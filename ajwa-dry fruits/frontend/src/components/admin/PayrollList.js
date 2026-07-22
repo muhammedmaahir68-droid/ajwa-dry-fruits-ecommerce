@@ -96,10 +96,10 @@ export default function PayrollList() {
         <Fragment>
             <MetaData title={'Admin Payroll Management'} />
             <div className="row">
-                <div className="col-12 col-md-2">
+                <div className="col-12 col-md-4 col-lg-3 mb-4">
                     <Sidebar />
                 </div>
-                <div className="col-12 col-md-10 p-4">
+                <div className="col-12 col-md-8 col-lg-9 p-4">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h1 className="my-2 font-weight-bold text-dark">Staff Payroll Management</h1>
                         <button className="btn btn-primary font-weight-bold" onClick={() => setShowModal(true)}>

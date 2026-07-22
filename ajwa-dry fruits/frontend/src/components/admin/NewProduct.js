@@ -100,10 +100,10 @@ export default function NewProduct() {
 
   return (
     <div className="row">
-      <div className="col-12 col-md-2">
+      <div className="col-12 col-md-4 col-lg-3 mb-4">
         <Sidebar />
       </div>
-      <div className="col-12 col-md-10">
+      <div className="col-12 col-md-8 col-lg-9">
         <Fragment>
           <div className="wrapper my-5">
             <form onSubmit={submitHandler} className="shadow-lg" encType="multipart/form-data">
