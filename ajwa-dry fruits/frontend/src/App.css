@@ -1,1280 +1,546 @@
+/* ==========================================================================
+   AJWA 3D CYBER-GOLD & GLASSMORPHIC THEME
+   ========================================================================== */
+
+/* 1. Global Reset & Body */
 html,
 body {
-  font-family: 'Amazon Ember';
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
+  font-family: 'Inter', 'Anton', sans-serif;
+  background: radial-gradient(circle at 50% 50%, #1c0e0b, #0d0605) !important;
+  color: #f5ede8 !important;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
-/* Scroll Bar */
-
-::-webkit-scrollbar-track {
-  background-color: #f5f5f5;
-}
-
+/* Premium Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
-  background-color: #f5f5f5;
+  background-color: #0d0605;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #0d0605;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(66, 66, 66, 0.2);
-  border: 0px;
-  background-clip: padding-box;
-  border-radius: 5px;
+  background-color: rgba(229, 169, 60, 0.45);
+  border-radius: 6px;
+  border: 2px solid #0d0605;
 }
 
-nav {
-  background-color: #232f3e;
-  padding: 1rem 1rem;
-}
-
-#search_btn {
-  background-color: #febd69;
-}
-
-.input-group {
-  width: 90%;
-  margin-right: 35%;
-}
-
-#search_field {
-  height: 2.4rem;
-  padding: 1rem;
-}
-
-#login_btn,
-#view_btn {
-  background-color: #febd69;
-  padding: 0.4rem 1.8rem;
-  font-family: calibri;
-}
-
-#cart {
-  font-size: 1rem;
-  color: white;
-}
-
-#cart_count {
-  background-color: #febd69;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.2rem;
-  color: black;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-/* Home page */
-#products_heading {
-  margin-top: 1.8rem;
-}
-
-.card {
-  height: 100%;
-}
-
-.card-title a {
-  color: #2e2e2e;
-}
-
-.card-title a:hover {
-  color: #fa9c23;
-  text-decoration: none;
-}
-
-.card-body {
-  padding-left: 0;
-}
-
-.card-text {
-  font-size: 1.4rem;
-}
-
-#view_btn {
-  background-color: #fa9c23;
-  color: white;
-}
-
-.card-img-top {
-  width: 200px;
-  height: 150px;
-}
-
-.ratings {
-  font-size: 1.2rem;
-  color: #fdcc0d;
-}
-
-#no_of_reviews {
-  font-size: 0.85rem;
-  color: grey;
-  margin-left: 0.5rem;
-}
-
-/* Footer */
-footer {
-  margin-top: 8rem;
-  color: grey;
-  bottom: 0;
-  width: 100%;
-}
-
-/* Ratings */
-
-.rating-outer {
-  display: inline-block;
-  position: relative;
-  font-family: FontAwesome;
-  color: #fdcc0d;
-}
-
-.rating-outer::before {
-  content: '\f006 \f006 \f006 \f006 \f006';
-}
-
-.rating-inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 0;
-}
-
-.rating-inner::before {
-  content: '\f005 \f005 \f005 \f005 \f005';
-  color: #f8ce0b;
-}
-
-/* Product Details Page */
-#product_id {
-  color: grey;
-  font-size: 0.8rem;
-}
-
-#product_price {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-#cart_btn,
-#review_btn {
-  border-radius: 2rem;
-  background-color: #fa9c23;
-  border: none;
-  padding: 0.5rem 2rem;
-}
-
-#product_seller {
-  color: grey;
-  font-size: 0.9rem;
-}
-
-#stock_status {
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-left: 0.3rem;
-}
-
-.redColor {
-  color: red;
-}
-
-.greenColor {
-  color: green;
-}
-
-#product_image {
-  margin-top: 9rem;
-}
-
-/* Loader */
-.loader {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 20%;
-  width: 80px;
-  height: 80px;
-  padding-left: 0;
-}
-.loader:after {
-  content: ' ';
-  display: block;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border-radius: 50%;
-  border: 6px solid #fa9c23;
-  border-color: #fa9c23 transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
-}
-@keyframes lds-dual-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Cart */
-
-.cart-item {
-  margin: 1.8rem 0rem;
-  padding: 0rem 0.7rem;
-}
-
-.cart-item a {
-  color: grey;
-}
-
-#delete_cart_item {
-  color: red;
-  background: white;
-  padding: 0.3rem 0.5rem;
-  font-size: 1.1rem;
-  border: none;
-}
-
-#card_item_price {
-  color: #febd69;
-  font-weight: bold;
-  font-size: 1.4rem;
-}
-
-#checkout_btn,
-.review-btn {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-  margin-top: 2rem;
-  border-radius: 5rem;
-}
-
-#view_order_details {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-}
-
-#order_summary {
-  border: 1px solid #e3e3e3;
-  border-radius: 1rem;
-  padding: 2rem 1.5rem;
-}
-
-.order-summary-values {
-  float: right;
-  font-weight: bold;
-}
-
-.stockCounter input {
-  border: none;
-  width: 3rem;
-  text-align: center;
-}
-
-.plus,
-.minus {
-  padding: 0.1rem 0.5rem;
-}
-
-.stockCounter input::-webkit-outer-spin-button,
-.stockCounter input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.form-control:disabled,
-.form-control[readonly] {
-  background-color: white;
-}
-
-/* Login & Register */
-
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5rem;
-
-  font-weight: 700;
-}
-
-.wrapper form {
-  padding: 2.5rem 3rem;
-}
-
-.wrapper form .btn {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-  color: white;
-  margin-top: 2.5rem;
-}
-
-.wrapper form a {
-  font-size: 0.9rem;
-  color: grey;
-}
-
-/* Avatar */
-.avatar {
-  display: inline-block;
-  margin-bottom: 0;
-  height: 3rem;
-  width: 3rem;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-}
-
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.rounded-circle {
-  border-radius: 50% !important;
-}
-
-.btn.focus,
-.btn:focus {
-  outline: 0;
-  box-shadow: none;
-}
-
-/* Header User Profile */
-
-.avatar-nav {
-  margin-right: 0.6rem;
-  height: 2.2rem;
-  width: 2.2rem;
-}
-
-/* Checkout Steps */
-
-.checkout-progress div {
-  box-sizing: border-box;
-}
-
-.checkout-progress {
-  display: block;
-  clear: both;
-  margin: 20px auto;
-  width: auto;
-  font-family: sans-serif;
-  overflow: auto;
-}
-
-.step {
-  margin: 0;
-  border: 0;
-  letter-spacing: 1px;
-  line-height: 30px;
-  padding: 5px 10px 5px 15px;
-  color: grey;
-  text-decoration: none;
-  cursor: default;
-  font-weight: bold;
-  float: left;
-  height: auto;
-}
-
-.incomplete {
-  background: #eeeeee;
-}
-
-.active-step {
-  background: #fa9c23;
-  color: #fff;
-}
-
-.triangle-active {
-  float: left;
-  width: 0;
-  border-top: 20px solid transparent;
-  border-left: 15px solid #fa9c23;
-  border-bottom: 20px solid transparent;
-  margin-left: -1px;
-}
-
-.triangle2-active {
-  width: 0;
-  float: left;
-  border-top: 20px solid #fa9c23;
-  border-left: 15px solid #fff;
-  border-bottom: 20px solid #fa9c23;
-  margin-right: -1px;
-}
-
-.triangle-incomplete {
-  float: left;
-  width: 0;
-  border-top: 20px solid transparent;
-  border-left: 15px solid #eeeeee;
-  border-bottom: 20px solid transparent;
-  margin-left: -1px;
-}
-
-.triangle2-incomplete {
-  width: 0;
-  float: left;
-  border-top: 20px solid #eeeeee;
-  border-left: 15px solid #fff;
-  border-bottom: 20px solid #eeeeee;
-  margin-right: -1px;
-}
-
-/* User Profile */
-
-.avatar-profile {
-  height: 16rem;
-  width: 16rem;
-}
-
-.user-info h4 {
-  font-weight: 800;
-  color: grey;
-  margin-top: 2rem;
-}
-
-.user-info p {
-  font-size: 1.1rem;
-}
-
-#edit_profile {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-}
-
-/* Confirm Order */
-
-.order-confirm p,
-.order-details p {
-  margin-left: 1.5rem;
-}
-
-.update-btn {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-  color: white;
-}
-
-.update-btn:hover {
-  color: white;
-}
-
-/* Pagination */
-.page-item.active .page-link {
-  background-color: #fa9c23;
-  border-color: #fa9c23;
-}
-
-.page-link {
-  color: #fa9c23;
-}
-
-.page-link:hover {
-  color: #fa9c23;
-}
-
-/* Admin Sidebar */
-
-.sidebar-wrapper {
-  display: flex;
-  width: 100%;
-  align-items: stretch;
-  min-height: 100vh;
-  font-weight: normal;
-
-  margin-top: 0;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 10;
-}
-#sidebar {
-  min-width: 100%;
-  max-width: 100%;
-  background: #232f3e;
-  color: #fff;
-  transition: all 0.3s;
-}
-#sidebar.active {
-  margin-left: -250px;
-}
-
-#sidebar .sidebar-header {
-  padding: 20px;
-  background: #232f3e;
-}
-#sidebar ul.components {
-  padding: 5px 0px;
-  border-bottom: 1px solid #232f3e;
-}
-
-#sidebar ul li a {
-  padding: 10px;
-  font-size: 1.1em;
-  display: block;
-  color: white;
-  text-decoration: none;
-}
-#sidebar ul li a:hover {
-  color: #232f3e;
-  background: #fff;
-}
-
-#sidebar ul li div.dropdown-menu a{
-  color: black;
-
-}
-
-#sidebar ul li a i {
-  margin-right: 0.3rem;
-}
-
-#sidebar ul li.active > a,
-a[aria-expanded='true'] {
-  color: #fff;
-  background: #232f3e;
-}
-a[data-toggle='collapse'] {
-  position: relative;
-}
-.dropdown-toggle::after {
-  display: block;
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-}
-
-ul ul a {
-  font-size: 1rem !important;
-  padding-left: 30px !important;
-  background: #232f3e;
-}
-
-ul.CTAs {
-  padding: 20px;
-}
-
-ul.CTAs a {
-  text-align: center;
-  font-size: 0.9em !important;
-  display: block;
-  border-radius: 5px;
-  margin-bottom: 5px;
-}
-
-/* Products List Admin */
-#products_table .btn {
-  padding: 0.2rem 0.5rem;
-  margin-left: 0.4rem;
-}
-
-/* Dashboard */
-
-.card-font-size {
-  font-size: 1.5rem;
-}
-
-/* Reviews */
-
-.rating {
-  margin-top: 10rem;
-}
-
-.stars {
-  height: 100px;
-  display: flex;
-  align-items: center;
-  padding-left: 0;
-}
-
-.star {
-  display: inline;
-  list-style: none;
-  font-size: 3rem;
-  padding-left: 0.9rem;
-  color: #e3e3e3;
-}
-
-.star:first-child {
-  padding-left: 0;
-}
-
-.orange {
-  color: #fa9c23;
-}
-
-.yellow {
-  color: #fdcc0d;
-}
-
-.review_user {
-  font-size: 0.8rem;
-  color: grey;
-}
-
-/* Ajwa product card */
-.ajwa-card {
-  border: 1px solid #d8dee3;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-}
-
-.ajwa-card-media {
-  position: relative;
-}
-
-.ajwa-card .card-img-top {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-  border-radius: 0.4rem;
-}
-
-.add-circle-btn {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  background: #68b444;
-  color: #fff;
-  font-size: 2rem;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.add-circle-btn:hover {
-  background: #4f9c2f;
-}
-
-.ajwa-product-title a {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1f2429;
-}
-
-.ajwa-rating-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.3rem 0 0.5rem;
-}
-
-.ajwa-price {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.8rem;
-}
-
-.ajwa-add-cart-btn {
-  background-color: #efa72f;
-  border-color: #efa72f;
-  color: #fff;
-  font-weight: 700;
-}
-
-.ajwa-add-cart-btn:hover {
-  background-color: #d49328;
-  border-color: #d49328;
-  color: #fff;
-}
-
-/* Ajwa theme refresh */
+/* Core theme CSS variables */
 :root {
-  --ajwa-cream: #efe9d9;
-  --ajwa-dark: #1f2c22;
-  --ajwa-green: #2c5d38;
-  --ajwa-accent: #f0ad3d;
-  --ajwa-soft-border: #d9dee2;
+  --gold-glow: 0 0 25px rgba(229, 169, 60, 0.45);
+  --accent-gold: #e5a93c;
+  --dark-accent: #2c1611;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(20px);
 }
 
-body {
-  background: #f6f7f8;
-  color: #262a2d;
-}
-
-.container.container-fluid {
-  max-width: 100%;
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
+/* 2. Topbar Frosted Header */
 .ajwa-topbar {
-  background: var(--ajwa-cream);
-  display: grid;
-  grid-template-columns: 260px 1fr 240px;
-  gap: 1rem;
+  background: rgba(20, 10, 8, 0.8) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-bottom: 1.5px solid var(--glass-border) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 1.2rem 2rem;
+  display: flex;
   align-items: center;
-  padding: 0.9rem 1.1rem;
-  border-bottom: 1px solid #ddd6c4;
+  justify-content: space-between;
+  transition: all 300ms ease;
 }
 
 .ajwa-logo-link {
   text-decoration: none;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  line-height: 1;
 }
 
 .ajwa-logo-main {
-  color: var(--ajwa-green);
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-family: 'Anton', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #ffffff 0%, #e5a93c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
 }
 
 .ajwa-logo-sub {
-  color: #412f2a;
-  font-size: 2rem;
-  letter-spacing: 7px;
-  margin-top: 0.1rem;
+  font-size: 0.85rem;
+  letter-spacing: 5px;
+  color: #e5a93c;
+  opacity: 0.85;
 }
 
+/* 3. Premium Search Bar */
 .ajwa-search-form {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 30px !important;
+  padding: 0.4rem 1.2rem;
   display: flex;
   align-items: center;
-  background: #fff;
-  border-radius: 20px;
-  border: 2px solid #d7d7d7;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-  padding: 0.35rem 1.1rem;
-  min-height: 64px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.ajwa-search-form i {
-  font-size: 2.8rem;
-  color: #767676;
-  margin-right: 0.7rem;
+.ajwa-search-form:focus-within {
+  border-color: #e5a93c !important;
+  box-shadow: var(--gold-glow), inset 0 1px 2px rgba(0,0,0,0.1) !important;
 }
 
 .ajwa-search-input {
-  border: 0;
-  width: 100%;
-  font-size: 2rem;
-  color: #444;
+  background: transparent !important;
+  border: 0 !important;
+  color: #ffffff !important;
+  font-size: 1.1rem;
   outline: none;
+  width: 100%;
 }
 
-.ajwa-hidden-submit {
-  display: none;
+.ajwa-search-form i {
+  color: #e5a93c;
+  font-size: 1.3rem;
+  margin-right: 0.6rem;
 }
 
+/* 4. Action Buttons & Icons */
 .ajwa-top-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 1.2rem;
+  align-items: center;
+  gap: 1.4rem;
 }
 
 .ajwa-upload-btn {
-  border: 0;
-  border-radius: 10px;
-  padding: 0.55rem 0.9rem;
-  background: #ffffff;
-  color: #3f3f3f;
+  background: rgba(229, 169, 60, 0.15) !important;
+  border: 1.5px solid #e5a93c !important;
+  color: #e5a93c !important;
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
   font-weight: 700;
+  transition: all 250ms ease;
+}
+
+.ajwa-upload-btn:hover {
+  background: #e5a93c !important;
+  color: #1c0e0b !important;
+  transform: translateY(-2px);
+  box-shadow: var(--gold-glow);
 }
 
 .ajwa-top-action {
-  color: #545454;
+  color: #f5ede8 !important;
   text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  transition: all 200ms ease;
+}
+
+.ajwa-top-action:hover {
+  opacity: 1;
+  color: #e5a93c !important;
+  transform: translateY(-2px);
 }
 
 .ajwa-top-action i {
-  font-size: 2.9rem;
-}
-
-.ajwa-cart-icon-wrap {
-  position: relative;
+  font-size: 1.6rem;
+  margin-bottom: 2px;
 }
 
 .ajwa-cart-badge {
   position: absolute;
-  top: -9px;
-  right: -9px;
-  width: 24px;
-  height: 24px;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #ea3c3c;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.ajwa-category-strip {
+  background: #e5a93c;
+  color: #000;
+  font-weight: 800;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(229, 169, 60, 0.6);
+}
+
+/* 5. Category Strip (Frosted Sliding Container) */
+.ajwa-category-strip {
+  display: flex;
+  gap: 1.2rem;
   overflow-x: auto;
-  white-space: nowrap;
-  background: #fff;
-  border-top: 1px solid #e2e2e2;
-  border-bottom: 1px solid #e2e2e2;
-  padding: 0.4rem 1rem 0;
-  margin-bottom: 0.7rem;
+  padding: 1rem;
+  background: rgba(28, 14, 11, 0.5);
+  border-bottom: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  margin-bottom: 2rem;
 }
 
 .ajwa-tab {
   border: 0;
   background: transparent;
-  font-size: 1.3rem;
-  color: #252525;
-  padding: 0.7rem 0.3rem;
-  border-bottom: 4px solid transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 250ms ease;
+  cursor: pointer;
 }
 
-.ajwa-tab.active {
-  border-bottom-color: var(--ajwa-accent);
+.ajwa-tab.active,
+.ajwa-tab:hover {
+  color: #ffffff;
+  background: rgba(229, 169, 60, 0.15);
+  box-shadow: inset 0 0 10px rgba(229, 169, 60, 0.1);
+  border-bottom: 2px solid #e5a93c;
 }
 
-.ajwa-products-wrap {
-  padding-left: 0.1rem;
-  padding-right: 0.1rem;
-  padding-bottom: 7rem;
-}
-
+/* 6. Interactive 3D Product Card catalog */
 .ajwa-card {
-  border: 1px solid var(--ajwa-soft-border);
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
-  border-radius: 12px;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
+  transition: transform 450ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 450ms ease, border-color 450ms ease !important;
   overflow: hidden;
+  backdrop-filter: var(--glass-blur);
+}
+
+.ajwa-card:hover {
+  transform: translateY(-12px) rotateX(4deg) rotateY(-2deg) !important;
+  box-shadow: var(--gold-glow), 0 25px 50px rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(229, 169, 60, 0.4) !important;
 }
 
 .ajwa-card-media {
   position: relative;
-  padding: 10px;
-  background: #f5f6f7;
+  background: rgba(0, 0, 0, 0.25) !important;
+  padding: 15px;
+  overflow: hidden;
 }
 
 .ajwa-card .card-img-top {
   width: 100%;
-  height: 215px;
-  object-fit: cover;
-  border-radius: 12px;
+  height: 200px;
+  object-fit: contain;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+.ajwa-card:hover .card-img-top {
+  transform: scale(1.1) translateZ(10px) !important;
+}
+
+/* Quick Floating add-to-cart circle button */
 .add-circle-btn {
   position: absolute;
-  right: 18px;
-  top: 18px;
-  width: 50px;
-  height: 50px;
-  border: 0;
+  right: 15px;
+  top: 15px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #69b64a;
-  color: #fff;
-  font-size: 2.6rem;
-  line-height: 1;
+  background: #e5a93c !important;
+  color: #1c0e0b !important;
+  font-size: 2rem;
+  border: 2px solid #ffffff !important;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(229, 169, 60, 0.4);
+  transition: transform 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 250ms ease !important;
 }
 
-.ajwa-product-title {
-  margin-bottom: 0.4rem;
+.add-circle-btn:hover {
+  transform: scale(1.2) rotate(90deg) !important;
+  background: #ffffff !important;
+  color: #e5a93c !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
+}
+
+.card-body {
+  padding: 1.5rem !important;
 }
 
 .ajwa-product-title a {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #222;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 200ms ease;
 }
 
-.ajwa-old-price {
-  color: #222;
-  font-size: 1.1rem;
-  text-decoration: line-through;
-  margin-right: 0.35rem;
+.ajwa-product-title a:hover {
+  color: #e5a93c;
 }
 
 .ajwa-rating-row {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.2rem;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.8rem;
 }
 
-#no_of_reviews {
-  margin-left: 0;
-  font-size: 1.05rem;
+.rating-outer {
+  color: #e5a93c;
 }
 
-.ajwa-card-bottom-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.35rem;
+.rating-inner::before {
+  color: #e5a93c;
+}
+
+.ajwa-old-price {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.4);
+  margin-right: 6px;
+  font-size: 0.9rem;
 }
 
 .ajwa-price {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #e5a93c;
   margin: 0;
-  font-size: 2.6rem;
-  font-weight: 800;
-  color: #121212;
 }
 
-.ajwa-round-icons {
-  display: flex;
-  gap: 0.55rem;
+/* Premium 3D-effect Add to Cart Button */
+.ajwa-add-cart-btn {
+  width: 100%;
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
+  color: #1c0e0b !important;
+  font-weight: 800 !important;
+  border: 0 !important;
+  border-radius: 30px !important;
+  padding: 0.7rem 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 15px rgba(229, 169, 60, 0.3);
+  transition: transform 250ms ease, box-shadow 250ms ease !important;
+}
+
+.ajwa-add-cart-btn:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--gold-glow) !important;
 }
 
 .ajwa-round-icon {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 4px solid #b4b8bb;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
   position: relative;
+  cursor: pointer;
+  transition: all 200ms ease;
 }
 
-.ajwa-round-icon::after {
-  content: '';
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #b4b8bb;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.ajwa-round-icon:hover {
+  background: rgba(229, 169, 60, 0.2);
+  border-color: #e5a93c;
+  transform: scale(1.1);
 }
 
-.ajwa-add-cart-btn {
-  margin-top: 0.6rem;
-  padding: 0.45rem 1rem;
-  border-radius: 8px;
-  background-color: var(--ajwa-accent);
-  border-color: var(--ajwa-accent);
-  color: #fff;
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-.ajwa-footer-desktop {
-  margin-top: 1rem;
-}
-
-.ajwa-mobile-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  background: #fff;
-  border-top: 1px solid #dde1e5;
-  display: none;
-  z-index: 1200;
-}
-
-.ajwa-mobile-link {
-  width: 25%;
-  height: 100%;
-  float: left;
-  text-decoration: none;
-  color: #6b6f73;
+/* 7. Beautiful Glowing Form UI (Login, Register, etc.) */
+.wrapper {
+  min-height: 75vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.95rem;
 }
 
-.ajwa-mobile-link i {
-  font-size: 1.6rem;
-  margin-bottom: 0.2rem;
+form.shadow-lg {
+  background: rgba(20, 10, 8, 0.75) !important;
+  backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--glass-border) !important;
+  border-radius: 24px !important;
+  padding: 2.5rem !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  transition: border-color 300ms ease;
 }
 
-.ajwa-mobile-link.active {
-  background: #69b64a;
-  color: #fff;
+form.shadow-lg:hover {
+  border-color: rgba(229, 169, 60, 0.25) !important;
 }
 
-@media (max-width: 992px) {
-  .ajwa-topbar {
-    grid-template-columns: 1fr;
-  }
-
-  .ajwa-search-wrap {
-    order: 3;
-  }
-
-  .ajwa-top-actions {
-    justify-content: flex-start;
-  }
+.form-group label {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
 }
 
-@media (max-width: 768px) {
-  .ajwa-logo-main {
-    font-size: 2.2rem;
-  }
-
-  .ajwa-logo-sub {
-    font-size: 1.2rem;
-    letter-spacing: 4px;
-  }
-
-  .ajwa-search-form {
-    min-height: 50px;
-  }
-
-  .ajwa-search-form i {
-    font-size: 1.8rem;
-  }
-
-  .ajwa-search-input {
-    font-size: 1.2rem;
-  }
-
-  .ajwa-card .card-img-top {
-    height: 170px;
-  }
-
-  .ajwa-product-title a {
-    font-size: 1.2rem;
-  }
-
-  .ajwa-price {
-    font-size: 1.8rem;
-  }
-
-  .ajwa-mobile-nav {
-    display: block;
-  }
-
-  .ajwa-footer-desktop {
-    display: none;
-  }
+.form-control {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--glass-border) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 0.8rem 1.2rem !important;
+  font-size: 1rem;
+  transition: all 250ms ease !important;
 }
 
+.form-control:focus {
+  border-color: #e5a93c !important;
+  box-shadow: var(--gold-glow), inset 0 1px 2px rgba(0,0,0,0.1) !important;
+  transform: translateY(-2px);
+}
+
+.btn-primary,
+#login_button,
+#checkout_btn {
+  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
+  color: #1c0e0b !important;
+  font-weight: 800 !important;
+  border: 0 !important;
+  border-radius: 30px !important;
+  padding: 0.85rem 2rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 250ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  box-shadow: 0 5px 15px rgba(229, 169, 60, 0.25);
+  cursor: pointer;
+}
+
+.btn-primary:hover,
+#login_button:hover,
+#checkout_btn:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: var(--gold-glow), 0 8px 25px rgba(229, 169, 60, 0.4) !important;
+}
+
+.btn-outline-danger {
+  border: 1.5px solid rgba(220, 53, 69, 0.7) !important;
+  color: #ff6b7a !important;
+  background: transparent !important;
+  border-radius: 30px !important;
+  transition: all 250ms ease !important;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545 !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(220, 53, 69, 0.4);
+  transform: translateY(-2px);
+}
+
+/* 8. Admin Dashboard Cyber-glass design */
 .admin-control-page {
-  background: radial-gradient(circle at 20% 0%, rgba(140, 78, 210, 0.5), transparent 45%), #130a2c;
+  background: radial-gradient(circle at 10% 10%, rgba(229, 169, 60, 0.05), transparent 45%), #0d0605 !important;
   min-height: calc(100vh - 72px);
-  color: #eef0ff;
+  padding: 2rem 0;
 }
 
 .admin-control-sidebar {
-  background: rgba(32, 46, 74, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  padding: 14px;
+  background: rgba(20, 10, 8, 0.75) !important;
+  border: 1.5px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  padding: 1.5rem;
+  backdrop-filter: var(--glass-blur);
 }
 
 .admin-control-link {
   display: block;
-  color: #d8ddff;
+  color: rgba(255, 255, 255, 0.75) !important;
   text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 200ms ease;
+  border: 1px solid transparent;
 }
 
 .admin-control-link:hover {
-  background: rgba(255, 255, 255, 0.14);
-  color: #fff;
-}
-
-.admin-control-head {
-  background: rgba(52, 77, 199, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 12px 16px;
+  background: rgba(229, 169, 60, 0.15) !important;
+  color: #ffffff !important;
+  border-color: rgba(229, 169, 60, 0.25);
+  transform: translateX(4px);
 }
 
 .admin-card {
-  background: rgba(46, 68, 170, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 12px;
-  padding: 14px;
-  min-height: 150px;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px solid var(--glass-border) !important;
+  border-radius: 18px !important;
+  padding: 1.5rem;
+  transition: all 300ms ease;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
-.admin-card a {
-  color: #c4f7ff;
-  text-decoration: none;
+.admin-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(229, 169, 60, 0.3);
+  box-shadow: 0 15px 35px rgba(229, 169, 60, 0.06);
 }
 
+/* 9. Dynamic Interactive Chat FAB */
 .ajwa-chat-fab {
   position: fixed;
-  right: 18px;
-  bottom: 90px;
+  right: 24px;
+  bottom: 24px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 0;
-  font-weight: 700;
-  background: #58c66a;
-  color: #112215;
-  z-index: 1400;
-}
-
-.ajwa-chat-panel {
-  position: fixed;
-  right: 18px;
-  bottom: 156px;
-  width: 340px;
-  max-width: calc(100vw - 24px);
-  background: #fff;
-  border: 1px solid #dde3e9;
-  border-radius: 10px;
-  padding: 12px;
-  z-index: 1400;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.ajwa-chat-link {
-  padding: 6px 0;
-  color: #1a4f85;
-  text-decoration: none;
-}
-
-/* ==========================================================================
-   AJWA PREMIUM 3D & INTERACTIVE DESIGN SYSTEM
-   ========================================================================== */
-:root {
-  --ajwa-primary-gold: #e5a93c;
-  --ajwa-primary-dark: #1f0b05;
-  --ajwa-premium-glow: 0 20px 45px rgba(229, 169, 60, 0.18);
-  --ajwa-premium-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-}
-
-/* Beautiful frosted transparent topbar header */
-.ajwa-topbar {
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1.5px solid rgba(0, 0, 0, 0.06) !important;
-  box-shadow: var(--ajwa-premium-shadow);
-  transition: all 300ms ease;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.ajwa-logo-main {
-  background: linear-gradient(135deg, #1f0b05 0%, #e5a93c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 900;
-}
-
-/* 3D Lifting Cards with Ambient Gold Aura Shadow */
-.ajwa-card {
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  border-radius: 18px !important;
-  background: #ffffff;
-  box-shadow: var(--ajwa-premium-shadow) !important;
-  transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 380ms ease, border-color 380ms ease !important;
-  overflow: hidden;
-}
-
-.ajwa-card:hover {
-  transform: translateY(-10px) scale(1.01) !important;
-  box-shadow: var(--ajwa-premium-glow) !important;
-  border-color: rgba(229, 169, 60, 0.35) !important;
-}
-
-/* Scale media zoom inside product card */
-.ajwa-card-media {
-  overflow: hidden;
-  background: #fdfaf4 !important;
-  transition: background 300ms ease;
-}
-
-.ajwa-card .card-img-top {
-  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.ajwa-card:hover .card-img-top {
-  transform: scale(1.08) rotate(1deg) !important;
-}
-
-/* Quick Add circular button with dynamic scale */
-.add-circle-btn {
-  background: #1f0b05 !important;
-  border: 2px solid #e5a93c !important;
-  transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease !important;
-}
-
-.add-circle-btn:hover {
-  transform: scale(1.15) !important;
-  background: #e5a93c !important;
-  color: #1f0b05 !important;
-  box-shadow: 0 4px 12px rgba(229, 169, 60, 0.4) !important;
-}
-
-/* Gold border premium search bar */
-.ajwa-search-form {
-  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
-  border-radius: 30px !important;
-  background: #ffffff !important;
-  transition: border-color 250ms ease, box-shadow 250ms ease !important;
-}
-
-.ajwa-search-form:focus-within {
-  border-color: #e5a93c !important;
-  box-shadow: 0 0 12px rgba(229, 169, 60, 0.2) !important;
-}
-
-/* Luxury Category Strip Active Tabs */
-.ajwa-tab {
-  font-weight: 700 !important;
-  color: rgba(31, 11, 5, 0.6) !important;
-  transition: color 200ms ease, border-color 200ms ease !important;
-}
-
-.ajwa-tab.active {
-  color: #1f0b05 !important;
-  border-bottom-width: 3px !important;
-  border-bottom-color: #e5a93c !important;
-}
-
-/* Floating chat button hover lift */
-.ajwa-chat-fab {
-  background: #e5a93c !important;
-  color: #1f0b05 !important;
   border: 2px solid #ffffff !important;
-  box-shadow: 0 8px 24px rgba(229, 169, 60, 0.3) !important;
-  transition: transform 200ms ease, box-shadow 200ms ease !important;
+  font-weight: 700;
+  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
+  color: #1c0e0b !important;
+  z-index: 1400;
+  box-shadow: var(--gold-glow);
+  cursor: pointer;
+  transition: transform 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 250ms ease !important;
 }
 
 .ajwa-chat-fab:hover {
-  transform: scale(1.1) translateY(-4px) !important;
-  box-shadow: 0 12px 28px rgba(229, 169, 60, 0.4) !important;
+  transform: scale(1.15) rotate(15deg) !important;
+  box-shadow: 0 0 35px rgba(229, 169, 60, 0.7);
 }
 
-/* Premium Primary Buttons */
-.btn-primary, .ajwa-add-cart-btn, #cart_btn, #checkout_btn {
-  background: linear-gradient(135deg, #1f0b05 0%, #3a1b12 100%) !important;
-  border: 1px solid #e5a93c !important;
-  border-radius: 30px !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease !important;
+.ajwa-chat-panel {
+  background: rgba(20, 10, 8, 0.92) !important;
+  border: 1.5px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5) !important;
+  backdrop-filter: var(--glass-blur);
 }
 
-.btn-primary:hover, .ajwa-add-cart-btn:hover, #cart_btn:hover, #checkout_btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 8px 20px rgba(31, 11, 5, 0.25) !important;
-  opacity: 0.95 !important;
+/* 10. Loader Glow */
+.loader {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin: 15% auto;
+  border: 4px solid rgba(229, 169, 60, 0.1);
+  border-top-color: #e5a93c;
+  animation: spin 1s linear infinite;
+  box-shadow: var(--gold-glow);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 11. Custom responsive layouts */
+@media (max-width: 768px) {
+  .ajwa-topbar {
+    padding: 1rem;
+  }
+  .ajwa-logo-main {
+    font-size: 1.8rem;
+  }
 }
