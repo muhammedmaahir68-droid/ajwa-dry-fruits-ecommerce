@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 export default function Header() {
-  const { isAuthenticated } = useSelector((state) => state.authState);
+  const { isAuthenticated, user } = useSelector((state) => state.authState);
   const { items: cartItems } = useSelector((state) => state.cartState);
   const uploadRef = useRef(null);
 
@@ -38,6 +38,13 @@ export default function Header() {
         <button type="button" className="ajwa-upload-btn" onClick={() => uploadRef.current?.click()}>
           Upload Files
         </button>
+
+        {isAuthenticated && user && user.role === 'admin' && (
+          <Link to="/admin/dashboard" className="ajwa-top-action" style={{ color: '#e5a93c' }}>
+            <i className="fa fa-tachometer" aria-hidden="true"></i>
+            <span>Admin</span>
+          </Link>
+        )}
 
         <Link to={isAuthenticated ? '/myprofile' : '/login'} className="ajwa-top-action">
           <i className="fa fa-user-circle-o" aria-hidden="true"></i>
