@@ -494,3 +494,66 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* 14. MDBDataTable Dark Theme Text Visibility Overrides */
+.dataTables_wrapper,
+.dataTables_wrapper label,
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+  color: #f5ede8 !important;
+}
+
+.dataTables_wrapper input,
+.dataTables_wrapper select {
+  background-color: #1a0d08 !important;
+  color: #e5a93c !important;
+  border: 1px solid rgba(229, 169, 60, 0.5) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+}
+
+table.dataTable {
+  background-color: rgba(20, 10, 8, 0.9) !important;
+  color: #f5ede8 !important;
+  border: 1px solid rgba(229, 169, 60, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+table.dataTable thead th {
+  background-color: #2c1611 !important;
+  color: #e5a93c !important;
+  font-weight: 800 !important;
+  font-size: 1rem !important;
+  border-bottom: 2px solid #e5a93c !important;
+  text-transform: uppercase !important;
+}
+
+table.dataTable tbody tr {
+  background-color: rgba(20, 10, 8, 0.8) !important;
+  color: #ffffff !important;
+}
+
+table.dataTable tbody tr:hover {
+  background-color: rgba(229, 169, 60, 0.2) !important;
+}
+
+table.dataTable tbody td {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  font-size: 0.95rem !important;
+}
+
+.dataTables_empty {
+  color: #e5a93c !important;
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  padding: 2rem !important;
+}
+
+.bs-select-all,
+.bs-deselect-all {
+  color: #e5a93c !important;
+}
+
