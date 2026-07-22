@@ -6,14 +6,24 @@ import MetaData from "./layouts/MetaData";
 import Product from "./product/Product";
 import ChatbotWidget from "./ChatbotWidget";
 import Ajwa3DHero from "./Ajwa3DHero";
+import AdBanner from "./layouts/AdBanner";
 import { toast } from 'react-toastify';
 import Pagination from 'react-js-pagination';
 
-const tabs = ['New Arrivals', 'Dates', 'Almonds', 'Cashews', 'Walews', 'Pistachios', 'Dried Figs'];
+const tabs = [
+  'All Products', 
+  'Dates', 
+  'Almonds', 
+  'Cashews', 
+  'Walnuts', 
+  'Pistachios', 
+  'Dried Figs', 
+  'Imported Chocolates', 
+  'Gift Hampers'
+];
 
 function mapTabToCategory(tab) {
-  if (tab === 'New Arrivals') return null;
-  if (tab === 'Walews') return 'Walnuts';
+  if (tab === 'All Products') return null;
   return tab;
 }
 
@@ -21,7 +31,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const { products, loading, error, productsCount, resPerPage } = useSelector((state) => state.productsState);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState('New Arrivals');
+  const [activeTab, setActiveTab] = useState('All Products');
 
   const setCurrentPageNo = (pageNo) => {
     setCurrentPage(pageNo);
@@ -41,7 +51,7 @@ export default function Home() {
     if (!selectedCategory) return products || [];
     return (products || []).filter((product) => {
       const value = (product.category || '').toLowerCase();
-      return value === selectedCategory.toLowerCase();
+      return value.includes(selectedCategory.toLowerCase()) || selectedCategory.toLowerCase().includes(value);
     });
   }, [products, activeTab]);
 
@@ -49,17 +59,21 @@ export default function Home() {
     <Fragment>
       {loading ? <Loader /> : (
         <Fragment>
-          <MetaData title={'Ajwa Dry Fruits'} />
+          <MetaData title={'Ajwa Dry Fruits & Gourmet Imported Chocolates'} />
 
-          {/* Interactive TOONHUB 3D Hero Showcase */}
+          {/* Interactive 3D Cyber-Gold Hero Showcase */}
           <Ajwa3DHero />
 
-          <section className="ajwa-category-strip">
+          {/* Promotional Video & Countdown Ad Banner */}
+          <AdBanner />
+
+          {/* Category Filter Tabs */}
+          <section className="ajwa-category-strip my-4 d-flex flex-wrap justify-content-center gap-2">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 type="button"
-                className={`ajwa-tab ${activeTab === tab ? 'active' : ''}`}
+                className={`btn btn-sm px-3 py-2 font-weight-bold rounded-pill shadow-sm transition-all ${activeTab === tab ? 'btn-warning text-dark font-weight-bold scale-105' : 'btn-outline-warning text-white'}`}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}
@@ -67,14 +81,23 @@ export default function Home() {
             ))}
           </section>
 
-          <section id="products" className="container-fluid ajwa-products-wrap">
+          {/* Products Grid Showcase */}
+          <section id="products" className="container-fluid ajwa-products-wrap my-4">
             <div className="row">
-              {filteredProducts && filteredProducts.map((product) => (
-                <Product col={4} key={product._id} product={product} />
-              ))}
+              {filteredProducts && filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <Product col={4} key={product._id} product={product} />
+                ))
+              ) : (
+                <div className="col-12 text-center py-5 text-muted">
+                  <i className="fa fa-box-open fa-3x mb-3 text-warning"></i>
+                  <h5>No items found in "{activeTab}". Select another category or view all products.</h5>
+                </div>
+              )}
             </div>
           </section>
 
+          {/* Pagination */}
           {productsCount > 0 && productsCount > resPerPage ? (
             <div className="d-flex justify-content-center mt-4 mb-5">
               <Pagination
@@ -90,6 +113,8 @@ export default function Home() {
               />
             </div>
           ) : null}
+
+          {/* AI Shopping Concierge Widget */}
           <ChatbotWidget products={products || []} />
         </Fragment>
       )}

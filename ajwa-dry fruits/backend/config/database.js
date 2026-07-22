@@ -21,14 +21,16 @@ const PRODUCT_CATEGORIES = [
     'Walnuts',
     'Pistachios',
     'Dried Figs',
-    'Raisins'
+    'Raisins',
+    'Imported Chocolates',
+    'Gift Hampers'
 ];
 
-let sequelize;
+let activeSequelize;
 
 function getSequelizeInstance() {
-    if (!sequelize) {
-        sequelize = new Sequelize(
+    if (!activeSequelize) {
+        activeSequelize = new Sequelize(
             process.env.DB_NAME || 'ajwa_dry_fruits',
             process.env.DB_USER || 'root',
             process.env.DB_PASSWORD || '',
@@ -37,18 +39,21 @@ function getSequelizeInstance() {
                 port: Number(process.env.DB_PORT || 3306),
                 dialect: 'mysql',
                 logging: false,
-                retry: { max: 1 }
+                retry: { max: 1 },
+                dialectOptions: {
+                    connectTimeout: 3000
+                }
             }
         );
     }
-    return sequelize;
+    return activeSequelize;
 }
 
-sequelize = getSequelizeInstance();
+getSequelizeInstance();
 
 const connectDatabase = async () => {
     try {
-        await sequelize.authenticate();
+        await activeSequelize.authenticate();
         console.log(`MySQL is connected to host: ${process.env.DB_HOST || '127.0.0.1'}`);
     } catch (error) {
         console.log(`MySQL connection failed (${error.message}). Falling back to SQLite database...`);
@@ -56,19 +61,19 @@ const connectDatabase = async () => {
         if (!fs.existsSync(dataDir)) {
             fs.mkdirSync(dataDir, { recursive: true });
         }
-        sequelize = new Sequelize({
+        activeSequelize = new Sequelize({
             dialect: 'sqlite',
             storage: path.join(dataDir, 'database.sqlite'),
             logging: false
         });
-        await sequelize.authenticate();
+        await activeSequelize.authenticate();
         console.log(`SQLite database successfully initialized at backend/data/database.sqlite`);
     }
 
-    await sequelize.sync();
+    await activeSequelize.sync();
     
     try {
-        const queryInterface = sequelize.getQueryInterface();
+        const queryInterface = activeSequelize.getQueryInterface();
         const productTable = await queryInterface.describeTable('products');
 
         if (productTable && !productTable.offerPercentage) {
@@ -91,5 +96,18 @@ const connectDatabase = async () => {
     }
 };
 
-module.exports = { sequelize, connectDatabase, PRODUCT_CATEGORIES };
+// Export a Proxy so that models requiring this module get redirected to the active Sequelize instance (MySQL or SQLite)
+const sequelize = new Proxy({}, {
+    get(target, prop) {
+        if (typeof activeSequelize[prop] === 'function') {
+            return activeSequelize[prop].bind(activeSequelize);
+        }
+        return activeSequelize[prop];
+    },
+    set(target, prop, value) {
+        activeSequelize[prop] = value;
+        return true;
+    }
+});
 
+module.exports = { sequelize, connectDatabase, PRODUCT_CATEGORIES };

@@ -39,8 +39,8 @@ import UserList from './components/admin/UserList';
 import UpdateUser from './components/admin/UpdateUser';
 import ReviewList from './components/admin/ReviewList';
 import PayrollList from './components/admin/PayrollList';
-import AdminAccess from './components/admin/AdminAccess';
 import AdminControl from './components/admin/AdminControl';
+import AdManager from './components/admin/AdManager';
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("")
@@ -70,8 +70,7 @@ function App() {
                       <Route path='/product/:id' element={<ProductDetail/>} />
                       <Route path='/login' element={<Login/>} />
                       <Route path='/register' element={<Register/>} />
-                      <Route path='/admin/products/register' element={<AdminAccess/>} />
-                      <Route path='/admin/prducts/register' element={<AdminAccess/>} />
+                      
                       <Route path='/myprofile' element={<ProtectedRoute><Profile/></ProtectedRoute> } />
                       <Route path='/myprofile/update' element={<ProtectedRoute><UpdateProfile/></ProtectedRoute> } />
                       <Route path='/myprofile/update/password' element={<ProtectedRoute><UpdatePassword/></ProtectedRoute> } />
@@ -89,7 +88,7 @@ function App() {
                       <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />
                       <Route path='/admin/products' element={ <ProtectedRoute isAdmin={true}><ProductList/></ProtectedRoute> } />
                       <Route path='/admin/products/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
-                      <Route path='/admin/produts/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
+
                       <Route path='/admin/product/:id' element={ <ProtectedRoute isAdmin={true}><UpdateProduct/></ProtectedRoute> } />
                       <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
                       <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
@@ -97,6 +96,7 @@ function App() {
                       <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
                       <Route path='/admin/reviews' element={ <ProtectedRoute isAdmin={true}><ReviewList/></ProtectedRoute> } />
                       <Route path='/admin/payrolls' element={ <ProtectedRoute isAdmin={true}><PayrollList/></ProtectedRoute> } />
+                      <Route path='/admin/ads' element={ <ProtectedRoute isAdmin={true}><AdManager/></ProtectedRoute> } />
                   </Routes>
                 </div>
             <Footer/>
