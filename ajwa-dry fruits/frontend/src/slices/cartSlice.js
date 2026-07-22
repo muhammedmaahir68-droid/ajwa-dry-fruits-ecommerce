@@ -5,9 +5,23 @@ import { createSlice } from "@reduxjs/toolkit";
 const cartSlice = createSlice({
     name: 'cart',
     initialState: {
-        items: localStorage.getItem('cartItems')? JSON.parse(localStorage.getItem('cartItems')): [],
+        items: (() => {
+            try {
+                const item = localStorage.getItem('cartItems');
+                return item ? JSON.parse(item) : [];
+            } catch (e) {
+                return [];
+            }
+        })(),
         loading: false,
-        shippingInfo: localStorage.getItem('shippingInfo')? JSON.parse(localStorage.getItem('shippingInfo')): {}
+        shippingInfo: (() => {
+            try {
+                const info = localStorage.getItem('shippingInfo');
+                return info ? JSON.parse(info) : {};
+            } catch (e) {
+                return {};
+            }
+        })()
     },
     reducers: {
         addCartItemRequest(state, action){

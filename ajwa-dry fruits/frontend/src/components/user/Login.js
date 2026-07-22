@@ -15,7 +15,8 @@ export default function Login() {
     const location = useLocation();
 
     const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
-    const redirect = location.search ? '/' + location.search.split('=')[1] : '/';
+    const redirectParam = location.search ? location.search.split('=')[1] : '/';
+    const redirect = redirectParam.startsWith('/') ? redirectParam : '/' + redirectParam;
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -34,14 +35,14 @@ export default function Login() {
         ];
         const selected = sampleGoogleAccounts[Math.floor(Math.random() * sampleGoogleAccounts.length)];
         
-        toast.info(`Connecting Google Account: ${selected.email}...`, { position: toast.POSITION.BOTTOM_CENTER });
+        toast.info(`Connecting Google Account: ${selected.email}...`, { position: 'bottom-center' });
         dispatch(googleLoginAction(selected.email, selected.name, selected.avatar));
     };
 
     useEffect(() => {
         if (isAuthenticated) {
             if (user && user.role === 'admin' && isAdminLogin) {
-                toast.success('Welcome back, Administrator!', { position: toast.POSITION.BOTTOM_CENTER });
+                toast.success('Welcome back, Administrator!', { position: 'bottom-center' });
                 navigate('/admin/dashboard');
             } else {
                 navigate(redirect);
@@ -50,7 +51,7 @@ export default function Login() {
 
         if (error) {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 type: 'error',
                 onOpen: () => { dispatch(clearAuthError()) }
             });

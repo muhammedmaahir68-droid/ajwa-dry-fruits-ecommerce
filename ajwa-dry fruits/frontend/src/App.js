@@ -47,8 +47,12 @@ function App() {
   useEffect(() => {
     store.dispatch(loadUser)
     async function getStripeApiKey(){
-      const {data} = await axios.get('/api/v1/stripeapi')
-      setStripeApiKey(data.stripeApiKey)
+      try {
+        const {data} = await axios.get('/api/v1/stripeapi')
+        setStripeApiKey(data.stripeApiKey)
+      } catch (err) {
+        // Stripe API key not configured or disabled
+      }
     }
     getStripeApiKey()
   },[])
@@ -79,25 +83,22 @@ function App() {
                       <Route path='/order/success' element={<ProtectedRoute><OrderSuccess/></ProtectedRoute> } />
                       <Route path='/orders' element={<ProtectedRoute><UserOrders/></ProtectedRoute> } />
                       <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
-                      {stripeApiKey && <Route path='/payment' element={<ProtectedRoute><Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements></ProtectedRoute> } />
-} 
+                      {stripeApiKey && <Route path='/payment' element={<ProtectedRoute><Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements></ProtectedRoute> } />}
+                      {/* Admin Routes */}
+                      <Route path='/admin/control' element={ <ProtectedRoute isAdmin={true}><AdminControl/></ProtectedRoute> } />
+                      <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />
+                      <Route path='/admin/products' element={ <ProtectedRoute isAdmin={true}><ProductList/></ProtectedRoute> } />
+                      <Route path='/admin/products/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
+                      <Route path='/admin/produts/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
+                      <Route path='/admin/product/:id' element={ <ProtectedRoute isAdmin={true}><UpdateProduct/></ProtectedRoute> } />
+                      <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
+                      <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
+                      <Route path='/admin/users' element={ <ProtectedRoute isAdmin={true}><UserList/></ProtectedRoute> } />
+                      <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
+                      <Route path='/admin/reviews' element={ <ProtectedRoute isAdmin={true}><ReviewList/></ProtectedRoute> } />
+                      <Route path='/admin/payrolls' element={ <ProtectedRoute isAdmin={true}><PayrollList/></ProtectedRoute> } />
                   </Routes>
                 </div>
-                {/* Admin Routes */}
-                <Routes>
-                  <Route path='/admin/control' element={ <ProtectedRoute isAdmin={true}><AdminControl/></ProtectedRoute> } />
-                  <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />
-                  <Route path='/admin/products' element={ <ProtectedRoute isAdmin={true}><ProductList/></ProtectedRoute> } />
-                  <Route path='/admin/products/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
-                  <Route path='/admin/produts/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />
-                  <Route path='/admin/product/:id' element={ <ProtectedRoute isAdmin={true}><UpdateProduct/></ProtectedRoute> } />
-                  <Route path='/admin/orders' element={ <ProtectedRoute isAdmin={true}><OrderList/></ProtectedRoute> } />
-                  <Route path='/admin/order/:id' element={ <ProtectedRoute isAdmin={true}><UpdateOrder/></ProtectedRoute> } />
-                  <Route path='/admin/users' element={ <ProtectedRoute isAdmin={true}><UserList/></ProtectedRoute> } />
-                  <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
-                  <Route path='/admin/reviews' element={ <ProtectedRoute isAdmin={true}><ReviewList/></ProtectedRoute> } />
-                  <Route path='/admin/payrolls' element={ <ProtectedRoute isAdmin={true}><PayrollList/></ProtectedRoute> } />
-                </Routes>
             <Footer/>
         </HelmetProvider>
       </div>
