@@ -235,3 +235,54 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
         success: true
     });
 });
+
+// Google Gmail Authentication - /api/v1/google-login
+exports.googleLogin = catchAsyncError(async (req, res, next) => {
+    const { email, name, avatar } = req.body;
+
+    if (!email) {
+        return next(new ErrorHandler('Google account email is required', 400));
+    }
+
+    let user = await User.findOne({ where: { email: email.toLowerCase().trim() } });
+
+    if (!user) {
+        // Auto-create user for Google Login
+        const randomPassword = crypto.randomBytes(12).toString('hex') + 'A1!';
+        user = await User.create({
+            name: name || email.split('@')[0],
+            email: email.toLowerCase().trim(),
+            password: randomPassword,
+            avatar: avatar || '/images/default_avatar.png',
+            role: 'user'
+        });
+    }
+
+    sendToken(user, 200, res);
+});
+
+// Dedicated Admin Login - /api/v1/admin/login
+exports.adminLogin = catchAsyncError(async (req, res, next) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return next(new ErrorHandler('Please enter email & password', 400));
+    }
+
+    const user = await User.findOne({ where: { email: email.toLowerCase().trim() } });
+
+    if (!user) {
+        return next(new ErrorHandler('Invalid administrator credentials', 401));
+    }
+
+    if (user.role !== 'admin') {
+        return next(new ErrorHandler('Access Denied: Administrator privileges required', 403));
+    }
+
+    if (!(await user.isValidPassword(password))) {
+        return next(new ErrorHandler('Invalid administrator credentials', 401));
+    }
+
+    sendToken(user, 200, res);
+});
+

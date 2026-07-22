@@ -24,13 +24,17 @@ const {
     getAllUsers,
     getUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    googleLogin,
+    adminLogin
  } = require('../controllers/authController');
 const router = express.Router();
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/authenticate')
 
 router.route('/register').post(upload.single('avatar'), registerUser);
 router.route('/login').post(loginUser);
+router.route('/google-login').post(googleLogin);
+router.route('/admin/login').post(adminLogin);
 router.route('/logout').get(logoutUser);
 router.route('/password/forgot').post(forgotPassword);
 router.route('/password/reset/:token').post(resetPassword);

@@ -38,6 +38,7 @@ import UpdateOrder from './components/admin/UpdateOrder';
 import UserList from './components/admin/UserList';
 import UpdateUser from './components/admin/UpdateUser';
 import ReviewList from './components/admin/ReviewList';
+import PayrollList from './components/admin/PayrollList';
 import AdminAccess from './components/admin/AdminAccess';
 import AdminControl from './components/admin/AdminControl';
 
@@ -95,6 +96,7 @@ function App() {
                   <Route path='/admin/users' element={ <ProtectedRoute isAdmin={true}><UserList/></ProtectedRoute> } />
                   <Route path='/admin/user/:id' element={ <ProtectedRoute isAdmin={true}><UpdateUser/></ProtectedRoute> } />
                   <Route path='/admin/reviews' element={ <ProtectedRoute isAdmin={true}><ReviewList/></ProtectedRoute> } />
+                  <Route path='/admin/payrolls' element={ <ProtectedRoute isAdmin={true}><PayrollList/></ProtectedRoute> } />
                 </Routes>
             <Footer/>
         </HelmetProvider>

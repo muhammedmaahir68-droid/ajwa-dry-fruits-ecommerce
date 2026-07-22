@@ -1,12 +1,14 @@
 const app = require('./app');
 const { connectDatabase } = require('./config/database');
-
+const seedDatabase = require('./utils/seeder');
 
 const startServer = async () => {
     await connectDatabase();
+    await seedDatabase();
 
-    const server = app.listen(process.env.PORT,()=>{
-        console.log(`My Server listening to the port: ${process.env.PORT} in  ${process.env.NODE_ENV} `)
+    const port = process.env.PORT || 8000;
+    const server = app.listen(port, () => {
+        console.log(`Server is running on http://127.0.0.1:${port} in ${process.env.NODE_ENV || 'development'} mode`);
     });
 
     process.on('unhandledRejection',(err)=>{

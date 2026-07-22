@@ -5,7 +5,6 @@ const User = require('../models/userModel');
 const ErrorHandler = require('../utils/errorHandler');
 const { serializeOrder, serializeUser } = require('../utils/serialize');
 
-//Create New Order - api/v1/order/new
 exports.newOrder = catchAsyncError(async (req, res) => {
     const { orderItems, shippingInfo, itemsPrice, taxPrice, shippingPrice, totalPrice, paymentInfo } = req.body;
 
@@ -20,6 +19,15 @@ exports.newOrder = catchAsyncError(async (req, res) => {
         paidAt: new Date(),
         user: req.user.id
     });
+
+    if (Array.isArray(orderItems)) {
+        for (const item of orderItems) {
+            const pId = item.product || item.id;
+            if (pId) {
+                await updateStock(pId, item.quantity || 1);
+            }
+        }
+    }
 
     res.status(200).json({
         success: true,

@@ -43,7 +43,6 @@ import {
 import axios from 'axios';
 
 export const login = (email, password) => async (dispatch) => {
-
         try {
             dispatch(loginRequest())
             const { data }  = await axios.post(`/api/v1/login`,{email,password});
@@ -51,7 +50,26 @@ export const login = (email, password) => async (dispatch) => {
         } catch (error) {
             dispatch(loginFail(error?.response?.data?.message || 'Login failed'))
         }
+}
 
+export const googleLoginAction = (email, name, avatar) => async (dispatch) => {
+    try {
+        dispatch(loginRequest())
+        const { data } = await axios.post(`/api/v1/google-login`, { email, name, avatar });
+        dispatch(loginSuccess(data))
+    } catch (error) {
+        dispatch(loginFail(error?.response?.data?.message || 'Google login failed'))
+    }
+}
+
+export const adminLoginAction = (email, password) => async (dispatch) => {
+    try {
+        dispatch(loginRequest())
+        const { data } = await axios.post(`/api/v1/admin/login`, { email, password });
+        dispatch(loginSuccess(data))
+    } catch (error) {
+        dispatch(loginFail(error?.response?.data?.message || 'Admin login failed'))
+    }
 }
 
 export const clearAuthError = () => (dispatch) => {

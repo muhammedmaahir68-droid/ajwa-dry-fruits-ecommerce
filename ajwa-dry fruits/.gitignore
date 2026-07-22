@@ -1,0 +1,6 @@
+node_modules/
+backend/data/*.sqlite
+backend/uploads/user/*
+.env
+build/
+dist/
