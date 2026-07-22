@@ -11,7 +11,7 @@ Product.init(
             autoIncrement: true
         },
         name: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         price: {
@@ -22,14 +22,10 @@ Product.init(
         offerPercentage: {
             type: DataTypes.FLOAT,
             allowNull: false,
-            defaultValue: 0,
-            validate: {
-                min: 0,
-                max: 100
-            }
+            defaultValue: 0
         },
         salesStatus: {
-            type: DataTypes.ENUM('Regular', 'On Sale', 'Out of Stock'),
+            type: DataTypes.STRING(100),
             allowNull: false,
             defaultValue: 'Regular'
         },
@@ -48,31 +44,11 @@ Product.init(
             defaultValue: []
         },
         category: {
-            type: DataTypes.ENUM(
-                'Electronics',
-                'Mobile Phones',
-                'Laptops',
-                'Accessories',
-                'Headphones',
-                'Food',
-                'Books',
-                'Clothes/Shoes',
-                'Beauty/Health',
-                'Sports',
-                'Outdoor',
-                'Home',
-                'Dates',
-                'Almonds',
-                'Cashews',
-                'Walnuts',
-                'Pistachios',
-                'Dried Figs',
-                'Raisins'
-            ),
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         seller: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         stock: {

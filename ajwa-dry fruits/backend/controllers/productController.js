@@ -12,7 +12,7 @@ const normalizeProductPayload = (body = {}) => {
     payload.stock = Number.isNaN(stock) ? 0 : stock;
     payload.offerPercentage = Number.isNaN(offerPercentage) ? 0 : Math.min(100, Math.max(0, offerPercentage));
 
-    if (!payload.salesStatus || !['Regular', 'On Sale', 'Out of Stock'].includes(payload.salesStatus)) {
+    if (!payload.salesStatus) {
         if (payload.stock <= 0) {
             payload.salesStatus = 'Out of Stock';
         } else if (payload.offerPercentage > 0) {

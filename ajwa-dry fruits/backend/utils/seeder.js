@@ -1,7 +1,4 @@
 const products = require('../data/products.json');
-const Product = require('../models/productModel');
-const User = require('../models/userModel');
-const Payroll = require('../models/payrollModel');
 const dotenv = require('dotenv');
 const path = require('path');
 const { connectDatabase } = require('../config/database');
@@ -11,10 +8,17 @@ dotenv.config({ path: path.join(__dirname, '../config/config.env') });
 const seedDatabase = async () => {
     try {
         await connectDatabase();
+
+        const Product = require('../models/productModel');
+        const User = require('../models/userModel');
+        const Payroll = require('../models/payrollModel');
+
+        // Sync models to ensure tables exist
+        await Product.sync({ force: true });
+        await User.sync();
+        await Payroll.sync();
         
-        // Seed Products if empty
-        const count = await Product.count();
-        if (count === 0 && Array.isArray(products) && products.length > 0) {
+        if (Array.isArray(products) && products.length > 0) {
             await Product.bulkCreate(
                 products.map((product) => ({
                     ...product,
@@ -24,7 +28,7 @@ const seedDatabase = async () => {
                     reviews: product.reviews || []
                 }))
             );
-            console.log(`Seeded ${products.length} products successfully!`);
+            console.log(`Seeded ${products.length} gourmet products & images successfully!`);
         }
 
         // Seed Admin User

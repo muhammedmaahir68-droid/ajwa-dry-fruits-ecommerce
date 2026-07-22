@@ -1,117 +1,128 @@
 [
     {
-        "name": "OPPO F21s Pro 5G",
-        "price": 245.67,
-        "description": "OPPO F21s Pro 5G is a powerful device with a RAM extension feature, that offers brilliant operational speed to users.",
-        "ratings": 4.5,
+        "name": "Royal Saudi Ajwa Dates (Al-Madinah)",
+        "price": 1250,
+        "description": "Authentic, soft, and nutrient-dense Premium Ajwa dates directly imported from Madinah Munawwarah. Packed with natural antioxidants, fiber, and essential minerals.",
+        "ratings": 4.9,
+        "offerPercentage": 15,
+        "salesStatus": "Best Seller",
         "images": [
             {
                 "image": "/images/products/1.jpg"
-            },
-            {
-                "image": "/images/products/2.jpg"
             }
         ],
-        "category": "Mobile Phones",
-        "seller": "Amazon",
-        "stock": 5,
-        "numOfReviews": 15,
+        "category": "Dates",
+        "seller": "Ajwa Gourmet Direct",
+        "stock": 45,
+        "numOfReviews": 128,
         "reviews": []
     },
     {
-        "name": "WRISTIO HD, Bluetooth Calling Smart Watch",
-        "price": 150.32,
-        "description": "Minix watches are exclusively designed to fulfill the advanced tech needs of today’s generation.",
-        "ratings": 3.5,
+        "name": "Belgian 70% Dark Chocolate Truffles",
+        "price": 1450,
+        "description": "Luxurious imported Belgian dark chocolate truffles crafted with 70% cocoa solids, silky ganache center, and dusted with rich cocoa powder.",
+        "ratings": 4.8,
+        "offerPercentage": 20,
+        "salesStatus": "Trending",
         "images": [
             {
                 "image": "/images/products/2.jpg"
             }
         ],
-        "category": "Accessories",
-        "seller": "Flipkart",
-        "stock": 9,
-        "numOfReviews": 5,
+        "category": "Imported Chocolates",
+        "seller": "Gourmet Chocolatier",
+        "stock": 30,
+        "numOfReviews": 84,
         "reviews": []
     },
     {
-        "name": "Dell Inspiron 3511 Laptop",
-        "price": 440.57,
-        "description": "Dell Inspiron 3511 11th Generation Intel Core i5-1135G7 Processor (8MB Cache, up to 4.2 GHz);Operating System: Windows 10 Home Single Language, English",
-        "ratings": 2,
+        "name": "Handpicked Royal Iranian Salted Pistachios",
+        "price": 980,
+        "description": "Naturally opened, jumbo-sized Iranian pistachios dry-roasted with sea salt for an irresistible crunch and rich flavor.",
+        "ratings": 4.7,
+        "offerPercentage": 10,
+        "salesStatus": "Popular",
         "images": [
             {
                 "image": "/images/products/3.jpg"
             }
         ],
-        "category": "Laptops",
-        "seller": "Ebay",
-        "stock": 9,
-        "numOfReviews": 12,
+        "category": "Pistachios",
+        "seller": "Ajwa Nut House",
+        "stock": 50,
+        "numOfReviews": 62,
         "reviews": []
     },
     {
-        "name": "Lenovo IdeaPad Slim 3 Laptop",
-        "price": 250.45,
-        "description": "Lenovo IdeaPad Slim 311th Gen Intel Core i5-1135G7 | Speed: 2.4 GHz (Base) - 4.2 GHz (Max) | 4 Cores | 8 Threads | 8 MB Cache",
-        "ratings": 4,
-        "images": [
-          {
-            "image": "/images/products/6.jpg"
-          }
-        ],
-        "category": "Laptops",
-        "seller": "Ebay",
-        "stock": 9,
-        "numOfReviews": 12,
-        "reviews": []
-      },
-      {
-        "name": "ASUS VivoBook 15 Laptop",
-        "price": 767.32,
-        "description": "ASUS VivoBook 15 15.6-inch (39.62 cm) HD, Dual Core Intel Celeron N4020, Thin and Light Laptop (4GB RAM/256GB SSD/Integrated Graphics/Windows 11 Home/Transparent Silver/1.8 Kg), X515MA-BR011W",
-        "ratings": 5,
-        "images": [
-          {
-            "image": "/images/products/7.jpg"
-          }
-        ],
-        "category": "Laptops",
-        "seller": "Ebay",
-        "stock": 9,
-        "numOfReviews": 12,
-        "reviews": []
-    },
-    {
-        "name": "PTron Newly Launched Tangent Sports, 60Hrs Playtime",
-        "price": 15.46,
-        "description": "Gigantic 60 + Hours of music playtime on a single charge; BT5.2 Wireless headphones with ENC (Environmental Noise Cancellation) Technology to enhance your voice quality over the voice calls",
-        "ratings": 5,
+        "name": "Californian King Raw Almonds (Badam)",
+        "price": 850,
+        "description": "Premium whole California almonds packed with plant protein, vitamin E, healthy fats, and dietary fiber.",
+        "ratings": 4.6,
+        "offerPercentage": 12,
+        "salesStatus": "Regular",
         "images": [
             {
                 "image": "/images/products/4.jpg"
             }
         ],
-        "category": "Headphones",
-        "seller": "Amazon",
-        "stock": 4,
-        "numOfReviews": 20,
+        "category": "Almonds",
+        "seller": "Ajwa Nut House",
+        "stock": 60,
+        "numOfReviews": 95,
         "reviews": []
     },
     {
-        "name": "Campus Men's Maxico Running Shoes",
-        "price": 10.12,
-        "description": "The high raised back cover with extra padding.",
-        "ratings": 3,
+        "name": "Swiss Milk Chocolate Hazelnut Pralines",
+        "price": 1600,
+        "description": "Decadent Swiss milk chocolate pralines filled with smooth roasted hazelnut cream and crisp wafer crunch.",
+        "ratings": 4.9,
+        "offerPercentage": 25,
+        "salesStatus": "Best Seller",
         "images": [
             {
                 "image": "/images/products/5.jpg"
             }
         ],
-        "category": "Sports",
-        "seller": "Ebay",
-        "stock": 6,
-        "numOfReviews": 9,
+        "category": "Imported Chocolates",
+        "seller": "Swiss Confectionery",
+        "stock": 25,
+        "numOfReviews": 42,
+        "reviews": []
+    },
+    {
+        "name": "Royal Festive Gift Hamper (Dates, Nuts & Chocolates)",
+        "price": 2800,
+        "description": "An opulent luxury gift box containing Ajwa dates, Iranian pistachios, California almonds, and Belgian dark chocolate truffles in a gold-embossed box.",
+        "ratings": 5.0,
+        "offerPercentage": 18,
+        "salesStatus": "Exclusive",
+        "images": [
+            {
+                "image": "/images/products/6.jpg"
+            }
+        ],
+        "category": "Gift Hampers",
+        "seller": "Ajwa Luxury Hampers",
+        "stock": 15,
+        "numOfReviews": 38,
+        "reviews": []
+    },
+    {
+        "name": "Organic Afghan Dried Figs (Anjeer)",
+        "price": 790,
+        "description": "Naturally sun-dried Afghan figs packed with dietary fiber, calcium, and natural sweetness without added sugar.",
+        "ratings": 4.5,
+        "offerPercentage": 10,
+        "salesStatus": "Regular",
+        "images": [
+            {
+                "image": "/images/products/7.jpg"
+            }
+        ],
+        "category": "Dried Figs",
+        "seller": "Ajwa Harvest",
+        "stock": 40,
+        "numOfReviews": 51,
         "reviews": []
     }
 ]
