@@ -3,9 +3,13 @@
    ========================================================================== */
 
 /* 1. Global Reset & Body */
+* {
+  font-family: 'Inter', sans-serif;
+}
+
 html,
 body {
-  font-family: 'Inter', 'Anton', sans-serif;
+  font-family: 'Inter', sans-serif !important;
   background: radial-gradient(circle at 50% 50%, #1c0e0b, #0d0605) !important;
   color: #f5ede8 !important;
   min-height: 100%;
@@ -13,6 +17,44 @@ body {
   padding: 0;
   overflow-x: hidden;
   scroll-behavior: smooth;
+}
+
+/* Global Hyperlinks */
+a {
+  color: #e5a93c;
+  text-decoration: none;
+  transition: all 250ms ease;
+}
+
+a:hover {
+  color: #ffffff;
+  text-decoration: none;
+  text-shadow: var(--gold-glow);
+}
+
+/* Global Form Controls (Glassmorphic) */
+.form-control, select, textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border: 1.5px solid rgba(229, 169, 60, 0.3) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  transition: all 250ms ease !important;
+}
+
+.form-control:focus, select:focus, textarea:focus, input:focus {
+  background-color: rgba(20, 10, 8, 0.8) !important;
+  border-color: #e5a93c !important;
+  box-shadow: 0 0 10px rgba(229, 169, 60, 0.4) !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+/* Form Labels */
+label {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
 }
 
 /* Premium Scrollbar */
@@ -295,6 +337,11 @@ body {
 }
 
 .btn-primary,
+.btn-success,
+.btn-info,
+.btn-warning,
+.btn-secondary,
+.btn-dark,
 #login_button,
 #checkout_btn {
   background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
@@ -311,6 +358,11 @@ body {
 }
 
 .btn-primary:hover,
+.btn-success:hover,
+.btn-info:hover,
+.btn-warning:hover,
+.btn-secondary:hover,
+.btn-dark:hover,
 #login_button:hover,
 #checkout_btn:hover {
   transform: translateY(-3px) scale(1.02) !important;

@@ -103,7 +103,7 @@ export default function Dashboard() {
                                         PAYMENTS PENDING
                                     </div>
                                     <h2 className="font-weight-bold text-white mb-0 display-5">
-                                        $2,500
+                                        Rs.2,500
                                     </h2>
                                 </div>
                                 {/* Trendline Wave SVG */}
@@ -208,31 +208,31 @@ export default function Dashboard() {
                                         <tr>
                                             <td className="font-weight-bold text-warning">1</td>
                                             <td className="font-weight-bold">Royal Ajwa Dates</td>
-                                            <td className="text-warning font-weight-bold">$32,450</td>
+                                            <td className="text-warning font-weight-bold">Rs.32,450</td>
                                             <td className="text-success"><i className="fa fa-line-chart"></i> ~~~</td>
                                         </tr>
                                         <tr>
                                             <td className="font-weight-bold text-warning">2</td>
                                             <td className="font-weight-bold">Super Almonds</td>
-                                            <td className="text-warning font-weight-bold">$1,800</td>
+                                            <td className="text-warning font-weight-bold">Rs.1,800</td>
                                             <td className="text-success"><i className="fa fa-line-chart"></i> ~~~</td>
                                         </tr>
                                         <tr>
                                             <td className="font-weight-bold text-warning">3</td>
                                             <td className="font-weight-bold">Medjool Dates</td>
-                                            <td className="text-warning font-weight-bold">$2,500</td>
+                                            <td className="text-warning font-weight-bold">Rs.2,500</td>
                                             <td className="text-success"><i className="fa fa-line-chart"></i> ~~~</td>
                                         </tr>
                                         <tr>
                                             <td className="font-weight-bold text-warning">4</td>
                                             <td className="font-weight-bold">Cashews</td>
-                                            <td className="text-warning font-weight-bold">$200</td>
+                                            <td className="text-warning font-weight-bold">Rs.200</td>
                                             <td className="text-success"><i className="fa fa-line-chart"></i> ~~~</td>
                                         </tr>
                                         <tr>
                                             <td className="font-weight-bold text-warning">5</td>
                                             <td className="font-weight-bold">Pistachios</td>
-                                            <td className="text-warning font-weight-bold">$290</td>
+                                            <td className="text-warning font-weight-bold">Rs.290</td>
                                             <td className="text-success"><i className="fa fa-line-chart"></i> ~~~</td>
                                         </tr>
                                     </tbody>

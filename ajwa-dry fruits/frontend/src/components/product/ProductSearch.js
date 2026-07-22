@@ -68,8 +68,8 @@ export  default function ProductSearch(){
                                         range={true}
                                         marks = {
                                              {
-                                                1: "$1",
-                                                1000: "$1000"
+                                                1: "Rs.1",
+                                                1000: "Rs.1000"
                                              }   
                                         }
                                         min={1}
@@ -81,7 +81,7 @@ export  default function ProductSearch(){
                                         handleRender={
                                             renderProps => {
                                                 return (
-                                                    <Tooltip  overlay={`$${renderProps.props['aria-valuenow']}`}  >
+                                                    <Tooltip  overlay={`Rs.${renderProps.props['aria-valuenow']}`}  >
                                                          <div {...renderProps.props}>  </div>
                                                     </Tooltip>
                                                 )

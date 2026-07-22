@@ -489,7 +489,7 @@ export default function Ajwa3DHero() {
           {/* Dynamic Price badge from database if available */}
           {(() => {
             const matchedProduct = products.find(p => p._id === activeItem.productId || p.id === activeItem.productId) || products[activeIndex];
-            const dynamicPrice = matchedProduct && matchedProduct.price ? `$${matchedProduct.price}` : null;
+            const dynamicPrice = matchedProduct && matchedProduct.price ? `Rs.${matchedProduct.price}` : null;
             return (
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isMobile ? '8px' : '14px' }}>
                 {dynamicPrice && (

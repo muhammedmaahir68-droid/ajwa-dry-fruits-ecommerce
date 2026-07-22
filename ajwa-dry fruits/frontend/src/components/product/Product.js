@@ -41,7 +41,7 @@ export default function Product({ product, col }) {
           {product.category || 'Gourmet'}
         </span>
 
-        <div className="ajwa-card-media position-relative overflow-hidden text-center p-3">
+        <div className="ajwa-card-media position-relative text-center p-3">
           {product.images && product.images.length > 0 ? (
             <img className="card-img-top mx-auto img-fluid rounded" src={product.images[0].image} alt={product.name} style={{ maxHeight: '180px', objectFit: 'contain' }} />
           ) : (

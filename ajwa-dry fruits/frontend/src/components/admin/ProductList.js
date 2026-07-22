@@ -60,7 +60,7 @@ export default function ProductList() {
             data.rows.push({
                 id: product._id,
                 name: <Link to={`/admin/product/${product._id}`}>{product.name}</Link>,
-                price : `$${product.price}`,
+                price : `Rs.${product.price}`,
                 stock: product.stock,
                 salesStatus: product.salesStatus || (product.stock > 0 ? 'Regular' : 'Out of Stock'),
                 offerPercentage: `${Number(product.offerPercentage || 0)}%`,
