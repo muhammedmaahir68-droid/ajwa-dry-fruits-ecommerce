@@ -11,11 +11,11 @@ export default function AdminAccess() {
   const submitHandler = (e) => {
     e.preventDefault();
     if (password !== ADMIN_PASSWORD) {
-      toast.error("Invalid admin password", { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error("Invalid admin password", { position: 'bottom-center' });
       return;
     }
     localStorage.setItem("ajwa_admin_access", "true");
-    toast.success("Admin access granted", { position: toast.POSITION.BOTTOM_CENTER });
+    toast.success("Admin access granted", { position: 'bottom-center' });
     navigate("/admin/control");
   };
 

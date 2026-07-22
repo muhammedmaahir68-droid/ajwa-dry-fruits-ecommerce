@@ -58,7 +58,7 @@ export default function ProductDetail() {
 
   const buyNowHandler = async (method) => {
     if (product.stock <= 0) {
-      toast.error("This product is out of stock", { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error("This product is out of stock", { position: 'bottom-center' });
       return;
     }
     dispatch(addCartItem(product._id, quantity));
@@ -69,7 +69,7 @@ export default function ProductDetail() {
       }
     } catch (err) {
       toast.error(err?.response?.data?.message || "Unable to redirect to payment", {
-        position: toast.POSITION.BOTTOM_CENTER
+        position: 'bottom-center'
       });
     }
   };
@@ -79,12 +79,12 @@ export default function ProductDetail() {
       setShowReviewModal(false);
       setReviewImage(null);
       setComment("");
-      toast.success("Review submitted successfully", { position: toast.POSITION.BOTTOM_CENTER });
+      toast.success("Review submitted successfully", { position: 'bottom-center' });
       dispatch(clearReviewSubmitted());
     }
 
     if (error) {
-      toast.error(error, { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error(error, { position: 'bottom-center' });
       dispatch(clearError());
       return;
     }
@@ -150,7 +150,7 @@ export default function ProductDetail() {
                 disabled={product.stock === 0}
                 onClick={() => {
                   dispatch(addCartItem(product._id, quantity));
-                  toast.success("Cart Item Added!", { position: toast.POSITION.BOTTOM_CENTER });
+                  toast.success("Cart Item Added!", { position: 'bottom-center' });
                 }}
                 className="btn btn-primary d-inline ml-3"
               >

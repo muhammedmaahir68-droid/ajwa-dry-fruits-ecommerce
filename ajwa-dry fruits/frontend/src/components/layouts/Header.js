@@ -31,7 +31,7 @@ export default function Header() {
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {
-              toast.success(`Uploaded: ${file.name}`, { position: toast.POSITION.BOTTOM_CENTER });
+              toast.success(`Uploaded: ${file.name}`, { position: 'bottom-center' });
             }
           }}
         />

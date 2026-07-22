@@ -56,7 +56,7 @@ export default function NewProduct() {
     e.preventDefault();
 
     if (!name.trim() || !price || images.length === 0) {
-      toast.error('Name, price and image are required', { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error('Name, price and image are required', { position: 'bottom-center' });
       return;
     }
 
@@ -80,7 +80,7 @@ export default function NewProduct() {
     if (isProductCreated) {
       toast('Product Created Successfully!', {
         type: 'success',
-        position: toast.POSITION.BOTTOM_CENTER,
+        position: 'bottom-center',
         onOpen: () => dispatch(clearProductCreated())
       });
       navigate('/admin/products');
@@ -89,7 +89,7 @@ export default function NewProduct() {
 
     if (error) {
       toast(error, {
-        position: toast.POSITION.BOTTOM_CENTER,
+        position: 'bottom-center',
         type: 'error',
         onOpen: () => {
           dispatch(clearError());

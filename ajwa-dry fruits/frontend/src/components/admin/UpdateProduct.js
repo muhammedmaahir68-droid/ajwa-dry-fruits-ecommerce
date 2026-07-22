@@ -97,7 +97,7 @@ export default function UpdateProduct () {
         if(isProductUpdated) {
             toast('Product Updated Succesfully!',{
                 type: 'success',
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 onOpen: () => dispatch(clearProductUpdated())
             })
             setImages([])
@@ -106,7 +106,7 @@ export default function UpdateProduct () {
 
         if(error)  {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 type: 'error',
                 onOpen: ()=> { dispatch(clearError()) }
             })

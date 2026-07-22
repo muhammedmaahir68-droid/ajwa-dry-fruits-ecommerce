@@ -52,7 +52,7 @@ export default function Payment() {
         validateShipping(shippingInfo, navigate)
         if(orderError) {
             toast(orderError, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 type: 'error',
                 onOpen: ()=> { dispatch(clearOrderError()) }
             })
@@ -80,14 +80,14 @@ export default function Payment() {
             if(result.error){
                 toast(result.error.message, {
                     type: 'error',
-                    position: toast.POSITION.BOTTOM_CENTER
+                    position: 'bottom-center'
                 })
                 document.querySelector('#pay_btn').disabled = false;
             }else{
                 if((await result).paymentIntent.status === 'succeeded') {
                     toast('Payment Success!', {
                         type: 'success',
-                        position: toast.POSITION.BOTTOM_CENTER
+                        position: 'bottom-center'
                     })
                     order.paymentInfo = {
                         id: result.paymentIntent.id,
@@ -100,7 +100,7 @@ export default function Payment() {
                 }else{
                     toast('Please Try again!', {
                         type: 'warning',
-                        position: toast.POSITION.BOTTOM_CENTER
+                        position: 'bottom-center'
                     })
                 }
             }

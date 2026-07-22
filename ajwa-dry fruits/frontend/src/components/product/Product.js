@@ -14,12 +14,12 @@ export default function Product({ product, col }) {
 
   const quickAddToCart = () => {
     if (product.stock < 1) {
-      toast.error('Out of stock', { position: toast.POSITION.BOTTOM_CENTER });
+      toast.error('Out of stock', { position: 'bottom-center' });
       return;
     }
 
     dispatch(addCartItem(product._id, 1));
-    toast.success('Added to cart', { position: toast.POSITION.BOTTOM_CENTER });
+    toast.success('Added to cart', { position: 'bottom-center' });
   };
 
   return (

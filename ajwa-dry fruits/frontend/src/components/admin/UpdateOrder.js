@@ -31,7 +31,7 @@ export default function UpdateOrder () {
         if(isOrderUpdated) {
             toast('Order Updated Succesfully!',{
                 type: 'success',
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 onOpen: () => dispatch(clearOrderUpdated())
             })
            
@@ -40,7 +40,7 @@ export default function UpdateOrder () {
 
         if(error)  {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 type: 'error',
                 onOpen: ()=> { dispatch(clearError()) }
             })

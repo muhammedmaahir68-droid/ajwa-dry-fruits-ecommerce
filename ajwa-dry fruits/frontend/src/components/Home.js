@@ -29,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     if (error) {
       return toast.error(error, {
-        position: toast.POSITION.BOTTOM_CENTER
+        position: 'bottom-center'
       });
     }
     dispatch(getProducts(null, null, null, null, currentPage));

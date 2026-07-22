@@ -16,7 +16,7 @@ export const validateShipping = (shippingInfo, navigate) => {
         !shippingInfo.phoneNo||
         !shippingInfo.postalCode
         ) {
-            toast.error('Please fill the shipping information',{position: toast.POSITION.BOTTOM_CENTER})
+            toast.error('Please fill the shipping information',{position: 'bottom-center'})
             navigate('/shipping')
     }
 } 

@@ -19,7 +19,7 @@ export default function ForgotPassword() {
         if(message) {
             toast(message, {
                 type: 'success',
-                position: toast.POSITION.BOTTOM_CENTER
+                position: 'bottom-center'
             })
             setEmail("");
             return;
@@ -27,7 +27,7 @@ export default function ForgotPassword() {
 
         if(error)  {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                position: 'bottom-center',
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError()) }
             })

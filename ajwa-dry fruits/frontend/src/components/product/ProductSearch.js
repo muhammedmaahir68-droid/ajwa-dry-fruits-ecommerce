@@ -46,7 +46,7 @@ export  default function ProductSearch(){
     useEffect(()=>{
         if(error) {
             return toast.error(error,{
-                position: toast.POSITION.BOTTOM_CENTER
+                position: 'bottom-center'
             })
         }
         dispatch(getProducts(keyword, priceChanged, category, rating, currentPage)) 
