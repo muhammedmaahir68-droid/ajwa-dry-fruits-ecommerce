@@ -10,6 +10,10 @@ export default function Sidebar () {
             <nav id="sidebar">
                 <ul className="list-unstyled components">
                 <li>
+                    <Link to="/admin/control"><i className="fas fa-columns"></i> Control</Link>
+                </li>
+
+                <li>
                     <Link to="/admin/dashboard"><i className="fas fa-tachometer-alt"></i> Dashboard</Link>
                 </li>
         

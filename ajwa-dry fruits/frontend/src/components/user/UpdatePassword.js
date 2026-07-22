@@ -32,7 +32,7 @@ export default function UpdatePassword() {
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }

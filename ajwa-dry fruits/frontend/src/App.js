@@ -38,6 +38,8 @@ import UpdateOrder from './components/admin/UpdateOrder';
 import UserList from './components/admin/UserList';
 import UpdateUser from './components/admin/UpdateUser';
 import ReviewList from './components/admin/ReviewList';
+import AdminAccess from './components/admin/AdminAccess';
+import AdminControl from './components/admin/AdminControl';
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("")
@@ -63,6 +65,8 @@ function App() {
                       <Route path='/product/:id' element={<ProductDetail/>} />
                       <Route path='/login' element={<Login/>} />
                       <Route path='/register' element={<Register/>} />
+                      <Route path='/admin/products/register' element={<AdminAccess/>} />
+                      <Route path='/admin/prducts/register' element={<AdminAccess/>} />
                       <Route path='/myprofile' element={<ProtectedRoute><Profile/></ProtectedRoute> } />
                       <Route path='/myprofile/update' element={<ProtectedRoute><UpdateProfile/></ProtectedRoute> } />
                       <Route path='/myprofile/update/password' element={<ProtectedRoute><UpdatePassword/></ProtectedRoute> } />
@@ -80,6 +84,7 @@ function App() {
                 </div>
                 {/* Admin Routes */}
                 <Routes>
+                  <Route path='/admin/control' element={ <ProtectedRoute isAdmin={true}><AdminControl/></ProtectedRoute> } />
                   <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />
                   <Route path='/admin/products' element={ <ProtectedRoute isAdmin={true}><ProductList/></ProtectedRoute> } />
                   <Route path='/admin/products/create' element={ <ProtectedRoute isAdmin={true}><NewProduct/></ProtectedRoute> } />

@@ -28,11 +28,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }
-    },[error, isAuthenticated, dispatch, navigate])
+    },[error, isAuthenticated, dispatch, navigate, redirect])
 
     return (
         <Fragment>

@@ -49,12 +49,12 @@ export const login = (email, password) => async (dispatch) => {
             const { data }  = await axios.post(`/api/v1/login`,{email,password});
             dispatch(loginSuccess(data))
         } catch (error) {
-            dispatch(loginFail(error.response.data.message))
+            dispatch(loginFail(error?.response?.data?.message || 'Login failed'))
         }
 
 }
 
-export const clearAuthError = dispatch => {
+export const clearAuthError = () => (dispatch) => {
     dispatch(clearError())
 }
 
@@ -85,7 +85,7 @@ export const loadUser =  async (dispatch) => {
         const { data }  = await axios.get(`/api/v1/myprofile`);
         dispatch(loadUserSuccess(data))
     } catch (error) {
-        dispatch(loadUserFail(error.response.data.message))
+        dispatch(loadUserFail(error?.response?.data?.message || 'Unable to load user profile'))
     }
 
 }

@@ -50,7 +50,7 @@ export const createReview = reviewData => async (dispatch) => {
         dispatch(createReviewRequest()) 
         const config = {
             headers : {
-                'Content-type': 'application/json'
+                'Content-type': 'multipart/form-data'
             }
         }
         const { data }  =  await axios.put(`/api/v1/review`,reviewData, config);

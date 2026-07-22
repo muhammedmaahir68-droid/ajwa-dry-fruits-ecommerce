@@ -12,6 +12,28 @@ const sequelize = new Sequelize(
     }
 );
 
+const PRODUCT_CATEGORIES = [
+    'Electronics',
+    'Mobile Phones',
+    'Laptops',
+    'Accessories',
+    'Headphones',
+    'Food',
+    'Books',
+    'Clothes/Shoes',
+    'Beauty/Health',
+    'Sports',
+    'Outdoor',
+    'Home',
+    'Dates',
+    'Almonds',
+    'Cashews',
+    'Walnuts',
+    'Pistachios',
+    'Dried Figs',
+    'Raisins'
+];
+
 const connectDatabase = async () => {
     await sequelize.authenticate();
     await sequelize.sync();
@@ -33,6 +55,11 @@ const connectDatabase = async () => {
             defaultValue: 'Regular'
         });
     }
+
+    await queryInterface.changeColumn('products', 'category', {
+        type: Sequelize.ENUM(...PRODUCT_CATEGORIES),
+        allowNull: false
+    });
 
     console.log(`MySQL is connected to the host: ${process.env.DB_HOST}`);
 };

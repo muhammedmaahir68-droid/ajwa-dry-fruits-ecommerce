@@ -777,6 +777,15 @@ body {
   gap: 1.2rem;
 }
 
+.ajwa-upload-btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  background: #ffffff;
+  color: #3f3f3f;
+  font-weight: 700;
+}
+
 .ajwa-top-action {
   color: #545454;
   text-decoration: none;
@@ -1053,4 +1062,86 @@ body {
   .ajwa-footer-desktop {
     display: none;
   }
+}
+
+.admin-control-page {
+  background: radial-gradient(circle at 20% 0%, rgba(140, 78, 210, 0.5), transparent 45%), #130a2c;
+  min-height: calc(100vh - 72px);
+  color: #eef0ff;
+}
+
+.admin-control-sidebar {
+  background: rgba(32, 46, 74, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.admin-control-link {
+  display: block;
+  color: #d8ddff;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.admin-control-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.admin-control-head {
+  background: rgba(52, 77, 199, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+
+.admin-card {
+  background: rgba(46, 68, 170, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 150px;
+}
+
+.admin-card a {
+  color: #c4f7ff;
+  text-decoration: none;
+}
+
+.ajwa-chat-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 90px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 0;
+  font-weight: 700;
+  background: #58c66a;
+  color: #112215;
+  z-index: 1400;
+}
+
+.ajwa-chat-panel {
+  position: fixed;
+  right: 18px;
+  bottom: 156px;
+  width: 340px;
+  max-width: calc(100vw - 24px);
+  background: #fff;
+  border: 1px solid #dde3e9;
+  border-radius: 10px;
+  padding: 12px;
+  z-index: 1400;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.ajwa-chat-link {
+  padding: 6px 0;
+  color: #1a4f85;
+  text-decoration: none;
 }

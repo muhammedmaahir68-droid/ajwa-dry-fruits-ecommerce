@@ -20,7 +20,7 @@ router.route('/product/:id')
                             .get(getSingleProduct);
             
         
-router.route('/review').put(isAuthenticatedUser, createReview)
+router.route('/review').put(isAuthenticatedUser, upload.single('reviewImage'), createReview)
                       
 
 

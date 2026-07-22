@@ -181,6 +181,12 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler('Product not found', 404));
     }
 
+    let BASE_URL = process.env.BACKEND_URL;
+    if (process.env.NODE_ENV === 'production') {
+        BASE_URL = `${req.protocol}://${req.get('host')}`;
+    }
+    const reviewImage = req.file ? `${BASE_URL}/uploads/product/${req.file.originalname}` : '';
+
     const reviews = Array.isArray(product.reviews) ? [...product.reviews] : [];
     const userId = Number(req.user.id);
     const existingReview = reviews.find((review) => Number(review.user?.id ?? review.user) === userId);
@@ -188,6 +194,7 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
     if (existingReview) {
         existingReview.comment = comment;
         existingReview.rating = Number(rating);
+        if (reviewImage) existingReview.image = reviewImage;
     } else {
         reviews.push({
             _id: crypto.randomBytes(10).toString('hex'),
@@ -198,7 +205,8 @@ exports.createReview = catchAsyncError(async (req, res, next) => {
                 email: req.user.email
             },
             rating: Number(rating),
-            comment
+            comment,
+            image: reviewImage
         });
     }
 

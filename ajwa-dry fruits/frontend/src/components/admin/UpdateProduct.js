@@ -34,7 +34,14 @@ export default function UpdateProduct () {
         'Beauty/Health',
         'Sports',
         'Outdoor',
-        'Home'
+        'Home',
+        'Dates',
+        'Almonds',
+        'Cashews',
+        'Walnuts',
+        'Pistachios',
+        'Dried Figs',
+        'Raisins'
     ];
 
     const navigate = useNavigate();

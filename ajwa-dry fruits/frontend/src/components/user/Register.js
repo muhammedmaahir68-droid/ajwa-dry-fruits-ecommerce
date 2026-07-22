@@ -52,7 +52,7 @@ export default function Register() {
             toast(error, {
                 position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
-                onOpen: ()=> { dispatch(clearAuthError) }
+                onOpen: ()=> { dispatch(clearAuthError()) }
             })
             return
         }

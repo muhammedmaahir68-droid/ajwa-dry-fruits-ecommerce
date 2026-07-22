@@ -1,11 +1,14 @@
 import React from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Search from './Search';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 export default function Header() {
   const { isAuthenticated } = useSelector((state) => state.authState);
   const { items: cartItems } = useSelector((state) => state.cartState);
+  const uploadRef = useRef(null);
 
   return (
     <header className="ajwa-topbar">
@@ -21,6 +24,21 @@ export default function Header() {
       </div>
 
       <div className="ajwa-top-actions">
+        <input
+          ref={uploadRef}
+          type="file"
+          className="d-none"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              toast.success(`Uploaded: ${file.name}`, { position: toast.POSITION.BOTTOM_CENTER });
+            }
+          }}
+        />
+        <button type="button" className="ajwa-upload-btn" onClick={() => uploadRef.current?.click()}>
+          Upload Files
+        </button>
+
         <Link to={isAuthenticated ? '/myprofile' : '/login'} className="ajwa-top-action">
           <i className="fa fa-user-circle-o" aria-hidden="true"></i>
           <span>Profile</span>

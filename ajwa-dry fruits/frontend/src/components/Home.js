@@ -4,6 +4,7 @@ import { getProducts } from "../actions/productActions";
 import Loader from "./layouts/Loader";
 import MetaData from "./layouts/MetaData";
 import Product from "./product/Product";
+import ChatbotWidget from "./ChatbotWidget";
 import { toast } from 'react-toastify';
 import Pagination from 'react-js-pagination';
 
@@ -85,6 +86,7 @@ export default function Home() {
               />
             </div>
           ) : null}
+          <ChatbotWidget products={products || []} />
         </Fragment>
       )}
     </Fragment>
