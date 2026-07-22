@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // 4 Premium Dry Fruit Visual Showcase Items (100% Dry Fruits & Nuts - NO human figures)
 const DRY_FRUITS = [
@@ -8,7 +9,6 @@ const DRY_FRUITS = [
     title: "ROYAL AJWA DATES",
     category: "ORGANIC DATES",
     tagline: "DIRECT FROM MADINAH, SAUDI ARABIA",
-    price: "$24.99",
     weight: "500g Pack",
     description: "Authentic Ajwa dates with dark velvety texture, rich honey sweetness, and high potassium & antioxidant power.",
     bg: '#2C1D1A', // Rich dark date brown
@@ -42,7 +42,6 @@ const DRY_FRUITS = [
     title: "CALIFORNIA ALMONDS",
     category: "RAW ALMONDS",
     tagline: "CRUNCHY & OMEGA-3 POWERHOUSE",
-    price: "$18.50",
     weight: "1 kg Pack",
     description: "Premium sun-dried California almonds. Extra crisp, unpolished, and packed with vitamin E & healthy proteins.",
     bg: '#1E2D1F', // Deep forest green
@@ -70,7 +69,6 @@ const DRY_FRUITS = [
     id: 3,
     title: "KING JUMBO CASHEWS",
     tagline: "GRADE W240 WHOLE CASHEWS",
-    price: "$22.00",
     weight: "750g Pack",
     description: "Hand-picked jumbo cashews with a rich buttery crunch. Lightly air-roasted for unforgettable natural creaminess.",
     bg: '#2E1F2B', // Deep plum/violet
@@ -97,7 +95,6 @@ const DRY_FRUITS = [
     id: 4,
     title: "PISTACHIOS & WALNUTS",
     tagline: "SALTED SHELL PISTACHIOS",
-    price: "$26.99",
     weight: "500g Pack",
     description: "Naturally opened Jumbo Iranian pistachios and brain-boosting Chilean walnut kernels, roasted to perfection.",
     bg: '#1A2936', // Dark sapphire blue
@@ -135,6 +132,9 @@ export default function Ajwa3DHero() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const canvasRef = useRef(null);
   const navigate = useNavigate();
+
+  // Read real products from Redux store
+  const { products = [] } = useSelector((state) => state.productsState || {});
 
   // Preload & resize handler
   useEffect(() => {
@@ -487,10 +487,19 @@ export default function Ajwa3DHero() {
             {activeItem.title}
           </h1>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isMobile ? '8px' : '14px' }}>
-            <span style={{ fontSize: '20px', fontWeight: 800, color: '#FFFFFF' }}>{activeItem.price}</span>
-            <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: '4px' }}>{activeItem.weight}</span>
-          </div>
+          {/* Dynamic Price badge from database if available */}
+          {(() => {
+            const matchedProduct = products.find(p => p._id === activeItem.productId || p.id === activeItem.productId) || products[activeIndex];
+            const dynamicPrice = matchedProduct && matchedProduct.price ? `$${matchedProduct.price}` : null;
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: isMobile ? '8px' : '14px' }}>
+                {dynamicPrice && (
+                  <span style={{ fontSize: '20px', fontWeight: 800, color: '#FFFFFF' }}>{dynamicPrice}</span>
+                )}
+                <span style={{ fontSize: '12px', background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: '4px' }}>{activeItem.weight}</span>
+              </div>
+            );
+          })()}
 
           {!isMobile && (
             <p
