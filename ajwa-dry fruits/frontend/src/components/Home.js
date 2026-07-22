@@ -5,6 +5,7 @@ import Loader from "./layouts/Loader";
 import MetaData from "./layouts/MetaData";
 import Product from "./product/Product";
 import ChatbotWidget from "./ChatbotWidget";
+import Ajwa3DHero from "./Ajwa3DHero";
 import { toast } from 'react-toastify';
 import Pagination from 'react-js-pagination';
 
@@ -49,6 +50,9 @@ export default function Home() {
       {loading ? <Loader /> : (
         <Fragment>
           <MetaData title={'Ajwa Dry Fruits'} />
+
+          {/* Interactive TOONHUB 3D Hero Showcase */}
+          <Ajwa3DHero />
 
           <section className="ajwa-category-strip">
             {tabs.map((tab) => (
