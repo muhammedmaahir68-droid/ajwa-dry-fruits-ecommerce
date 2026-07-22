@@ -1145,3 +1145,136 @@ body {
   color: #1a4f85;
   text-decoration: none;
 }
+
+/* ==========================================================================
+   AJWA PREMIUM 3D & INTERACTIVE DESIGN SYSTEM
+   ========================================================================== */
+:root {
+  --ajwa-primary-gold: #e5a93c;
+  --ajwa-primary-dark: #1f0b05;
+  --ajwa-premium-glow: 0 20px 45px rgba(229, 169, 60, 0.18);
+  --ajwa-premium-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Beautiful frosted transparent topbar header */
+.ajwa-topbar {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: var(--ajwa-premium-shadow);
+  transition: all 300ms ease;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.ajwa-logo-main {
+  background: linear-gradient(135deg, #1f0b05 0%, #e5a93c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+}
+
+/* 3D Lifting Cards with Ambient Gold Aura Shadow */
+.ajwa-card {
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 18px !important;
+  background: #ffffff;
+  box-shadow: var(--ajwa-premium-shadow) !important;
+  transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 380ms ease, border-color 380ms ease !important;
+  overflow: hidden;
+}
+
+.ajwa-card:hover {
+  transform: translateY(-10px) scale(1.01) !important;
+  box-shadow: var(--ajwa-premium-glow) !important;
+  border-color: rgba(229, 169, 60, 0.35) !important;
+}
+
+/* Scale media zoom inside product card */
+.ajwa-card-media {
+  overflow: hidden;
+  background: #fdfaf4 !important;
+  transition: background 300ms ease;
+}
+
+.ajwa-card .card-img-top {
+  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.ajwa-card:hover .card-img-top {
+  transform: scale(1.08) rotate(1deg) !important;
+}
+
+/* Quick Add circular button with dynamic scale */
+.add-circle-btn {
+  background: #1f0b05 !important;
+  border: 2px solid #e5a93c !important;
+  transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease !important;
+}
+
+.add-circle-btn:hover {
+  transform: scale(1.15) !important;
+  background: #e5a93c !important;
+  color: #1f0b05 !important;
+  box-shadow: 0 4px 12px rgba(229, 169, 60, 0.4) !important;
+}
+
+/* Gold border premium search bar */
+.ajwa-search-form {
+  border: 1.5px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 30px !important;
+  background: #ffffff !important;
+  transition: border-color 250ms ease, box-shadow 250ms ease !important;
+}
+
+.ajwa-search-form:focus-within {
+  border-color: #e5a93c !important;
+  box-shadow: 0 0 12px rgba(229, 169, 60, 0.2) !important;
+}
+
+/* Luxury Category Strip Active Tabs */
+.ajwa-tab {
+  font-weight: 700 !important;
+  color: rgba(31, 11, 5, 0.6) !important;
+  transition: color 200ms ease, border-color 200ms ease !important;
+}
+
+.ajwa-tab.active {
+  color: #1f0b05 !important;
+  border-bottom-width: 3px !important;
+  border-bottom-color: #e5a93c !important;
+}
+
+/* Floating chat button hover lift */
+.ajwa-chat-fab {
+  background: #e5a93c !important;
+  color: #1f0b05 !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 8px 24px rgba(229, 169, 60, 0.3) !important;
+  transition: transform 200ms ease, box-shadow 200ms ease !important;
+}
+
+.ajwa-chat-fab:hover {
+  transform: scale(1.1) translateY(-4px) !important;
+  box-shadow: 0 12px 28px rgba(229, 169, 60, 0.4) !important;
+}
+
+/* Premium Primary Buttons */
+.btn-primary, .ajwa-add-cart-btn, #cart_btn, #checkout_btn {
+  background: linear-gradient(135deg, #1f0b05 0%, #3a1b12 100%) !important;
+  border: 1px solid #e5a93c !important;
+  border-radius: 30px !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  transition: transform 200ms ease, box-shadow 200ms ease, opacity 200ms ease !important;
+}
+
+.btn-primary:hover, .ajwa-add-cart-btn:hover, #cart_btn:hover, #checkout_btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(31, 11, 5, 0.25) !important;
+  opacity: 0.95 !important;
+}

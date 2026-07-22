@@ -254,7 +254,6 @@ export default function Ajwa3DHero() {
   const centerIndex = activeIndex;
   const leftIndex = (activeIndex + 3) % 4;
   const rightIndex = (activeIndex + 1) % 4;
-  const backIndex = (activeIndex + 2) % 4;
 
   const getRoleStyle = (index) => {
     if (index === centerIndex) {
