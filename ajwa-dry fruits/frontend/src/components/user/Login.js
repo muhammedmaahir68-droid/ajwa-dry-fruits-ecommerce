@@ -51,21 +51,45 @@ export default function Login() {
         try {
             await axios.post('/api/v1/auth/verify-otp', { email, otp: otpCode });
             toast.success('OTP verified successfully! Logged in.', { position: 'bottom-center' });
-
             setTimeout(() => window.location.href = redirect, 500);
         } catch (err) {
             toast.error(err?.response?.data?.message || 'Invalid or expired OTP code', { position: 'bottom-center' });
         }
     };
 
+    // Official Google OAuth 2.0 Real Account Sign-In
     const handleGoogleSignIn = () => {
-        const userEmail = prompt('Enter your Google Gmail address:', 'customer@gmail.com');
-        if (!userEmail) return;
-
-        const userName = userEmail.split('@')[0];
-        toast.info(`Authenticating Google Account: ${userEmail}...`, { position: 'bottom-center' });
-        dispatch(googleLoginAction(userEmail, userName, '/images/default_avatar.png'));
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '188853709078-41rdpiri4vq87f41ss4l52b3i0qsa9n1.apps.googleusercontent.com';
+        const redirectUri = window.location.origin + '/login';
+        const scope = 'openid email profile';
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
+        
+        window.location.href = googleAuthUrl;
     };
+
+    // Extract real Google profile when Google redirects back with access_token
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash && hash.includes('access_token=')) {
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            if (accessToken) {
+                toast.info('Verifying Google Account with Google Services...', { position: 'bottom-center' });
+                axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`)
+                    .then((res) => {
+                        const { email: googleEmail, name: googleName, picture: googlePicture } = res.data;
+                        if (googleEmail) {
+                            dispatch(googleLoginAction(googleEmail, googleName || googleEmail.split('@')[0], googlePicture || '/images/default_avatar.png'));
+                            window.history.replaceState(null, null, window.location.pathname);
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('Google Userinfo Error:', err);
+                        toast.error('Google sign-in verification failed. Please try again.', { position: 'bottom-center' });
+                    });
+            }
+        }
+    }, [dispatch]);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -112,22 +136,23 @@ export default function Login() {
                                     className={`btn ${loginMode === 'otp' ? 'btn-warning text-dark font-weight-bold' : 'btn-outline-secondary text-white'}`}
                                     onClick={() => setLoginMode('otp')}
                                 >
-                                    Email OTP ðŸ”‘
+                                    Email OTP ??
                                 </button>
                             </div>
                         </div>
 
-                        {loginMode === 'password' ? (
+                        {/* MODE 1: PASSWORD LOGIN */}
+                        {loginMode === 'password' && (
                             <form onSubmit={submitHandler}>
                                 <div className="form-group mb-3">
                                     <label htmlFor="email_field" className="font-weight-bold text-warning">Email Address</label>
                                     <input
                                         type="email"
                                         id="email_field"
-                                        className="form-control form-control-lg bg-secondary text-white border-warning"
-                                        placeholder="Enter your email"
+                                        className="form-control text-white bg-secondary border-warning"
                                         value={email}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Enter your email"
                                         required
                                     />
                                 </div>
@@ -137,96 +162,105 @@ export default function Login() {
                                     <input
                                         type="password"
                                         id="password_field"
-                                        className="form-control form-control-lg bg-secondary text-white border-warning"
-                                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                                        className="form-control text-white bg-secondary border-warning"
                                         value={password}
-                                        onChange={e => setPassword(e.target.value)}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="••••••••"
                                         required
                                     />
                                 </div>
 
-                                <Link to="/password/forgot" className="float-right mb-3 text-warning small">Forgot Password?</Link>
+                                <div className="text-right mb-3">
+                                    <Link to="/password/forgot" className="small text-warning">Forgot Password?</Link>
+                                </div>
 
                                 <button
                                     id="login_button"
                                     type="submit"
-                                    className="btn btn-warning btn-block py-3 font-weight-bold text-dark text-uppercase shadow w-100 mt-2"
+                                    className="btn btn-warning btn-block font-weight-bold py-2 shadow-lg text-dark"
                                     disabled={loading}
                                 >
                                     {loading ? 'AUTHENTICATING...' : 'SIGN IN'}
                                 </button>
                             </form>
-                        ) : (
-                            <form onSubmit={handleVerifyOTP}>
+                        )}
+
+                        {/* MODE 2: EMAIL OTP LOGIN */}
+                        {loginMode === 'otp' && (
+                            <div>
                                 <div className="form-group mb-3">
-                                    <label className="font-weight-bold text-warning">Email Address</label>
+                                    <label htmlFor="otp_email_field" className="font-weight-bold text-warning">Your Registered Email</label>
                                     <div className="input-group">
                                         <input
                                             type="email"
-                                            className="form-control form-control-lg bg-secondary text-white border-warning"
-                                            placeholder="Enter your registered email"
+                                            id="otp_email_field"
+                                            className="form-control text-white bg-secondary border-warning"
                                             value={email}
-                                            onChange={e => setEmail(e.target.value)}
-                                            required
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="you@example.com"
+                                            disabled={otpSent}
                                         />
                                         <div className="input-group-append">
                                             <button
                                                 type="button"
-                                                className="btn btn-warning font-weight-bold text-dark"
+                                                className="btn btn-warning text-dark font-weight-bold"
                                                 onClick={handleSendOTP}
-                                                disabled={otpSending}
+                                                disabled={otpSending || !email}
                                             >
-                                                {otpSending ? 'SENDING...' : 'SEND OTP'}
+                                                {otpSending ? 'Sending...' : (otpSent ? 'Resend OTP' : 'Send OTP')}
                                             </button>
                                         </div>
                                     </div>
+                                    <small className="text-muted">A 6-digit passcode will be emailed to your inbox.</small>
                                 </div>
 
                                 {otpSent && (
-                                    <div className="form-group mb-3">
-                                        <label className="font-weight-bold text-warning">6-Digit OTP Code</label>
-                                        <input
-                                            type="text"
-                                            className="form-control form-control-lg bg-secondary text-warning font-weight-bold text-center letter-spacing-3"
-                                            placeholder="123456"
-                                            maxLength="6"
-                                            value={otpCode}
-                                            onChange={e => setOtpCode(e.target.value)}
-                                            required
-                                        />
-                                        <small className="text-muted">Enter the 6-digit code sent to your email</small>
-                                    </div>
+                                    <form onSubmit={handleVerifyOTP} className="mt-4 pt-3 border-top border-secondary">
+                                        <div className="form-group mb-3">
+                                            <label htmlFor="otp_code_field" className="font-weight-bold text-warning">Enter 6-Digit Passcode</label>
+                                            <input
+                                                type="text"
+                                                id="otp_code_field"
+                                                className="form-control text-white text-center font-weight-bold bg-secondary border-warning letter-spacing-2"
+                                                style={{ fontSize: '1.4rem' }}
+                                                value={otpCode}
+                                                maxLength="6"
+                                                onChange={(e) => setOtpCode(e.target.value)}
+                                                placeholder="1 2 3 4 5 6"
+                                                required
+                                            />
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-warning btn-block font-weight-bold py-2 text-dark shadow-lg"
+                                        >
+                                            VERIFY OTP & LOGIN
+                                        </button>
+                                    </form>
                                 )}
-
-                                <button
-                                    type="submit"
-                                    className="btn btn-warning btn-block py-3 font-weight-bold text-dark text-uppercase shadow w-100 mt-2"
-                                    disabled={!otpSent}
-                                >
-                                    VERIFY & SIGN IN
-                                </button>
-                            </form>
+                            </div>
                         )}
 
-                        <div className="text-center my-3 text-muted">OR</div>
+                        {/* DIVIDER */}
+                        <div className="d-flex align-items-center my-4 text-muted">
+                            <hr className="flex-grow-1 border-secondary m-0" />
+                            <span className="px-3 small font-weight-bold">OR</span>
+                            <hr className="flex-grow-1 border-secondary m-0" />
+                        </div>
 
+                        {/* GOOGLE GMAIL OAUTH BUTTON */}
                         <button
                             type="button"
                             onClick={handleGoogleSignIn}
-                            className="btn btn-outline-warning btn-block py-2 font-weight-bold d-flex align-items-center justify-content-center w-100"
+                            className="btn btn-warning btn-block font-weight-bold py-2 shadow-lg text-dark d-flex align-items-center justify-content-center gap-2"
                         >
-                            <svg className="mr-2" width="18" height="18" viewBox="0 0 24 24">
-                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                            </svg>
-                            Sign In with Google Gmail
+                            <i className="fa fa-google text-danger mr-2"></i>
+                            <span>Sign In with Google Gmail</span>
                         </button>
 
                         <div className="text-center mt-4">
-                            <span className="text-muted">Don't have an account? </span>
-                            <Link to="/register" className="font-weight-bold text-warning">Register Here</Link>
+                            <span className="small text-muted">Don't have an account? </span>
+                            <Link to="/register" className="small text-warning font-weight-bold">Register Here</Link>
                         </div>
                     </div>
                 </div>
