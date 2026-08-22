@@ -49,8 +49,9 @@ export default function Login() {
             return toast.error('Please enter your email and OTP code', { position: 'bottom-center' });
         }
         try {
-            const { data } = await axios.post('/api/v1/auth/verify-otp', { email, otp: otpCode });
+            await axios.post('/api/v1/auth/verify-otp', { email, otp: otpCode });
             toast.success('OTP verified successfully! Logged in.', { position: 'bottom-center' });
+
             setTimeout(() => window.location.href = redirect, 500);
         } catch (err) {
             toast.error(err?.response?.data?.message || 'Invalid or expired OTP code', { position: 'bottom-center' });
