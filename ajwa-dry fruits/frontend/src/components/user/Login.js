@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearAuthError, login, googleLoginAction } from '../../actions/userActions';
 import MetaData from '../layouts/MetaData';
 import { toast } from 'react-toastify';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
@@ -15,12 +15,11 @@ export default function Login() {
     const [otpSending, setOtpSending] = useState(false);
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const location = useLocation();
 
     const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
     const redirectParam = location.search ? location.search.split('=')[1] : '/';
-    const redirect = redirectParam.startsWith('/') ? redirectParam : '/' + redirectParam;
+    const redirect = (redirectParam && redirectParam.startsWith('/')) ? redirectParam : '/';
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -51,7 +50,7 @@ export default function Login() {
         try {
             await axios.post('/api/v1/auth/verify-otp', { email, otp: otpCode });
             toast.success('OTP verified successfully! Logged in.', { position: 'bottom-center' });
-            setTimeout(() => window.location.href = redirect, 500);
+            setTimeout(() => { window.location.href = redirect; }, 500);
         } catch (err) {
             toast.error(err?.response?.data?.message || 'Invalid or expired OTP code', { position: 'bottom-center' });
         }
@@ -125,14 +124,15 @@ export default function Login() {
         }
     };
 
+    // Auto Redirection on Authentication Success
     useEffect(() => {
         if (isAuthenticated) {
             if (user && user.role === 'admin') {
                 toast.success('Welcome back, Administrator!', { position: 'bottom-center' });
-                navigate('/admin/dashboard');
+                window.location.href = '/admin/dashboard';
             } else {
                 toast.success('Logged in successfully!', { position: 'bottom-center' });
-                navigate(redirect);
+                window.location.href = redirect;
             }
         }
 
@@ -143,7 +143,7 @@ export default function Login() {
                 onOpen: () => { dispatch(clearAuthError()) }
             });
         }
-    }, [error, isAuthenticated, user, dispatch, navigate, redirect]);
+    }, [error, isAuthenticated, user, dispatch, redirect]);
 
     return (
         <Fragment>
@@ -152,11 +152,19 @@ export default function Login() {
                 <div className="col-12 col-sm-10 col-md-8 col-lg-5">
                     <div className="shadow-lg p-4 rounded bg-dark text-white border border-warning">
                         
+                        {/* Navigation Top Action — BACK TO STORE */}
+                        <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                            <Link to="/" className="btn btn-outline-warning btn-sm font-weight-bold d-flex align-items-center gap-1">
+                                <i className="fa fa-arrow-left mr-1"></i> Back to Store
+                            </Link>
+                            <span className="small text-muted font-weight-bold">Ajwa Dry Fruits</span>
+                        </div>
+
                         {/* Header Tabs */}
                         <div className="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-warning">
-                            <h3 className="text-warning font-weight-bold m-0">
+                            <h4 className="text-warning font-weight-bold m-0">
                                 <i className="fa fa-user-circle mr-2"></i> Account Sign In
-                            </h3>
+                            </h4>
                             <div className="btn-group btn-group-sm">
                                 <button
                                     type="button"
