@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: ajwa-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_TIME
+        value: 7d
+      - key: COOKIE_EXPIRES_TIME
+        value: 7
+      - key: RAZORPAY_KEY_ID
+        value: rzp_test_ajwa_dry_fruits_live
+      - key: RAZORPAY_KEY_SECRET
+        value: rzp_secret_ajwa_dry_fruits_live
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+

@@ -95,73 +95,78 @@ export default function PayrollList() {
     return (
         <Fragment>
             <MetaData title={'Admin Payroll Management'} />
-            <div className="row">
-                <div className="col-12 col-md-4 col-lg-3 mb-4">
-                    <Sidebar />
-                </div>
-                <div className="col-12 col-md-8 col-lg-9 p-4">
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h1 className="my-2 font-weight-bold text-dark">Staff Payroll Management</h1>
-                        <button className="btn btn-primary font-weight-bold" onClick={() => setShowModal(true)}>
+            <div className="ajwa-admin-page"><Sidebar /><div className="ajwa-admin-content">
+                    
+                    {/* Header Banner */}
+                    <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 p-3 bg-dark rounded-lg border border-warning shadow-lg">
+                        <div>
+                            <h2 className="my-0 font-weight-bold text-warning">
+                                <i className="fa fa-money text-warning mr-2"></i> Staff Payroll Management
+                            </h2>
+                            <p className="text-light small m-0 opacity-75">
+                                Manage employee disbursals, track monthly payouts, and issue salary records in Indian Rupees (₹).
+                            </p>
+                        </div>
+                        <button className="btn btn-warning text-dark font-weight-bold px-4 py-2 shadow-lg" onClick={() => setShowModal(true)}>
                             + Add New Payroll
                         </button>
                     </div>
 
                     {/* Summary Cards */}
-                    <div className="row pr-4 mb-4">
+                    <div className="row mb-4">
                         <div className="col-xl-4 col-sm-6 mb-3">
-                            <div className="card text-white bg-success o-hidden h-100 shadow">
-                                <div className="card-body">
-                                    <div className="text-center card-font-size">
-                                        Total Paid Out<br />
-                                        <b>${totalPayout.toLocaleString(undefined, { minimumFractionDigits: 2 })}</b>
-                                    </div>
+                            <div className="card text-white bg-dark border border-warning rounded-lg p-3 shadow-lg h-100">
+                                <div className="card-body p-2 text-center">
+                                    <span className="small text-muted font-weight-bold text-uppercase d-block mb-1">Total Paid Out</span>
+                                    <h3 className="text-success font-weight-bold m-0">
+                                        ₹{totalPayout.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                    </h3>
                                 </div>
                             </div>
                         </div>
 
                         <div className="col-xl-4 col-sm-6 mb-3">
-                            <div className="card text-white bg-warning o-hidden h-100 shadow">
-                                <div className="card-body">
-                                    <div className="text-center card-font-size">
-                                        Total Pending Salaries<br />
-                                        <b>${totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}</b>
-                                    </div>
+                            <div className="card text-white bg-dark border border-warning rounded-lg p-3 shadow-lg h-100">
+                                <div className="card-body p-2 text-center">
+                                    <span className="small text-muted font-weight-bold text-uppercase d-block mb-1">Total Pending Salaries</span>
+                                    <h3 className="text-warning font-weight-bold m-0">
+                                        ₹{totalPending.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                    </h3>
                                 </div>
                             </div>
                         </div>
 
                         <div className="col-xl-4 col-sm-6 mb-3">
-                            <div className="card text-white bg-info o-hidden h-100 shadow">
-                                <div className="card-body">
-                                    <div className="text-center card-font-size">
-                                        Payroll Records<br />
-                                        <b>{payrolls.length}</b>
-                                    </div>
+                            <div className="card text-white bg-dark border border-warning rounded-lg p-3 shadow-lg h-100">
+                                <div className="card-body p-2 text-center">
+                                    <span className="small text-muted font-weight-bold text-uppercase d-block mb-1">Payroll Records</span>
+                                    <h3 className="text-info font-weight-bold m-0">
+                                        {payrolls.length}
+                                    </h3>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Payroll Table */}
-                    <div className="card shadow mb-4">
-                        <div className="card-header bg-light font-weight-bold text-uppercase">
-                            Employee Salary Disbursals
+                    <div className="card bg-dark text-white border border-warning shadow-lg mb-4">
+                        <div className="card-header bg-dark text-warning border-bottom border-warning font-weight-bold text-uppercase py-3">
+                            <i className="fa fa-list-alt text-warning mr-2"></i> Employee Salary Disbursals (₹ INR)
                         </div>
-                        <div className="card-body table-responsive">
+                        <div className="card-body table-responsive bg-dark p-3">
                             {loading ? (
-                                <p className="text-center">Loading payrolls...</p>
+                                <p className="text-center text-warning">Loading payrolls...</p>
                             ) : (
-                                <table className="table table-bordered table-striped align-middle">
-                                    <thead className="thead-dark">
+                                <table className="table table-dark table-hover table-bordered align-middle">
+                                    <thead className="thead-dark text-warning border-bottom border-warning">
                                         <tr>
                                             <th>Employee</th>
                                             <th>Designation</th>
                                             <th>Month/Year</th>
-                                            <th>Base ($)</th>
-                                            <th>Allowances ($)</th>
-                                            <th>Deductions ($)</th>
-                                            <th>Net Salary ($)</th>
+                                            <th>Base (₹)</th>
+                                            <th>Allowances (₹)</th>
+                                            <th>Deductions (₹)</th>
+                                            <th>Net Salary (₹)</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -169,21 +174,26 @@ export default function PayrollList() {
                                     <tbody>
                                         {payrolls.length === 0 ? (
                                             <tr>
-                                                <td colSpan="9" className="text-center py-3">No payroll records found. Click "+ Add New Payroll" to create one.</td>
+                                                <td colSpan="9" className="text-center py-4 text-light opacity-75">
+                                                    No payroll records found. Click "+ Add New Payroll" to create one.
+                                                </td>
                                             </tr>
                                         ) : (
                                             payrolls.map(p => (
                                                 <tr key={p.id}>
-                                                    <td className="font-weight-bold">{p.employeeName}</td>
-                                                    <td>{p.designation} <br /><small className="text-muted">{p.department}</small></td>
-                                                    <td>{p.monthYear}</td>
-                                                    <td>${Number(p.baseSalary).toFixed(2)}</td>
-                                                    <td className="text-success">+${Number(p.allowances).toFixed(2)}</td>
-                                                    <td className="text-danger">-${Number(p.deductions).toFixed(2)}</td>
-                                                    <td className="font-weight-bold text-primary">${Number(p.netSalary).toFixed(2)}</td>
+                                                    <td className="font-weight-bold text-white">{p.employeeName}</td>
+                                                    <td>
+                                                        <span className="text-white font-weight-bold">{p.designation}</span><br />
+                                                        <small className="text-warning opacity-75">{p.department}</small>
+                                                    </td>
+                                                    <td className="text-light">{p.monthYear}</td>
+                                                    <td className="text-light">₹{Number(p.baseSalary).toFixed(2)}</td>
+                                                    <td className="text-success font-weight-bold">+₹{Number(p.allowances).toFixed(2)}</td>
+                                                    <td className="text-danger font-weight-bold">-₹{Number(p.deductions).toFixed(2)}</td>
+                                                    <td className="font-weight-bold text-warning">₹{Number(p.netSalary).toFixed(2)}</td>
                                                     <td>
                                                         <span
-                                                            className={`badge badge-${p.paymentStatus === 'Paid' ? 'success' : 'warning'} px-2 py-1 style-pointer`}
+                                                            className={`badge badge-${p.paymentStatus === 'Paid' ? 'success' : 'warning text-dark'} px-3 py-2 font-weight-bold style-pointer`}
                                                             style={{ cursor: 'pointer' }}
                                                             onClick={() => handleStatusToggle(p.id, p.paymentStatus)}
                                                             title="Click to toggle status"
@@ -193,7 +203,7 @@ export default function PayrollList() {
                                                     </td>
                                                     <td>
                                                         <button
-                                                            className="btn btn-sm btn-danger ml-2"
+                                                            className="btn btn-sm btn-outline-danger"
                                                             onClick={() => handleDeletePayroll(p.id)}
                                                         >
                                                             <i className="fa fa-trash"></i> Delete
@@ -210,80 +220,82 @@ export default function PayrollList() {
                 </div>
             </div>
 
-            {/* Create Modal */}
+            {/* Create Modal - Styled for Cyber Gold Theme */}
             {showModal && (
-                <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                    <div className="modal-dialog modal-lg">
-                        <div className="modal-content">
+                <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.85)' }}>
+                    <div className="modal-dialog modal-lg modal-dialog-centered">
+                        <div className="modal-content bg-dark text-white border border-warning shadow-2-strong">
                             <form onSubmit={handleCreatePayroll}>
-                                <div className="modal-header bg-primary text-white">
-                                    <h5 className="modal-title font-weight-bold">Issue New Employee Payroll</h5>
-                                    <button type="button" className="close text-white" onClick={() => setShowModal(false)}>
+                                <div className="modal-header bg-dark text-warning border-bottom border-warning">
+                                    <h5 className="modal-title font-weight-bold text-warning">
+                                        <i className="fa fa-plus-circle mr-2"></i> Issue New Employee Payroll (₹ INR)
+                                    </h5>
+                                    <button type="button" className="close text-warning opacity-100" onClick={() => setShowModal(false)}>
                                         &times;
                                     </button>
                                 </div>
-                                <div className="modal-body">
+                                <div className="modal-body bg-dark text-white p-4">
                                     <div className="row">
                                         <div className="col-md-6 mb-3">
-                                            <label className="font-weight-bold">Employee Name</label>
+                                            <label className="font-weight-bold text-warning">Employee Name *</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-control text-white border-warning bg-secondary"
                                                 value={employeeName}
                                                 onChange={e => setEmployeeName(e.target.value)}
                                                 required
                                             />
                                         </div>
                                         <div className="col-md-6 mb-3">
-                                            <label className="font-weight-bold">Designation</label>
+                                            <label className="font-weight-bold text-warning">Designation</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-control text-white border-warning bg-secondary"
                                                 value={designation}
                                                 onChange={e => setDesignation(e.target.value)}
                                             />
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label className="font-weight-bold">Base Salary ($)</label>
+                                            <label className="font-weight-bold text-warning">Base Salary (₹) *</label>
                                             <input
                                                 type="number"
-                                                className="form-control"
+                                                className="form-control text-white font-weight-bold border-warning bg-secondary"
                                                 value={baseSalary}
                                                 onChange={e => setBaseSalary(e.target.value)}
                                                 required
                                             />
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label className="font-weight-bold">Allowances ($)</label>
+                                            <label className="font-weight-bold text-success">Allowances (₹)</label>
                                             <input
                                                 type="number"
-                                                className="form-control"
+                                                className="form-control text-success font-weight-bold border-warning bg-secondary"
                                                 value={allowances}
                                                 onChange={e => setAllowances(e.target.value)}
                                             />
                                         </div>
                                         <div className="col-md-4 mb-3">
-                                            <label className="font-weight-bold">Deductions ($)</label>
+                                            <label className="font-weight-bold text-danger">Deductions (₹)</label>
                                             <input
                                                 type="number"
-                                                className="form-control"
+                                                className="form-control text-danger font-weight-bold border-warning bg-secondary"
                                                 value={deductions}
                                                 onChange={e => setDeductions(e.target.value)}
                                             />
                                         </div>
                                         <div className="col-md-6 mb-3">
-                                            <label className="font-weight-bold">Month & Year</label>
+                                            <label className="font-weight-bold text-warning">Month & Year</label>
                                             <input
                                                 type="text"
-                                                className="form-control"
+                                                className="form-control text-white border-warning bg-secondary"
                                                 value={monthYear}
                                                 onChange={e => setMonthYear(e.target.value)}
                                             />
                                         </div>
                                         <div className="col-md-6 mb-3">
-                                            <label className="font-weight-bold">Payment Status</label>
+                                            <label className="font-weight-bold text-warning">Payment Status</label>
                                             <select
-                                                className="form-control"
+                                                className="form-control text-white border-warning bg-secondary"
                                                 value={paymentStatus}
                                                 onChange={e => setPaymentStatus(e.target.value)}
                                             >
@@ -292,15 +304,16 @@ export default function PayrollList() {
                                             </select>
                                         </div>
                                         <div className="col-md-12 mb-3">
-                                            <div className="alert alert-info">
-                                                Computed Net Salary Payout: <strong>${computedNet.toFixed(2)}</strong>
+                                            <div className="p-3 bg-secondary rounded border border-warning text-center">
+                                                <span className="text-light small text-uppercase font-weight-bold d-block">Computed Net Salary Payout</span>
+                                                <h4 className="text-warning font-weight-bold m-0">₹{computedNet.toFixed(2)}</h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
-                                    <button type="submit" className="btn btn-success font-weight-bold">Save Payroll</button>
+                                <div className="modal-footer bg-dark border-top border-warning">
+                                    <button type="button" className="btn btn-secondary px-4" onClick={() => setShowModal(false)}>Cancel</button>
+                                    <button type="submit" className="btn btn-warning font-weight-bold text-dark px-4 shadow">Save Payroll</button>
                                 </div>
                             </form>
                         </div>

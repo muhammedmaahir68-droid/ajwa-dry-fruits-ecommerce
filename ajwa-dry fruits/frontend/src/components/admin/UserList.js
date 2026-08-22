@@ -94,11 +94,7 @@ export default function UserList() {
 
 
     return (
-        <div className="row">
-        <div className="col-12 col-md-4 col-lg-3 mb-4">
-                <Sidebar/>
-        </div>
-        <div className="col-12 col-md-8 col-lg-9">
+        <div className="ajwa-admin-page"><Sidebar /><div className="ajwa-admin-content">
             <h1 className="my-4">User List</h1>
             <Fragment>
                 {loading ? <Loader/> : 

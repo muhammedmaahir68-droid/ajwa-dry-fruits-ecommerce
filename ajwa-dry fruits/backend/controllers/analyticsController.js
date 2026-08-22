@@ -2,6 +2,7 @@ const catchAsyncError = require('../middlewares/catchAsyncError');
 const Product = require('../models/productModel');
 const Order = require('../models/orderModel');
 const User = require('../models/userModel');
+const Payroll = require('../models/payrollModel');
 
 // Get Sales Analytics & Predictions - /api/v1/admin/analytics
 exports.getSalesAnalytics = catchAsyncError(async (req, res, next) => {
@@ -137,5 +138,16 @@ exports.getSalesAnalytics = catchAsyncError(async (req, res, next) => {
         })),
         topProducts,
         predictions
+    });
+});
+
+// Admin Reset Database Endpoint - /api/v1/admin/reset-database
+exports.resetDatabase = catchAsyncError(async (req, res, next) => {
+    await Order.destroy({ where: {} });
+    await Payroll.destroy({ where: {} });
+
+    res.status(200).json({
+        success: true,
+        message: 'Database backlogs, orders, and test payroll records cleared successfully for a 100% fresh start!'
     });
 });

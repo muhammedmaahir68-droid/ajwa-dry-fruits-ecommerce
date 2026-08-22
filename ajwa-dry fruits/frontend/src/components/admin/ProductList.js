@@ -105,25 +105,25 @@ export default function ProductList() {
     },[dispatch, error, isProductDeleted])
 
 
+
     return (
-        <div className="row">
-        <div className="col-12 col-md-4 col-lg-3 mb-4">
-                <Sidebar/>
+        <div className="ajwa-admin-page">
+            <Sidebar />
+            <div className="ajwa-admin-content">
+                <h1 className="ajwa-admin-title">Product List</h1>
+                <Fragment>
+                    {loading ? <Loader/> :
+                        <MDBDataTable
+                            data={setProducts()}
+                            bordered
+                            striped
+                            hover
+                            className="ajwa-admin-table"
+                        />
+                    }
+                </Fragment>
+            </div>
         </div>
-        <div className="col-12 col-md-8 col-lg-9">
-            <h1 className="my-4">Product List</h1>
-            <Fragment>
-                {loading ? <Loader/> : 
-                    <MDBDataTable
-                        data={setProducts()}
-                        bordered
-                        striped
-                        hover
-                        className="px-3"
-                    />
-                }
-            </Fragment>
-        </div>
-    </div>
     )
 }
+

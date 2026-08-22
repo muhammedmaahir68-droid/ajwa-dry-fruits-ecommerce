@@ -5,6 +5,9 @@
 /* 1. Global Reset & Body */
 * {
   font-family: 'Inter', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  box-sizing: border-box;
 }
 
 html,
@@ -17,6 +20,7 @@ body {
   padding: 0;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  width: 100vw;
 }
 
 /* Global Hyperlinks */
@@ -30,6 +34,14 @@ a:hover {
   color: #ffffff;
   text-decoration: none;
   text-shadow: var(--gold-glow);
+}
+
+/* ===== SEARCH INPUT: Lock padding so icon never covers placeholder text ===== */
+input#search_field,
+.ajwa-search-wrap input,
+.ajwa-search-form input {
+  padding-left: 48px !important;
+  padding-right: 48px !important;
 }
 
 /* Global Form Controls (Glassmorphic) */
@@ -49,6 +61,39 @@ a:hover {
   outline: none !important;
   color: #ffffff !important;
 }
+
+/* ===== SELECT DROPDOWN — Fix clipped / cut-off text ===== */
+select,
+select.form-control,
+.form-control[multiple],
+.form-control[size] {
+  padding: 0.5rem 2rem 0.5rem 0.85rem !important;
+  height: auto !important;
+  min-height: 42px !important;
+  line-height: 1.5 !important;
+  -webkit-appearance: auto !important;
+  appearance: auto !important;
+  cursor: pointer;
+  background-image: none !important;
+  overflow: visible !important;
+}
+
+/* Quick Add Product inline select — shorter height to match pill row */
+.form-row select,
+.form-row select.form-control {
+  height: 42px !important;
+  padding: 0 1rem !important;
+  border-radius: 50px !important;
+  line-height: 42px !important;
+}
+
+/* Option items inside select */
+select option {
+  background: #1a0a00 !important;
+  color: #f5ede8 !important;
+  padding: 8px 12px !important;
+}
+
 
 /* Form Labels */
 label {
@@ -83,529 +128,582 @@ label {
   --glass-blur: blur(20px);
 }
 
-/* 2. Topbar Frosted Header */
+/* 2. Topbar Frosted Header & Glassmorphic Styling */
 .ajwa-topbar {
-  background: rgba(20, 10, 8, 0.8) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
-  border-bottom: 1.5px solid var(--glass-border) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background: rgba(13, 6, 5, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1.5px solid rgba(229, 169, 60, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 1.2rem 2rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 300ms ease;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
+/* Logo */
 .ajwa-logo-link {
-  text-decoration: none;
   display: flex;
   flex-direction: column;
+  text-decoration: none !important;
 }
 
 .ajwa-logo-main {
-  font-family: 'Anton', sans-serif;
-  font-size: 2.4rem;
+  color: #E5A93C;
+  font-size: 1.5rem;
+  font-weight: 900;
   letter-spacing: 2px;
-  background: linear-gradient(135deg, #ffffff 0%, #e5a93c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   line-height: 1;
 }
 
 .ajwa-logo-sub {
-  font-size: 0.85rem;
-  letter-spacing: 5px;
-  color: #e5a93c;
-  opacity: 0.85;
+  color: #A0A0A0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 3px;
 }
 
-/* 3. Premium Search Bar */
+/* Search Bar Container & Voice-to-Text Microphone */
+.ajwa-search-wrap {
+  flex: 1;
+  max-width: 450px;
+  position: relative;
+}
+
 .ajwa-search-form {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid var(--glass-border) !important;
-  border-radius: 30px !important;
-  padding: 0.4rem 1.2rem;
+  position: relative;
   display: flex;
   align-items: center;
-  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.ajwa-search-form:focus-within {
-  border-color: #e5a93c !important;
-  box-shadow: var(--gold-glow), inset 0 1px 2px rgba(0,0,0,0.1) !important;
-}
-
-.ajwa-search-input {
-  background: transparent !important;
-  border: 0 !important;
-  color: #ffffff !important;
-  font-size: 1.1rem;
-  outline: none;
   width: 100%;
 }
 
-.ajwa-search-form i {
-  color: #e5a93c;
-  font-size: 1.3rem;
-  margin-right: 0.6rem;
+.ajwa-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #E5A93C;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 5;
 }
 
-/* 4. Action Buttons & Icons */
+/* Search Input — MUST override Bootstrap form-control which resets padding */
+input#search_field.ajwa-search-input,
+input.ajwa-search-input,
+.ajwa-search-form input {
+  width: 100% !important;
+  padding: 0 48px 0 48px !important;
+  height: 42px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 1.5px solid rgba(229, 169, 60, 0.4) !important;
+  border-radius: 22px !important;
+  color: #FFFFFF !important;
+  font-size: 0.92rem !important;
+  outline: none !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+input#search_field.ajwa-search-input:focus,
+.ajwa-search-form input:focus {
+  border-color: #E5A93C !important;
+  box-shadow: 0 0 14px rgba(229, 169, 60, 0.5) !important;
+  background: rgba(20, 10, 8, 0.9) !important;
+}
+
+/* Voice Search Button */
+.ajwa-voice-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #E5A93C;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 5;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px !important;
+  transition: all 0.3s ease;
+}
+
+.ajwa-voice-btn:hover {
+  background: rgba(229, 169, 60, 0.2);
+}
+
+.ajwa-voice-btn.listening {
+  animation: pulseMic 1.2s infinite alternate;
+}
+
+@keyframes pulseMic {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    background: rgba(220, 53, 69, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+    background: rgba(220, 53, 69, 0.4);
+  }
+}
+
+.ajwa-hidden-submit {
+  display: none;
+}
+
+/* Action Buttons Grid */
 .ajwa-top-actions {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.2rem;
+  flex-wrap: wrap;
 }
 
 .ajwa-upload-btn {
   background: rgba(229, 169, 60, 0.15) !important;
-  border: 1.5px solid #e5a93c !important;
-  color: #e5a93c !important;
-  border-radius: 20px;
-  padding: 0.5rem 1.2rem;
-  font-weight: 700;
-  transition: all 250ms ease;
+  border: 1px solid #E5A93C !important;
+  color: #E5A93C !important;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  min-height: 36px !important;
+  cursor: pointer;
+  transition: all 0.3s ease !important;
+  white-space: nowrap;
 }
 
 .ajwa-upload-btn:hover {
-  background: #e5a93c !important;
-  color: #1c0e0b !important;
-  transform: translateY(-2px);
-  box-shadow: var(--gold-glow);
+  background: #E5A93C !important;
+  color: #000000 !important;
+  box-shadow: 0 0 15px rgba(229, 169, 60, 0.6) !important;
 }
 
 .ajwa-top-action {
-  color: #f5ede8 !important;
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  font-size: 0.9rem;
-  opacity: 0.85;
-  transition: all 200ms ease;
+  gap: 6px;
+  color: #E5E5E5 !important;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .ajwa-top-action:hover {
-  opacity: 1;
-  color: #e5a93c !important;
-  transform: scale(1.05);
+  color: #E5A93C !important;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .ajwa-cart-icon-wrap {
   position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .ajwa-cart-badge {
   position: absolute;
   top: -8px;
   right: -10px;
-  background: #e5a93c;
-  color: #1c0e0b;
-  font-size: 0.75rem;
-  font-weight: 800;
+  background: #E5A93C;
+  color: #000000;
+  font-size: 10px;
+  font-weight: 900;
   border-radius: 50%;
-  padding: 2px 6px;
-  border: 1px solid #1c0e0b;
-}
-
-/* 5. Hero & Showcase Animations */
-.ajwa-hero-container {
-  position: relative;
-  min-height: 520px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1.5px solid var(--glass-border);
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-.ajwa-hero-glow {
-  position: absolute;
-  top: -30%;
-  left: -20%;
-  width: 70%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(229,169,60,0.12) 0%, rgba(229,169,60,0) 70%);
-  z-index: 1;
-}
-
-/* 6. Dynamic Categories Strip */
-.ajwa-category-strip {
+  width: 18px;
+  height: 18px;
   display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem 0;
-  margin-bottom: 2rem;
+  align-items: center;
+  justify-content: center;
 }
 
-.ajwa-tab {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid var(--glass-border) !important;
-  color: #f5ede8 !important;
-  padding: 0.7rem 1.6rem;
-  border-radius: 30px;
-  font-weight: 700;
-  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
+/* ==========================================================================
+   15. WORLDWIDE MOBILE & TOUCH RESPONSIVE ENGINE (ANDROID, IOS, TABLETS, PC)
+   ========================================================================== */
+
+/* Universal Touch & Button Sizing */
+button, .btn, a.btn, input[type="submit"], input[type="button"] {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.ajwa-tab:hover,
-.ajwa-tab.active {
-  background: #e5a93c !important;
-  color: #1c0e0b !important;
-  border-color: #e5a93c !important;
-  transform: translateY(-2px);
-  box-shadow: var(--gold-glow);
+/* Table Responsive Wrapper */
+.table-responsive, .dataTables_wrapper {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  max-width: 100%;
 }
 
-/* 7. Luxury Product Cards */
-.ajwa-card {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid var(--glass-border) !important;
-  border-radius: 20px !important;
-  overflow: hidden;
-  transition: all 300ms cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+/* Extra Small Phones (320px - 480px) */
+@media screen and (max-width: 480px) {
+  .ajwa-topbar {
+    padding: 0.8rem 1rem !important;
+  }
+
+  .display-5, h1 {
+    font-size: 1.8rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.3rem !important;
+  }
+
+  .card {
+    padding: 1rem !important;
+  }
+
+  .container-fluid {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .col-12.col-md-4.col-lg-3 {
+    margin-bottom: 1rem !important;
+  }
 }
 
-.ajwa-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(229, 169, 60, 0.35) !important;
-  box-shadow: var(--gold-glow), 0 10px 20px rgba(0,0,0,0.3) !important;
+/* Medium Tablets & iPads (481px - 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .ajwa-topbar {
+    padding: 1rem 1.5rem !important;
+  }
+
+  .display-5, h1 {
+    font-size: 2.2rem !important;
+  }
 }
 
-.ajwa-card-media {
+/* Large Displays & 4K PCs (1440px+) */
+@media screen and (min-width: 1440px) {
+  .container, .container-fluid {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ===========================================================
+   ADMIN PANEL — SLIDING DRAWER SIDEBAR + FULL-WIDTH LAYOUT
+   =========================================================== */
+
+/* Full-page admin wrapper */
+.ajwa-admin-page {
   position: relative;
-  background: rgba(0,0,0,0.2);
-  padding: 1.5rem;
+  min-height: 100vh;
+  width: 100%;
 }
 
-.add-circle-btn {
-  position: absolute;
-  bottom: -15px;
-  right: 15px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #e5a93c;
-  color: #1c0e0b;
-  border: 0;
+/* Admin main content — always full width */
+.ajwa-admin-content {
+  width: 100%;
+  padding: 1.5rem 1.5rem 3rem;
+  min-height: 80vh;
+}
+
+/* Admin Page Titles */
+.ajwa-admin-title {
+  color: #E5A93C !important;
   font-weight: 800;
-  font-size: 1.5rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: all 200ms ease;
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+/* ---- Hamburger Toggle Button ---- */
+.ajwa-sidebar-toggle {
+  position: fixed;
+  top: 72px;
+  left: 16px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(229, 169, 60, 0.15);
+  border: 1.5px solid rgba(229, 169, 60, 0.6);
+  color: #E5A93C;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+}
+
+.ajwa-sidebar-toggle:hover,
+.ajwa-sidebar-toggle.open {
+  background: rgba(229, 169, 60, 0.35);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(229, 169, 60, 0.5);
+}
+
+.ajwa-sidebar-toggle .fa {
+  font-size: 1rem;
+}
+
+/* ---- Dark Overlay Backdrop ---- */
+.ajwa-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
   cursor: pointer;
 }
 
-.add-circle-btn:hover {
-  transform: scale(1.1);
-  box-shadow: var(--gold-glow);
+/* ---- Sliding Drawer Panel ---- */
+.ajwa-sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1300;
+  height: 100vh;
+  width: min(340px, 88vw);
+  background: rgba(13, 6, 5, 0.97);
+  backdrop-filter: blur(20px);
+  border-right: 1.5px solid rgba(229, 169, 60, 0.35);
+  box-shadow: 4px 0 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-110%);
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.ajwa-product-title a {
+.ajwa-sidebar-drawer.open {
+  transform: translateX(0);
+}
+
+/* ---- Drawer Header ---- */
+.ajwa-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.2rem 0.8rem;
+  border-bottom: 1px solid rgba(229, 169, 60, 0.2);
+  flex-shrink: 0;
+}
+
+.ajwa-sidebar-brand {
+  color: #E5A93C;
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.ajwa-sidebar-close {
+  background: transparent;
+  border: 1px solid rgba(229, 169, 60, 0.4);
+  color: #E5A93C;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.ajwa-sidebar-close:hover {
+  background: rgba(229, 169, 60, 0.2);
+  color: #ffffff;
+}
+
+/* ---- Drawer Nav Items ---- */
+.ajwa-sidebar-nav {
+  list-style: none;
+  padding: 1rem 0.8rem;
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ajwa-sidebar-nav li {
+  width: 100%;
+}
+
+.ajwa-sidebar-link {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px !important;
+  border-radius: 12px;
+  color: #e0cbb0 !important;
+  font-weight: 700 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  border: 1px solid transparent;
+  transition: all 0.22s ease;
+  background: transparent;
+}
+
+.ajwa-sidebar-link:hover {
+  background: rgba(229, 169, 60, 0.12) !important;
+  border-color: rgba(229, 169, 60, 0.3) !important;
   color: #ffffff !important;
   text-decoration: none !important;
-}
-
-.ajwa-price {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #e5a93c !important;
-}
-
-.ajwa-add-cart-btn {
-  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
-  color: #1c0e0b !important;
-  font-weight: 800 !important;
-  border: 0 !important;
-  border-radius: 30px !important;
-  padding: 0.85rem 2rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  transition: all 250ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-  box-shadow: 0 5px 15px rgba(229, 169, 60, 0.25);
-  cursor: pointer;
-}
-
-.ajwa-add-cart-btn:hover {
-  transform: translateY(-3px) scale(1.02) !important;
-  box-shadow: var(--gold-glow), 0 8px 25px rgba(229, 169, 60, 0.4) !important;
-}
-
-.btn-primary,
-.btn-success,
-.btn-info,
-.btn-warning,
-.btn-secondary,
-.btn-dark,
-#login_button,
-#checkout_btn {
-  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
-  color: #1c0e0b !important;
-  font-weight: 800 !important;
-  border: 0 !important;
-  border-radius: 30px !important;
-  padding: 0.85rem 2rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  transition: all 250ms cubic-bezier(0.2, 0.8, 0.2, 1) !important;
-  box-shadow: 0 5px 15px rgba(229, 169, 60, 0.25);
-  cursor: pointer;
-}
-
-.btn-primary:hover,
-.btn-success:hover,
-.btn-info:hover,
-.btn-warning:hover,
-.btn-secondary:hover,
-.btn-dark:hover,
-#login_button:hover,
-#checkout_btn:hover {
-  transform: translateY(-3px) scale(1.02) !important;
-  box-shadow: var(--gold-glow), 0 8px 25px rgba(229, 169, 60, 0.4) !important;
-}
-
-.btn-outline-danger {
-  border: 1.5px solid rgba(220, 53, 69, 0.7) !important;
-  color: #ff6b7a !important;
-  background: transparent !important;
-  border-radius: 30px !important;
-  transition: all 250ms ease !important;
-}
-
-.btn-outline-danger:hover {
-  background: #dc3545 !important;
-  color: #fff !important;
-  box-shadow: 0 0 15px rgba(220, 53, 69, 0.4);
-  transform: translateY(-2px);
-}
-
-/* 8. Admin Dashboard Cyber-glass design */
-.admin-control-page {
-  background: radial-gradient(circle at 10% 10%, rgba(229, 169, 60, 0.05), transparent 45%), #0d0605 !important;
-  min-height: calc(100vh - 72px);
-  padding: 2rem 0;
-}
-
-.admin-control-sidebar {
-  background: rgba(20, 10, 8, 0.75) !important;
-  border: 1.5px solid var(--glass-border) !important;
-  border-radius: 16px !important;
-  padding: 1.5rem;
-  backdrop-filter: var(--glass-blur);
-}
-
-.admin-control-link {
-  display: block;
-  color: rgba(255, 255, 255, 0.75) !important;
-  text-decoration: none;
-  padding: 10px 14px;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 200ms ease;
-  border: 1px solid transparent;
-}
-
-.admin-control-link:hover {
-  background: rgba(229, 169, 60, 0.15) !important;
-  color: #ffffff !important;
-  border-color: rgba(229, 169, 60, 0.25);
   transform: translateX(4px);
 }
 
-.admin-card {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1.5px solid var(--glass-border) !important;
-  border-radius: 18px !important;
-  padding: 1.5rem;
-  transition: all 300ms ease;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+.ajwa-sidebar-link.active {
+  background: linear-gradient(135deg, rgba(229, 169, 60, 0.9), rgba(200, 130, 20, 0.9)) !important;
+  color: #1a0a00 !important;
+  border-color: #E5A93C !important;
+  box-shadow: 0 4px 16px rgba(229, 169, 60, 0.45);
 }
 
-.admin-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(229, 169, 60, 0.3);
-  box-shadow: 0 15px 35px rgba(229, 169, 60, 0.06);
+.ajwa-sidebar-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
-/* 9. Dynamic Interactive Chat FAB */
-.ajwa-chat-fab {
-  position: fixed;
-  right: 24px;
-  bottom: 24px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 2px solid #ffffff !important;
-  font-weight: 700;
-  background: linear-gradient(135deg, #e5a93c 0%, #bd8624 100%) !important;
-  color: #1c0e0b !important;
-  z-index: 1400;
-  box-shadow: var(--gold-glow);
-  cursor: pointer;
-  transition: transform 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 250ms ease !important;
+/* ---- Drawer Footer (Logout) ---- */
+.ajwa-sidebar-footer {
+  padding: 0.8rem;
+  border-top: 1px solid rgba(229, 169, 60, 0.15);
+  flex-shrink: 0;
 }
 
-.ajwa-chat-fab:hover {
-  transform: scale(1.15) rotate(15deg) !important;
-  box-shadow: 0 0 35px rgba(229, 169, 60, 0.7);
-}
-
-.ajwa-chat-panel {
-  background: rgba(20, 10, 8, 0.92) !important;
-  border: 1.5px solid var(--glass-border) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5) !important;
-  backdrop-filter: var(--glass-blur);
-}
-
-/* 10. Loader Glow */
-.loader {
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  margin: 15% auto;
-  border: 4px solid rgba(229, 169, 60, 0.1);
-  border-top-color: #e5a93c;
-  animation: spin 1s linear infinite;
-  box-shadow: var(--gold-glow);
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* 11. Custom responsive layouts */
-@media (max-width: 768px) {
-  .ajwa-topbar {
-    padding: 1rem;
-  }
-  .ajwa-logo-main {
-    font-size: 1.8rem;
-  }
-}
-
-/* 12. Cyber-Gold Premium Pagination */
-.page-item .page-link {
-  background-color: #1a0d08 !important;
-  border: 1px solid rgba(229, 169, 60, 0.4) !important;
-  color: #e5a93c !important;
-  font-weight: 700 !important;
-  border-radius: 8px !important;
-  margin: 0 4px !important;
-  padding: 0.5rem 0.85rem !important;
-  transition: all 200ms ease !important;
-}
-
-.page-item.active .page-link {
-  background-color: #e5a93c !important;
-  border-color: #e5a93c !important;
-  color: #1c0e0b !important;
-  box-shadow: 0 0 15px rgba(229, 169, 60, 0.6) !important;
-}
-
-.page-item .page-link:hover {
-  background-color: rgba(229, 169, 60, 0.25) !important;
-  color: #ffffff !important;
-  transform: translateY(-2px);
-}
-
-.page-item.disabled .page-link {
-  background-color: #0d0605 !important;
-  color: #6c757d !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* 13. Ad Banner Styles */
-.ajwa-ad-banner-wrap {
-  background: linear-gradient(135deg, rgba(28,14,11,0.9) 0%, rgba(13,6,5,0.95) 100%);
-  border: 1.5px solid rgba(229, 169, 60, 0.3);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  backdrop-filter: blur(15px);
-}
-.ajwa-ad-glow-bg {
-  position: absolute;
-  top: -50%;
-  right: -50%;
+.ajwa-sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(229, 169, 60, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-.ajwa-ad-media-card {
-  border: 1px solid rgba(229, 169, 60, 0.2);
-  background: rgba(0, 0, 0, 0.4) !important;
-}
-.style-gold-text {
-  background: linear-gradient(135deg, #ffffff 30%, #e5a93c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1.5px solid rgba(220, 53, 69, 0.5);
+  border-radius: 12px;
+  color: #ff6b6b !important;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.22s ease;
 }
 
-/* 14. MDBDataTable Dark Theme Text Visibility Overrides */
+.ajwa-sidebar-logout:hover {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: #dc3545;
+  color: #ff4444 !important;
+}
+
+/* ===========================================================
+   TEXT CONTRAST FIXES — Admin Tables, Cards & Labels
+   =========================================================== */
+
+/* MDB DataTable — force white text on dark background */
+.ajwa-admin-table,
+.ajwa-admin-table table,
+.ajwa-admin-table th,
+.ajwa-admin-table td,
+.ajwa-admin-table .dataTables_wrapper,
+.ajwa-admin-table .dataTables_info,
+.ajwa-admin-table .dataTables_length,
+.ajwa-admin-table .dataTables_filter,
+.ajwa-admin-table .dataTables_paginate,
 .dataTables_wrapper,
-.dataTables_wrapper label,
-.dataTables_wrapper .dataTables_length label,
-.dataTables_wrapper .dataTables_filter label,
-.dataTables_wrapper .dataTables_info,
-.dataTables_wrapper .dataTables_paginate {
-  color: #f5ede8 !important;
+.dataTables_info,
+.dataTables_length,
+.dataTables_filter label,
+.dataTables_paginate {
+  color: #f0e6d6 !important;
+  background-color: transparent !important;
 }
 
-.dataTables_wrapper input,
-.dataTables_wrapper select {
-  background-color: #1a0d08 !important;
-  color: #e5a93c !important;
-  border: 1px solid rgba(229, 169, 60, 0.5) !important;
-  border-radius: 6px !important;
-  padding: 4px 8px !important;
-}
-
-table.dataTable {
-  background-color: rgba(20, 10, 8, 0.9) !important;
-  color: #f5ede8 !important;
-  border: 1px solid rgba(229, 169, 60, 0.3) !important;
-  border-radius: 8px !important;
-}
-
-table.dataTable thead th {
-  background-color: #2c1611 !important;
-  color: #e5a93c !important;
-  font-weight: 800 !important;
-  font-size: 1rem !important;
-  border-bottom: 2px solid #e5a93c !important;
-  text-transform: uppercase !important;
-}
-
-table.dataTable tbody tr {
-  background-color: rgba(20, 10, 8, 0.8) !important;
-  color: #ffffff !important;
-}
-
-table.dataTable tbody tr:hover {
-  background-color: rgba(229, 169, 60, 0.2) !important;
-}
-
-table.dataTable tbody td {
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-  font-size: 0.95rem !important;
-}
-
-.dataTables_empty {
-  color: #e5a93c !important;
+/* Table header rows */
+.ajwa-admin-table thead th,
+table.dataTable thead th,
+.mdb-datatable thead th {
+  background: rgba(229, 169, 60, 0.18) !important;
+  color: #E5A93C !important;
   font-weight: 700 !important;
-  font-size: 1.1rem !important;
-  padding: 2rem !important;
+  border-color: rgba(229, 169, 60, 0.25) !important;
+  white-space: nowrap;
 }
 
-.bs-select-all,
-.bs-deselect-all {
-  color: #e5a93c !important;
+/* Table body rows */
+.ajwa-admin-table tbody tr,
+.ajwa-admin-table tbody td,
+table.dataTable tbody tr td {
+  background: rgba(0, 0, 0, 0.35) !important;
+  color: #f0e6d6 !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  vertical-align: middle;
+}
+
+.ajwa-admin-table tbody tr:hover,
+table.dataTable tbody tr:hover {
+  background: rgba(229, 169, 60, 0.1) !important;
+}
+
+/* MDB striped odd rows */
+table.dataTable.table-striped tbody tr:nth-child(odd),
+.ajwa-admin-table.table-striped tbody tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* MDB search input & select */
+.dataTables_length select,
+.dataTables_filter input {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(229, 169, 60, 0.35) !important;
+  color: #ffffff !important;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+/* Pagination buttons */
+.dataTables_paginate .paginate_button {
+  color: #E5A93C !important;
+  border-radius: 6px;
+}
+
+.dataTables_paginate .paginate_button.current,
+.dataTables_paginate .paginate_button.current:hover {
+  background: #E5A93C !important;
+  color: #1a0a00 !important;
+  border: none !important;
+}
+
+/* Admin card & text-muted contrast fix */
+.ajwa-admin-content .text-muted {
+  color: #b0a090 !important;
+}
+
+.ajwa-admin-content .card {
+  border-radius: 12px !important;
 }
 

@@ -1,94 +1,99 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../actions/userActions';
+import { toast } from 'react-toastify';
 
 export default function Sidebar() {
     const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
     const isActive = (path) => location.pathname === path;
 
+    const handleLogout = () => {
+        dispatch(logout);
+        toast.success('Logged out successfully!', { position: 'bottom-center' });
+        navigate('/login');
+    };
+
+    useEffect(() => { setOpen(false); }, [location.pathname]);
+
+    useEffect(() => {
+        if (open) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [open]);
+
+    const navItems = [
+        { to: '/admin/dashboard',        icon: 'fa-tachometer',    label: 'DASHBOARD' },
+        { to: '/admin/products',         icon: 'fa-archive',       label: 'PRODUCT INVENTORY' },
+        { to: '/admin/orders',           icon: 'fa-shopping-cart', label: 'ORDER MANAGEMENT' },
+        { to: '/admin/products/create',  icon: 'fa-plus-circle',   label: 'ADD NEW PRODUCT' },
+        { to: '/admin/ads',              icon: 'fa-bullhorn',      label: 'HERO & AD MANAGER' },
+        { to: '/admin/users',            icon: 'fa-users',         label: 'CUSTOMER ANALYTICS' },
+        { to: '/admin/payrolls',         icon: 'fa-money',         label: 'PAYROLL MANAGEMENT' },
+        { to: '/admin/control',          icon: 'fa-cog',           label: 'SYSTEM SETTINGS' },
+    ];
+
     return (
-        <div className="ajwa-admin-sidebar-wrap p-3 rounded-lg text-white bg-dark border border-secondary shadow-lg">
-            <ul className="nav flex-column gap-2 list-unstyled m-0">
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/dashboard" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/dashboard') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-home mr-2 text-warning"></i> <span className="text-truncate">DASHBOARD</span>
-                    </Link>
-                </li>
+        <>
+            <button
+                className={`ajwa-sidebar-toggle ${open ? 'open' : ''}`}
+                onClick={() => setOpen(!open)}
+                aria-label={open ? 'Close Sidebar' : 'Open Sidebar'}
+            >
+                <i className={`fa ${open ? 'fa-times' : 'fa-bars'}`}></i>
+                <span>{open ? 'Close' : 'Menu'}</span>
+            </button>
 
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/dashboard" 
-                        className="nav-link text-uppercase font-weight-bold text-light d-flex align-items-center py-2 px-3 rounded-pill border border-secondary transition-all small"
-                    >
-                        <i className="fa fa-line-chart mr-2 text-warning"></i> <span className="text-truncate">SALES OVERVIEW</span>
-                    </Link>
-                </li>
+            {open && (
+                <div
+                    className="ajwa-sidebar-overlay"
+                    onClick={() => setOpen(false)}
+                />
+            )}
 
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/products" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/products') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
+            <nav className={`ajwa-sidebar-drawer ${open ? 'open' : ''}`}>
+                <div className="ajwa-sidebar-header">
+                    <span className="ajwa-sidebar-brand">
+                        <i className="fa fa-cog" style={{marginRight: '8px', color: '#E5A93C'}}></i>
+                        ADMIN PANEL
+                    </span>
+                    <button
+                        className="ajwa-sidebar-close"
+                        onClick={() => setOpen(false)}
                     >
-                        <i className="fa fa-archive mr-2 text-warning"></i> <span className="text-truncate">PRODUCT INVENTORY</span>
-                    </Link>
-                </li>
+                        <i className="fa fa-times"></i>
+                    </button>
+                </div>
 
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/orders" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/orders') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-shopping-cart mr-2 text-warning"></i> <span className="text-truncate">ORDER MANAGEMENT</span>
-                    </Link>
-                </li>
+                <ul className="ajwa-sidebar-nav">
+                    {navItems.map(({ to, icon, label }) => (
+                        <li key={to}>
+                            <Link
+                                to={to}
+                                className={`ajwa-sidebar-link ${isActive(to) ? 'active' : ''}`}
+                                onClick={() => setOpen(false)}
+                            >
+                                <i className={`fa ${icon} ajwa-sidebar-icon`}></i>
+                                <span>{label}</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
 
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/products/create" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/products/create') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-plus-circle mr-2 text-warning"></i> <span className="text-truncate">ADD NEW PRODUCT</span>
-                    </Link>
-                </li>
-
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/ads" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/ads') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-bullhorn mr-2 text-warning"></i> <span className="text-truncate">AD MANAGER</span>
-                    </Link>
-                </li>
-
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/users" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/users') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-users mr-2 text-warning"></i> <span className="text-truncate">CUSTOMER ANALYTICS</span>
-                    </Link>
-                </li>
-
-                <li className="nav-item mb-1">
-                    <Link 
-                        to="/admin/payrolls" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/payrolls') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-money mr-2 text-warning"></i> <span className="text-truncate">PAYROLL MANAGEMENT</span>
-                    </Link>
-                </li>
-
-                <li className="nav-item">
-                    <Link 
-                        to="/admin/control" 
-                        className={`nav-link text-uppercase font-weight-bold d-flex align-items-center py-2 px-3 rounded-pill transition-all small ${isActive('/admin/control') ? 'bg-warning text-dark shadow-sm' : 'text-light border border-secondary'}`}
-                    >
-                        <i className="fa fa-cog mr-2 text-warning"></i> <span className="text-truncate">SYSTEM SETTINGS</span>
-                    </Link>
-                </li>
-            </ul>
-        </div>
+                <div className="ajwa-sidebar-footer">
+                    <button onClick={handleLogout} className="ajwa-sidebar-logout">
+                        <i className="fa fa-sign-out ajwa-sidebar-icon"></i>
+                        <span>LOGOUT</span>
+                    </button>
+                </div>
+            </nav>
+        </>
     );
 }

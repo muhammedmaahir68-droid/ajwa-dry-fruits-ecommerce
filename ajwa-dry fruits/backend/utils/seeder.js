@@ -1,37 +1,24 @@
-const products = require('../data/products.json');
 const dotenv = require('dotenv');
 const path = require('path');
-const { connectDatabase } = require('../config/database');
 
 dotenv.config({ path: path.join(__dirname, '../config/config.env') });
 
 const seedDatabase = async () => {
     try {
-        await connectDatabase();
-
-        const Product = require('../models/productModel');
         const User = require('../models/userModel');
+        const Product = require('../models/productModel');
+        const Order = require('../models/orderModel');
         const Payroll = require('../models/payrollModel');
 
-        // Sync models to ensure tables exist
-        await Product.sync({ force: true });
-        await User.sync();
+        // Sync all models to update columns
+        await Product.sync();
+        await Order.sync();
         await Payroll.sync();
-        
-        if (Array.isArray(products) && products.length > 0) {
-            await Product.bulkCreate(
-                products.map((product) => ({
-                    ...product,
-                    offerPercentage: product.offerPercentage || 0,
-                    salesStatus: product.salesStatus || 'Regular',
-                    images: product.images || [],
-                    reviews: product.reviews || []
-                }))
-            );
-            console.log(`Seeded ${products.length} gourmet products & images successfully!`);
-        }
+        await User.sync({ alter: true }); // Automatically adds missing columns (isEmailVerified, googleId, otpCode, otpExpires)
 
-        // Seed Admin User
+        console.log('[SYNC SUCCESS] All database schemas, user authentication & OTP columns updated.');
+
+        // Ensure admin user exists
         const adminEmail = 'admin@ajwadryfruits.com';
         let adminUser = await User.findOne({ where: { email: adminEmail } });
         if (!adminUser) {
@@ -40,59 +27,14 @@ const seedDatabase = async () => {
                 email: adminEmail,
                 password: 'AdminPassword@123',
                 role: 'admin',
-                avatar: '/images/default_avatar.png'
+                avatar: '/images/default_avatar.png',
+                isEmailVerified: true
             });
-            console.log(`Created default admin account: ${adminEmail} / AdminPassword@123`);
-        }
-
-        // Seed Sample Payroll Records if empty
-        const payrollCount = await Payroll.count();
-        if (payrollCount === 0) {
-            await Payroll.bulkCreate([
-                {
-                    employeeName: 'Rahul Sharma',
-                    email: 'rahul@ajwadryfruits.com',
-                    designation: 'Inventory Manager',
-                    department: 'Warehouse & Stock',
-                    baseSalary: 45000,
-                    allowances: 5000,
-                    deductions: 2000,
-                    netSalary: 48000,
-                    paymentStatus: 'Paid',
-                    payDate: '2026-07-01',
-                    monthYear: 'July 2026',
-                    notes: 'Performance bonus included'
-                },
-                {
-                    employeeName: 'Fatima Al-Sayed',
-                    email: 'fatima@ajwadryfruits.com',
-                    designation: 'Sales & Marketing Lead',
-                    department: 'Marketing',
-                    baseSalary: 52000,
-                    allowances: 4000,
-                    deductions: 1500,
-                    netSalary: 54500,
-                    paymentStatus: 'Paid',
-                    payDate: '2026-07-01',
-                    monthYear: 'July 2026',
-                    notes: 'Quarterly review payout'
-                },
-                {
-                    employeeName: 'Muhammed Tariq',
-                    email: 'tariq@ajwadryfruits.com',
-                    designation: 'Quality Control Specialist',
-                    department: 'Quality Assurance',
-                    baseSalary: 38000,
-                    allowances: 2500,
-                    deductions: 1000,
-                    netSalary: 39500,
-                    paymentStatus: 'Pending',
-                    payDate: '2026-07-25',
-                    monthYear: 'July 2026',
-                    notes: 'Awaiting monthly verification'
-                }
-            ]);
-            console.log(`Seeded sample payroll records!`);
+            console.log(`[FRESH START] Created default admin account: ${adminEmail} / AdminPassword@123`);
+        } else {
+            adminUser.isEmailVerified = true;
+            await adminUser.save();
+            console.log(`[FRESH START] Admin account verified: ${adminEmail}`);
         }
 
     } catch (error) {
@@ -101,7 +43,8 @@ const seedDatabase = async () => {
 };
 
 if (require.main === module) {
-    seedDatabase().then(() => process.exit());
+    const { connectDatabase } = require('../config/database');
+    connectDatabase().then(() => seedDatabase()).then(() => process.exit());
 }
 
 module.exports = seedDatabase;
