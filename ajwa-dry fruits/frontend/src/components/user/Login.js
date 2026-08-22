@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAuthError, login, googleLoginAction } from '../../actions/userActions';
 import MetaData from '../layouts/MetaData';
@@ -7,7 +7,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
-    const [loginMode, setLoginMode] = useState('password'); // 'password' or 'otp'
+    const [loginMode, setLoginMode] = useState('password');
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [otpCode, setOtpCode] = useState("");
@@ -57,39 +57,73 @@ export default function Login() {
         }
     };
 
-    // Official Google OAuth 2.0 Real Account Sign-In
-    const handleGoogleSignIn = () => {
-        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '188853709078-41rdpiri4vq87f41ss4l52b3i0qsa9n1.apps.googleusercontent.com';
-        const redirectUri = window.location.origin + '/login';
-        const scope = 'openid email profile';
-        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
-        
-        window.location.href = googleAuthUrl;
-    };
+    // Google Credential Handler (Decodes Google JWT Token directly)
+    const handleGoogleCredentialResponse = useCallback((response) => {
+        try {
+            const base64Url = response.credential.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
 
-    // Extract real Google profile when Google redirects back with access_token
-    useEffect(() => {
-        const hash = window.location.hash;
-        if (hash && hash.includes('access_token=')) {
-            const params = new URLSearchParams(hash.substring(1));
-            const accessToken = params.get('access_token');
-            if (accessToken) {
-                toast.info('Verifying Google Account with Google Services...', { position: 'bottom-center' });
-                axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`)
-                    .then((res) => {
-                        const { email: googleEmail, name: googleName, picture: googlePicture } = res.data;
-                        if (googleEmail) {
-                            dispatch(googleLoginAction(googleEmail, googleName || googleEmail.split('@')[0], googlePicture || '/images/default_avatar.png'));
-                            window.history.replaceState(null, null, window.location.pathname);
-                        }
-                    })
-                    .catch((err) => {
-                        console.error('Google Userinfo Error:', err);
-                        toast.error('Google sign-in verification failed. Please try again.', { position: 'bottom-center' });
-                    });
+            const payload = JSON.parse(jsonPayload);
+            const { email: googleEmail, name: googleName, picture: googlePicture } = payload;
+
+            if (googleEmail) {
+                toast.success(`Welcome, ${googleName || googleEmail}! Logged in with Google.`, { position: 'bottom-center' });
+                dispatch(googleLoginAction(googleEmail, googleName || googleEmail.split('@')[0], googlePicture || '/images/default_avatar.png'));
             }
+        } catch (err) {
+            console.error('Google JWT Error:', err);
+            toast.error('Google Sign-In failed. Please try again.', { position: 'bottom-center' });
         }
     }, [dispatch]);
+
+    // Load Google Identity Services SDK
+    useEffect(() => {
+        const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || '188853709078-41rdpiri4vq87f41ss4l52b3i0qsa9n1.apps.googleusercontent.com';
+
+        const initializeGoogle = () => {
+            if (window.google && window.google.accounts) {
+                window.google.accounts.id.initialize({
+                    client_id: clientId,
+                    callback: handleGoogleCredentialResponse,
+                    auto_select: false
+                });
+
+                const container = document.getElementById('googleSignInContainer');
+                if (container) {
+                    container.innerHTML = '';
+                    window.google.accounts.id.renderButton(container, {
+                        theme: 'filled_black',
+                        size: 'large',
+                        width: 320,
+                        text: 'signin_with',
+                        shape: 'pill'
+                    });
+                }
+            }
+        };
+
+        if (window.google && window.google.accounts) {
+            initializeGoogle();
+        } else {
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = initializeGoogle;
+            document.head.appendChild(script);
+        }
+    }, [handleGoogleCredentialResponse]);
+
+    const handleCustomGoogleClick = () => {
+        if (window.google && window.google.accounts) {
+            window.google.accounts.id.prompt();
+        } else {
+            toast.info('Loading Google Identity Services...', { position: 'bottom-center' });
+        }
+    };
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -244,18 +278,23 @@ export default function Login() {
                         {/* DIVIDER */}
                         <div className="d-flex align-items-center my-4 text-muted">
                             <hr className="flex-grow-1 border-secondary m-0" />
-                            <span className="px-3 small font-weight-bold">OR</span>
+                            <span className="px-3 small font-weight-bold">OR SIGN IN WITH GOOGLE</span>
                             <hr className="flex-grow-1 border-secondary m-0" />
                         </div>
 
-                        {/* GOOGLE GMAIL OAUTH BUTTON */}
+                        {/* OFFICIAL GOOGLE IDENTITY SERVICES BUTTON */}
+                        <div className="d-flex justify-content-center my-2">
+                            <div id="googleSignInContainer"></div>
+                        </div>
+
+                        {/* CUSTOM GOOGLE FALLBACK BUTTON */}
                         <button
                             type="button"
-                            onClick={handleGoogleSignIn}
-                            className="btn btn-warning btn-block font-weight-bold py-2 shadow-lg text-dark d-flex align-items-center justify-content-center gap-2"
+                            onClick={handleCustomGoogleClick}
+                            className="btn btn-warning btn-block font-weight-bold py-2 shadow-lg text-dark d-flex align-items-center justify-content-center gap-2 mt-2"
                         >
                             <i className="fa fa-google text-danger mr-2"></i>
-                            <span>Sign In with Google Gmail</span>
+                            <span>One-Tap Sign In with Google</span>
                         </button>
 
                         <div className="text-center mt-4">
