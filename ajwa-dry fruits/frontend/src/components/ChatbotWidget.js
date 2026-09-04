@@ -1,3 +1,4 @@
+import { getProductImage } from '../utils/productImage';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -251,7 +252,7 @@ export default function ChatbotWidget() {
                   </div>
                   <div className="d-flex flex-column gap-2">
                     {recommendedProducts.map((p) => {
-                      const img = (p.images && p.images[0] && p.images[0].image) ? p.images[0].image : '/images/products/1.jpg';
+                      const img = getProductImage(p);
                       const targetId = p._id || p.id;
                       return (
                         <div 

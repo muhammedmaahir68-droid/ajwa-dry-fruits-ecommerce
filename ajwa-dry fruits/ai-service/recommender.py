@@ -23,6 +23,7 @@ CATEGORY_AFFINITIES = {
 DEFAULT_PRODUCTS = [
     {
         "id": 1,
+        "images": [{"image": "/images/products/1.jpg"}],
         "name": "Royal Saudi Ajwa Dates (Al-Madinah)",
         "category": "Dates",
         "price": 1250,
@@ -33,6 +34,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 2,
+        "images": [{"image": "/images/products/2.jpg"}],
         "name": "Belgian 70% Dark Chocolate Truffles",
         "category": "Imported Chocolates",
         "price": 1450,
@@ -43,6 +45,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 3,
+        "images": [{"image": "/images/products/3.jpg"}],
         "name": "Handpicked Royal Iranian Salted Pistachios",
         "category": "Pistachios",
         "price": 980,
@@ -53,6 +56,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 4,
+        "images": [{"image": "/images/products/4.jpg"}],
         "name": "Californian King Raw Almonds (Badam)",
         "category": "Almonds",
         "price": 850,
@@ -63,6 +67,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 5,
+        "images": [{"image": "/images/products/5.jpg"}],
         "name": "Swiss Milk Chocolate Hazelnut Pralines",
         "category": "Imported Chocolates",
         "price": 1600,
@@ -73,6 +78,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 6,
+        "images": [{"image": "/images/products/6.jpg"}],
         "name": "Royal Festive Gift Hamper (Dates, Nuts & Chocolates)",
         "category": "Gift Hampers",
         "price": 2800,
@@ -83,6 +89,7 @@ DEFAULT_PRODUCTS = [
     },
     {
         "id": 7,
+        "images": [{"image": "/images/products/7.jpg"}],
         "name": "Organic Afghan Dried Figs (Anjeer)",
         "category": "Dried Figs",
         "price": 790,

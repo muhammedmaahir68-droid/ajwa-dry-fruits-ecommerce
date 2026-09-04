@@ -1,3 +1,4 @@
+import { getProductImage } from '../../utils/productImage';
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -55,9 +56,7 @@ function NetflixShelfCard({ product }) {
     toast.success(`${product.name} added to cart!`, { position: 'bottom-center' });
   };
 
-  const imgUrl = (product.images && product.images[0] && product.images[0].image)
-    ? product.images[0].image
-    : '/images/products/1.jpg';
+  const imgUrl = getProductImage(product);
 
   const targetId = product._id || product.id;
 

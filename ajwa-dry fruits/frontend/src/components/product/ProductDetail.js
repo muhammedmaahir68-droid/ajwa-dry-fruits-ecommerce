@@ -1,3 +1,4 @@
+import { getProductImage } from '../../utils/productImage';
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -110,13 +111,14 @@ export default function ProductDetail() {
           <div className="row f-flex justify-content-around">
             <div className="col-12 col-lg-5 img-fluid" id="product_image">
               <Carousel pause="hover">
-                {product.images && product.images.length > 0
-                  ? product.images.map((image) => (
-                      <Carousel.Item key={image._id}>
-                        <img className="d-block w-100" src={image.image} alt={product.name} height="500" width="500" />
-                      </Carousel.Item>
-                    ))
-                  : null}
+                {(product.images && product.images.length > 0
+                  ? product.images
+                  : [{ _id: 'default', image: getProductImage(product) }]
+                ).map((image, idx) => (
+                  <Carousel.Item key={image._id || idx}>
+                    <img className="d-block w-100 rounded-lg shadow" src={image.image || getProductImage(product)} alt={product.name} height="500" width="500" style={{ objectFit: 'cover', maxHeight: '480px' }} />
+                  </Carousel.Item>
+                ))}
               </Carousel>
             </div>
 

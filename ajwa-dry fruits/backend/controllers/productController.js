@@ -27,7 +27,7 @@ const normalizeProductPayload = (body = {}) => {
 
 //Get Products - /api/v1/products
 exports.getProducts = catchAsyncError(async (req, res) => {
-    const resPerPage = 3;
+    const resPerPage = Number(req.query.limit) || 8;
     const currentPage = Number(req.query.page) || 1;
     const where = {};
 

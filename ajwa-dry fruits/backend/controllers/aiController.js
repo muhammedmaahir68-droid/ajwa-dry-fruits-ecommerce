@@ -66,19 +66,33 @@ exports.getAiRecommendations = catchAsyncError(async (req, res, next) => {
     } catch (err) {
         // High-availability algorithmic fallback
         const products = await Product.findAll({ limit: topN });
+        const imgMap = {
+            1: '/images/products/1.jpg',
+            2: '/images/products/2.jpg',
+            3: '/images/products/3.jpg',
+            4: '/images/products/4.jpg',
+            5: '/images/products/5.jpg',
+            6: '/images/products/6.jpg',
+            7: '/images/products/7.jpg'
+        };
         return res.status(200).json({
             success: true,
             source: 'Gateway Heuristic Fallback',
             count: products.length,
-            recommendations: products.map(p => ({
-                id: p.id,
-                name: p.name,
-                price: p.price,
-                category: p.category,
-                ratings: p.ratings,
-                stock: p.stock,
-                recommendation_reason: '⭐ Popular Gourmet Selection'
-            }))
+            recommendations: products.map((p, idx) => {
+                const pid = Number(p.id || idx + 1);
+                const assignedImg = imgMap[pid] || `/images/products/${((pid - 1) % 7) + 1}.jpg`;
+                return {
+                    id: p.id,
+                    name: p.name,
+                    price: p.price,
+                    category: p.category,
+                    ratings: p.ratings,
+                    stock: p.stock,
+                    images: (p.images && p.images.length > 0) ? p.images : [{ image: assignedImg }],
+                    recommendation_reason: '⭐ Popular Gourmet Selection'
+                };
+            })
         });
     }
 });
