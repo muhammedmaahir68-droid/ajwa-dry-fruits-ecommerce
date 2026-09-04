@@ -3,6 +3,17 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import store from './store'
 import {Provider } from 'react-redux';
+import axios from 'axios';
+
+// Configure Axios for Live Real-Time JWT Cross-Domain Credentials & Bearer Authorization
+axios.defaults.withCredentials = true;
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => Promise.reject(error));
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

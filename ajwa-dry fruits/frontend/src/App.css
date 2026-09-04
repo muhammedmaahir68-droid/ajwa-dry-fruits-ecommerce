@@ -707,3 +707,74 @@ table.dataTable.table-striped tbody tr:nth-child(odd),
   border-radius: 12px !important;
 }
 
+/* ==========================================================================
+   AJWA 3D PRODUCT CARD, SLIDING LAYERS & TOUCH-ZOOM INSPECT
+   ========================================================================== */
+.ajwa-3d-card-wrapper {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transition: z-index 0.3s ease;
+}
+
+.ajwa-3d-card-wrapper.ajwa-3d-zoomed {
+  z-index: 9999 !important;
+}
+
+.ajwa-3d-card-wrapper .card {
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+}
+
+/* Floating 3D layers inside card */
+.ajwa-3d-layer-base {
+  transform-style: preserve-3d;
+}
+
+.ajwa-3d-badge-layer {
+  transform: translateZ(55px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ajwa-3d-media-layer {
+  transform: translateZ(35px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ajwa-3d-body-layer {
+  transform: translateZ(45px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ajwa-3d-action-layer {
+  transform: translateZ(60px);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Horizontal sliding scroll container optimization */
+.ajwa-netflix-rail div[style*="overflow-x"]::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Security Firewall Status Pulse */
+.ajwa-firewall-pulse {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #28a745;
+  box-shadow: 0 0 0 rgba(40, 167, 69, 0.4);
+  animation: ajwa-pulse-green 2s infinite;
+}
+
+@keyframes ajwa-pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(40, 167, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+

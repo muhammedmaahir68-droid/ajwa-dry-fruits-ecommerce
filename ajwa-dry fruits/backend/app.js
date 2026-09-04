@@ -26,6 +26,11 @@ app.use(cors({
   credentials: true
 }));
 
+const firewall = require('./middlewares/firewall');
+
+// Apply Enterprise Security Firewall & Headers Shield
+app.use(firewall);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -38,13 +43,19 @@ const payroll = require('./routes/payroll');
 const analytics = require('./routes/analytics');
 const ai = require('./routes/ai');
 
-// Root API Health Check Route
+// Root API Health & Security Status Route
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     message: '🎉 Ajwa AI Commerce API Gateway is Live & Connected!',
     status: 'ONLINE',
     version: '2.0.0',
+    security_shield: {
+      firewall: 'ACTIVE (Enterprise WAF Shield)',
+      anti_ddos: 'ACTIVE (Adaptive Rate Limiting)',
+      injection_guard: 'ACTIVE (SQL & XSS Sanitizer)',
+      jwt_authentication: '100% REAL-TIME LIVE JWT AUTH'
+    },
     services: ['Auth', 'Products', 'Orders', 'Payments (Direct UPI + Razorpay)', 'AI & ML Service']
   });
 });

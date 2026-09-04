@@ -46,6 +46,7 @@ export const login = (email, password) => async (dispatch) => {
         try {
             dispatch(loginRequest())
             const { data }  = await axios.post(`/api/v1/login`,{email,password});
+            if (data.token) localStorage.setItem('token', data.token);
             dispatch(loginSuccess(data))
         } catch (error) {
             dispatch(loginFail(error?.response?.data?.message || 'Login failed'))
@@ -56,6 +57,7 @@ export const googleLoginAction = (email, name, avatar) => async (dispatch) => {
     try {
         dispatch(loginRequest())
         const { data } = await axios.post(`/api/v1/google-login`, { email, name, avatar });
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch(loginSuccess(data))
     } catch (error) {
         dispatch(loginFail(error?.response?.data?.message || 'Google login failed'))
@@ -66,6 +68,7 @@ export const adminLoginAction = (email, password) => async (dispatch) => {
     try {
         dispatch(loginRequest())
         const { data } = await axios.post(`/api/v1/admin/login`, { email, password });
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch(loginSuccess(data))
     } catch (error) {
         dispatch(loginFail(error?.response?.data?.message || 'Admin login failed'))
@@ -87,6 +90,7 @@ export const register = (userData) => async (dispatch) => {
         }
 
         const { data }  = await axios.post(`/api/v1/register`,userData, config);
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch(registerSuccess(data))
     } catch (error) {
         dispatch(registerFail(error.response.data.message))
@@ -101,6 +105,7 @@ export const loadUser =  async (dispatch) => {
        
 
         const { data }  = await axios.get(`/api/v1/myprofile`);
+        if (data.token) localStorage.setItem('token', data.token);
         dispatch(loadUserSuccess(data))
     } catch (error) {
         dispatch(loadUserFail(error?.response?.data?.message || 'Unable to load user profile'))
@@ -112,8 +117,10 @@ export const logout =  async (dispatch) => {
 
     try {
         await axios.get(`/api/v1/logout`);
+        localStorage.removeItem('token');
         dispatch(logoutSuccess())
     } catch (error) {
+        localStorage.removeItem('token');
         dispatch(logoutFail)
     }
 
