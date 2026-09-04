@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useCallback } from 'react';
+ï»¿import { Fragment, useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAuthError, login, googleLoginAction } from '../../actions/userActions';
 import MetaData from '../layouts/MetaData';
@@ -13,6 +13,7 @@ export default function Login() {
     const [otpCode, setOtpCode] = useState("");
     const [otpSent, setOtpSent] = useState(false);
     const [otpSending, setOtpSending] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
     const location = useLocation();
@@ -152,7 +153,7 @@ export default function Login() {
                 <div className="col-12 col-sm-10 col-md-8 col-lg-5">
                     <div className="shadow-lg p-4 rounded bg-dark text-white border border-warning">
                         
-                        {/* Navigation Top Action — BACK TO STORE */}
+                        {/* Navigation Top Action â€” BACK TO STORE */}
                         <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
                             <Link to="/" className="btn btn-outline-warning btn-sm font-weight-bold d-flex align-items-center gap-1">
                                 <i className="fa fa-arrow-left mr-1"></i> Back to Store
@@ -199,17 +200,32 @@ export default function Login() {
                                     />
                                 </div>
 
-                                <div className="form-group mb-3">
+<div className="form-group mb-3">
                                     <label htmlFor="password_field" className="font-weight-bold text-warning">Password</label>
-                                    <input
-                                        type="password"
-                                        id="password_field"
-                                        className="form-control text-white bg-secondary border-warning"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="••••••••"
-                                        required
-                                    />
+                                    <div className="input-group">
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            id="password_field"
+                                            className="form-control text-white bg-secondary border-warning"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Enter your password"
+                                            autoComplete="current-password"
+                                            required
+                                        />
+                                        <div className="input-group-append">
+                                            <button
+                                                type="button"
+                                                className="btn btn-secondary border-warning"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                tabIndex="-1"
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                                style={{ borderLeft: 'none' }}
+                                            >
+                                                <i className={showPassword ? "fa fa-eye-slash text-warning" : "fa fa-eye text-warning"}></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="text-right mb-3">
@@ -315,3 +331,4 @@ export default function Login() {
         </Fragment>
     );
 }
+
