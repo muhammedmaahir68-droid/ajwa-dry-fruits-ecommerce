@@ -4,11 +4,18 @@ const crypto = require('crypto');
 // Stripe fallback handler
 const stripeSecret = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== '%YOUR_STRIPE_SECRET_KEY%' 
     ? process.env.STRIPE_SECRET_KEY 
-    : 'sk_test_mock_stripe_key';
-const stripe = require('stripe')(stripeSecret);
+    : null;
+const stripe = stripeSecret ? require('stripe')(stripeSecret) : null;
 
 // Stripe Payment Process
 exports.processPayment = catchAsyncError(async (req, res, next) => {
+    if (!stripe) {
+        return res.status(400).json({
+            success: false,
+            message: 'Stripe gateway requires valid production credentials in server environment.'
+        });
+    }
+
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: req.body.amount,
@@ -23,10 +30,9 @@ exports.processPayment = catchAsyncError(async (req, res, next) => {
             client_secret: paymentIntent.client_secret
         });
     } catch (err) {
-        // Mock fallback response for Stripe test mode
-        res.status(200).json({
-            success: true,
-            client_secret: `live_client_secret_${Date.now()}`
+        res.status(500).json({
+            success: false,
+            message: err.message || 'Payment gateway failed to initialize.'
         });
     }
 });
@@ -51,7 +57,7 @@ exports.createRazorpayOrder = catchAsyncError(async (req, res, next) => {
     const amount = Number(req.body.amount || 0); // Amount in Paise (e.g. 1000 INR = 100000 Paise)
     const currency = 'INR';
     const receipt = `receipt_${Date.now()}`;
-    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_ajwa_dry_fruits_live';
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_live_ajwa_dry_fruits_live';
 
     // Generate Razorpay Order Object
     const razorpayOrderId = `order_rzp_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
@@ -122,10 +128,10 @@ exports.checkUpiStatus = catchAsyncError(async (req, res, next) => {
     const session = activeUpiSessions.get(orderId);
 
     if (!session) {
-        return res.status(200).json({
-            success: true,
-            status: 'PAID',
-            paymentId: `pay_upi_auto_${Date.now()}`
+        return res.status(404).json({
+            success: false,
+            status: 'SESSION_NOT_FOUND',
+            message: 'UPI payment session not found or has expired.'
         });
     }
 
@@ -147,18 +153,39 @@ exports.checkUpiStatus = catchAsyncError(async (req, res, next) => {
 
 exports.confirmUpiPayment = catchAsyncError(async (req, res, next) => {
     const { orderId, utrNumber } = req.body;
-    const paymentId = utrNumber ? `UPI-${utrNumber}` : `pay_gpay_${Date.now()}`;
+
+    if (!orderId) {
+        return next(new ErrorHandler('UPI Order ID is required.', 400));
+    }
+
+    if (!utrNumber || utrNumber.trim().length < 6) {
+        return next(new ErrorHandler('Please enter a valid 12-digit UTR / UPI Reference ID from your payment app.', 400));
+    }
+
+    const cleanUtr = utrNumber.trim();
+    const paymentId = `UPI-UTR-${cleanUtr}`;
 
     if (activeUpiSessions.has(orderId)) {
         const session = activeUpiSessions.get(orderId);
         session.status = 'PAID';
         session.paymentId = paymentId;
+        session.utr = cleanUtr;
+        session.confirmedAt = new Date().toISOString();
+    } else {
+        activeUpiSessions.set(orderId, {
+            id: orderId,
+            status: 'PAID',
+            paymentId,
+            utr: cleanUtr,
+            confirmedAt: new Date().toISOString()
+        });
     }
 
     res.status(200).json({
         success: true,
-        message: 'Direct UPI / Google Pay authenticated and confirmed successfully!',
+        message: 'Direct UPI payment authenticated and confirmed successfully!',
         paymentId,
+        utr: cleanUtr,
         gateway: 'Direct UPI / Google Pay'
     });
 });

@@ -1,143 +1,279 @@
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import { useDispatch, useSelector} from 'react-redux';
-import { useNavigate, useParams } from "react-router-dom";
-import { orderDetail as orderDetailAction, updateOrder } from "../../actions/orderActions";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { orderDetail as orderDetailAction, updateOrder, adminReturnAction } from "../../actions/orderActions";
 import { toast } from "react-toastify";
 import { clearOrderUpdated, clearError } from "../../slices/orderSlice";
-import { Link } from "react-router-dom";
 
-export default function UpdateOrder () {
+export default function UpdateOrder() {
+    const { loading, isOrderUpdated, error, orderDetail = {} } = useSelector(state => state.orderState);
+    const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, paymentInfo = {}, cancelInfo, returnInfo, trackingInfo = {} } = orderDetail;
+    const isPaid = paymentInfo && (paymentInfo.status === 'succeeded' || paymentInfo.status === 'PAID' || paymentInfo.status === 'COMPLETED');
     
-    
-    const { loading, isOrderUpdated, error, orderDetail } = useSelector( state => state.orderState)
-    const { user = {}, orderItems = [], shippingInfo = {}, totalPrice = 0, paymentInfo = {}} = orderDetail;
-    const isPaid = paymentInfo.status === 'succeeded'? true: false;
     const [orderStatus, setOrderStatus] = useState("Processing");
-    const { id:orderId } = useParams();
+    const [courier, setCourier] = useState("");
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [estimatedDelivery, setEstimatedDelivery] = useState("");
+    const [adminReturnNote, setAdminReturnNote] = useState("");
 
-
+    const { id: orderId } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const submitHandler = (e) => {
-        e.preventDefault();
-        const orderData = {};
-        orderData.orderStatus = orderStatus;
-        dispatch(updateOrder(orderId, orderData))
-    }
-    
     useEffect(() => {
-        if(isOrderUpdated) {
-            toast('Order Updated Succesfully!',{
-                type: 'success',
+        dispatch(orderDetailAction(orderId));
+    }, [orderId, dispatch]);
+
+    useEffect(() => {
+        if (orderDetail._id || orderDetail.id) {
+            setOrderStatus(orderDetail.orderStatus || "Processing");
+            if (orderDetail.trackingInfo) {
+                setCourier(orderDetail.trackingInfo.courier || "");
+                setTrackingNumber(orderDetail.trackingInfo.trackingNumber || "");
+                setEstimatedDelivery(orderDetail.trackingInfo.estimatedDelivery || "");
+            }
+        }
+    }, [orderDetail]);
+
+    useEffect(() => {
+        if (isOrderUpdated) {
+            toast.success('Order & Logistics Status Updated Successfully!', {
                 position: 'bottom-center',
                 onOpen: () => dispatch(clearOrderUpdated())
-            })
-           
-            return;
+            });
+            dispatch(orderDetailAction(orderId));
         }
 
-        if(error)  {
-            toast(error, {
+        if (error) {
+            toast.error(error, {
                 position: 'bottom-center',
-                type: 'error',
-                onOpen: ()=> { dispatch(clearError()) }
-            })
-            return
+                onOpen: () => dispatch(clearError())
+            });
         }
+    }, [isOrderUpdated, error, dispatch, orderId]);
 
-        dispatch(orderDetailAction(orderId))
-    }, [isOrderUpdated, error, dispatch])
+    const submitHandler = (e) => {
+        e.preventDefault();
+        const orderData = {
+            orderStatus,
+            trackingInfo: {
+                courier,
+                trackingNumber,
+                estimatedDelivery,
+                shippedAt: orderStatus === 'Shipped' ? new Date() : trackingInfo?.shippedAt,
+                outForDeliveryAt: orderStatus === 'Out for Delivery' ? new Date() : trackingInfo?.outForDeliveryAt
+            }
+        };
+        dispatch(updateOrder(orderId, orderData));
+    };
 
+    const handleReturnDecision = (action) => {
+        dispatch(adminReturnAction(orderId, {
+            action,
+            adminComment: adminReturnNote || (action === 'approve' ? 'Return request approved. Refund initiated to customer.' : 'Return request rejected after inspection.')
+        }));
+    };
 
-    useEffect(() => {
-        if(orderDetail._id) {
-            setOrderStatus(orderDetail.orderStatus);
-        }
-    },[orderDetail])
-
+    const isReturnRequested = orderStatus === 'Return Requested';
+    const isCancelled = orderStatus === 'Cancelled';
 
     return (
-        <div className="ajwa-admin-page"><Sidebar /><div className="ajwa-admin-content">
-                <Fragment>
-                <div className="row d-flex justify-content-around">
-                        <div className="col-12 col-lg-8 mt-5 order-details">
-    
-                            <h1 className="my-5">Order # {orderDetail._id}</h1>
-    
-                            <h4 className="mb-4">Shipping Info</h4>
-                            <p><b>Name:</b> {user.name}</p>
-                            <p><b>Phone:</b> {shippingInfo.phoneNo}</p>
-                            <p className="mb-4"><b>Address:</b>{shippingInfo.address}, {shippingInfo.city}, {shippingInfo.postalCode}, {shippingInfo.state}, {shippingInfo.country}</p>
-                            <p><b>Amount:</b> ${totalPrice}</p>
-    
-                            <hr />
-    
-                            <h4 className="my-4">Payment</h4>
-                            <p className={isPaid ? 'greenColor' : 'redColor' } ><b>{isPaid ? 'PAID' : 'NOT PAID' }</b></p>
-    
-    
-                            <h4 className="my-4">Order Status:</h4>
-                            <p className={orderStatus&&orderStatus.includes('Delivered') ? 'greenColor' : 'redColor' } ><b>{orderStatus}</b></p>
-    
-    
-                            <h4 className="my-4">Order Items:</h4>
-    
-                            <hr />
-                            <div className="cart-item my-1">
-                                {orderItems && orderItems.map(item => (
-                                    <div className="row my-5">
-                                        <div className="col-4 col-lg-2">
-                                            <img src={item.image} alt={item.name} height="45" width="65" />
-                                        </div>
+        <div className="ajwa-admin-page">
+            <Sidebar />
+            <div className="ajwa-admin-content">
+                <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <Link to="/admin/orders" className="btn btn-sm btn-outline-warning text-warning mb-2">
+                            <i className="fa fa-arrow-left mr-1"></i> Back to Orders List
+                        </Link>
+                        <h2 className="ajwa-admin-title m-0">
+                            <i className="fa fa-truck mr-2"></i> Update Order & Logistics Console
+                        </h2>
+                    </div>
+                    <div>
+                        <span className="badge badge-warning text-dark font-weight-bold px-3 py-2" style={{ fontSize: '0.9rem' }}>
+                            Status: {orderStatus}
+                        </span>
+                    </div>
+                </div>
 
-                                        <div className="col-5 col-lg-5">
-                                            <Link to={`/product/${item.product}`}>{item.name}</Link>
-                                        </div>
+                <div className="row">
+                    {/* Left Column: Order Summary & Review */}
+                    <div className="col-12 col-lg-7">
+                        {/* CANCELLATION NOTICE IF APPLICABLE */}
+                        {isCancelled && (
+                            <div className="p-3 rounded mb-4 border border-danger" style={{ backgroundColor: 'rgba(220, 53, 69, 0.15)' }}>
+                                <h5 className="text-danger font-weight-bold mb-2">
+                                    <i className="fa fa-times-circle mr-2"></i> Customer Cancellation Recorded
+                                </h5>
+                                <p className="mb-1 text-light small">
+                                    <strong>Cancellation Reason:</strong> {cancelInfo?.reason || 'Cancelled before dispatch'}
+                                </p>
+                                <p className="mb-1 text-muted small">
+                                    <strong>Cancelled By:</strong> {cancelInfo?.by || 'Customer'} | <strong>Time:</strong> {cancelInfo?.cancelledAt ? new Date(cancelInfo.cancelledAt).toLocaleString() : 'N/A'}
+                                </p>
+                                <span className="badge badge-success">Inventory Restocked Automatically</span>
+                            </div>
+                        )}
 
+                        {/* RETURN REQUEST ACTION BOX IF APPLICABLE */}
+                        {isReturnRequested && (
+                            <div className="p-4 rounded mb-4 border border-warning shadow" style={{ backgroundColor: 'rgba(229, 169, 60, 0.12)' }}>
+                                <h5 className="text-warning font-weight-bold mb-2">
+                                    <i className="fa fa-exclamation-triangle mr-2"></i> Action Required: Customer Return Request
+                                </h5>
+                                <p className="mb-1 text-light">
+                                    <strong>Customer Reason:</strong> {returnInfo?.reason || 'N/A'}
+                                </p>
+                                {returnInfo?.comment && (
+                                    <p className="mb-2 text-muted small">
+                                        <strong>Customer Notes:</strong> "{returnInfo.comment}"
+                                    </p>
+                                )}
+                                <div className="form-group my-3">
+                                    <label className="font-weight-bold text-warning small">Admin Resolution Note to Customer:</label>
+                                    <input 
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="e.g. Return approved. Courier will pick up items in 2 days."
+                                        value={adminReturnNote}
+                                        onChange={(e) => setAdminReturnNote(e.target.value)}
+                                    />
+                                </div>
+                                <div className="d-flex gap-2">
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-success font-weight-bold"
+                                        onClick={() => handleReturnDecision('approve')}
+                                        disabled={loading}
+                                    >
+                                        <i className="fa fa-check mr-1"></i> Approve Return & Refund
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-danger font-weight-bold"
+                                        onClick={() => handleReturnDecision('reject')}
+                                        disabled={loading}
+                                    >
+                                        <i className="fa fa-times mr-1"></i> Reject Return
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
-                                        <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                                            <p>${item.price}</p>
-                                        </div>
-
-                                        <div className="col-4 col-lg-3 mt-4 mt-lg-0">
-                                            <p>{item.quantity} Piece(s)</p>
+                        {/* Order Items */}
+                        <div className="p-4 rounded mb-4 shadow" style={{ background: 'rgba(20, 10, 8, 0.85)', border: '1px solid rgba(229, 169, 60, 0.25)' }}>
+                            <h5 className="text-warning font-weight-bold mb-3 border-bottom border-secondary pb-2">
+                                <i className="fa fa-box mr-2"></i> Order Items
+                            </h5>
+                            {orderItems && orderItems.map((item, idx) => (
+                                <div key={idx} className="d-flex align-items-center justify-content-between p-2 mb-2 rounded border border-secondary" style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}>
+                                    <div className="d-flex align-items-center">
+                                        <img src={item.image || '/images/products/1.jpg'} alt={item.name} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} className="mr-2" />
+                                        <div>
+                                            <div className="text-white font-weight-bold small">{item.name}</div>
+                                            <div className="text-muted" style={{ fontSize: '0.75rem' }}>Qty: {item.quantity}</div>
                                         </div>
                                     </div>
-                                ))}
-                                    
+                                    <div className="text-warning font-weight-bold">
+                                        Rs. {item.price}
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="text-right mt-3 text-white font-weight-bold">
+                                Total: <span className="text-warning">Rs. {totalPrice}</span>
                             </div>
-                            <hr />
                         </div>
-                        <div className="col-12 col-lg-3 mt-5">
-                            <h4 className="my-4">Order Status</h4>
-                            <div className="form-group">
-                                <select 
-                                className="form-control"
-                                onChange={e => setOrderStatus(e.target.value)}
-                                value={orderStatus}
-                                name="status"
-                                >
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                </select>
-                              
-                            </div>
-                            <button
-                                disabled={loading}
-                                onClick={submitHandler}
-                                className="btn btn-primary btn-block"
-                                >
-                                    Update Status
-                            </button>
 
+                        {/* Shipping & Customer Details */}
+                        <div className="p-4 rounded mb-4 shadow" style={{ background: 'rgba(20, 10, 8, 0.85)', border: '1px solid rgba(229, 169, 60, 0.25)' }}>
+                            <h5 className="text-warning font-weight-bold mb-3 border-bottom border-secondary pb-2">
+                                <i className="fa fa-user mr-2"></i> Customer & Shipping Information
+                            </h5>
+                            <p className="mb-1 text-white"><strong>Customer:</strong> {user?.name || shippingInfo?.name || 'Customer'}</p>
+                            <p className="mb-1 text-muted small"><strong>Email:</strong> {user?.email || 'N/A'}</p>
+                            <p className="mb-1 text-muted small"><strong>Phone:</strong> {shippingInfo?.phoneNo || 'N/A'}</p>
+                            <p className="mb-1 text-muted small"><strong>Address:</strong> {shippingInfo?.address}, {shippingInfo?.city}, {shippingInfo?.state} - {shippingInfo?.postalCode}</p>
+                            <p className="mb-0 text-muted small"><strong>Payment Status:</strong> <span className={isPaid ? 'text-success font-weight-bold' : 'text-danger font-weight-bold'}>{isPaid ? 'PAID' : 'NOT PAID'}</span></p>
                         </div>
                     </div>
-                </Fragment>
+
+                    {/* Right Column: Status & Logistics Update Controls */}
+                    <div className="col-12 col-lg-5">
+                        <div className="p-4 rounded mb-4 shadow" style={{ background: 'rgba(20, 10, 8, 0.95)', border: '1.5px solid rgba(229, 169, 60, 0.4)' }}>
+                            <h5 className="text-warning font-weight-bold mb-3 border-bottom border-secondary pb-2">
+                                <i className="fa fa-sliders mr-2"></i> Update Order Status
+                            </h5>
+
+                            <form onSubmit={submitHandler}>
+                                <div className="form-group mb-3">
+                                    <label className="font-weight-bold text-warning small">Order Lifecycle Status:</label>
+                                    <select 
+                                        className="form-control"
+                                        value={orderStatus}
+                                        onChange={(e) => setOrderStatus(e.target.value)}
+                                    >
+                                        <option value="Processing">Processing (Order Placed)</option>
+                                        <option value="Packaged">Packaged (Inspected & Sealed)</option>
+                                        <option value="Shipped">Shipped (Dispatched)</option>
+                                        <option value="Out for Delivery">Out for Delivery (On Route)</option>
+                                        <option value="Delivered">Delivered (Completed)</option>
+                                        <option value="Cancelled">Cancelled (Order Voided)</option>
+                                        <option value="Return Approved">Return Approved (Refund Done)</option>
+                                        <option value="Return Rejected">Return Rejected</option>
+                                    </select>
+                                </div>
+
+                                <h6 className="text-warning font-weight-bold mt-4 mb-2">
+                                    <i className="fa fa-map-marker mr-1"></i> Courier & Tracking Details:
+                                </h6>
+
+                                <div className="form-group mb-3">
+                                    <label className="text-muted small">Courier Partner:</label>
+                                    <input 
+                                        type="text" 
+                                        className="form-control"
+                                        placeholder="e.g. BlueDart, Delhivery, DTDC, India Post"
+                                        value={courier}
+                                        onChange={(e) => setCourier(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="form-group mb-3">
+                                    <label className="text-muted small">Tracking Number / AWB:</label>
+                                    <input 
+                                        type="text" 
+                                        className="form-control"
+                                        placeholder="e.g. BLD987654321IN"
+                                        value={trackingNumber}
+                                        onChange={(e) => setTrackingNumber(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="form-group mb-4">
+                                    <label className="text-muted small">Estimated Delivery Date:</label>
+                                    <input 
+                                        type="text" 
+                                        className="form-control"
+                                        placeholder="e.g. 2-3 Business Days / Sept 08, 2026"
+                                        value={estimatedDelivery}
+                                        onChange={(e) => setEstimatedDelivery(e.target.value)}
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="btn btn-warning btn-block font-weight-bold text-dark py-2 shadow-lg"
+                                >
+                                    {loading ? 'SAVING...' : 'SAVE ORDER & LOGISTICS STATUS'}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-    )
+    );
 }

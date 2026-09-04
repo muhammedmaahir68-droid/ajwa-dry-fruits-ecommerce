@@ -37,6 +37,14 @@ const seedDatabase = async () => {
             console.log(`[FRESH START] Admin account verified: ${adminEmail}`);
         }
 
+        // Ensure catalog products exist
+        const productCount = await Product.count();
+        if (productCount === 0) {
+            const productsData = require('../data/products.json');
+            await Product.bulkCreate(productsData);
+            console.log(`[FRESH START] Seeded ${productsData.length} catalog products to database.`);
+        }
+
     } catch (error) {
         console.log('Seeder Error:', error.message);
     }

@@ -62,7 +62,7 @@ export default function Dashboard() {
 
     const runFirewallProbe = async () => {
         try {
-            toast.info('🛡️ Initiating simulated attack probe against WAF...', { position: 'bottom-center' });
+            toast.info('🛡️ Executing real-time live penetration filter probe against WAF...', { position: 'bottom-center' });
             await axios.get('/api/v1/products?keyword=%27%20UNION%20SELECT%20*%20FROM%20users--');
             toast.info('Probe completed.', { position: 'bottom-center' });
         } catch (err) {
@@ -176,9 +176,9 @@ export default function Dashboard() {
                             type="button"
                             onClick={runFirewallProbe}
                             className="btn btn-outline-danger btn-sm rounded-pill font-weight-bold shadow-sm"
-                            title="Test SQLi/XSS Probe to verify 403 Forbidden intercept"
+                            title="Run live penetration test query to verify 403 Forbidden intercept"
                         >
-                            <i className="fa fa-bolt mr-1"></i> Simulate Injection Attack Probe
+                            <i className="fa fa-bolt mr-1"></i> Run Live WAF Defense Verification
                         </button>
                     </div>
 

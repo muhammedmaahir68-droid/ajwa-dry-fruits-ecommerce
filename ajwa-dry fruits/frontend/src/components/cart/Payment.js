@@ -129,12 +129,7 @@ export default function Payment() {
                 setIsTimerRunning(true);
             }
         } catch (err) {
-            // Fallback UPI URI
-            const mockId = `UPI_AJWA_${Date.now()}`;
-            setUpiOrderId(mockId);
-            setUpiUri(`upi://pay?pa=ajwadryfruits@okaxis&pn=Ajwa+Dry+Fruits&am=${orderInfo.totalPrice}&cu=INR&tn=AJWA-${mockId}`);
-            setTimeLeft(300);
-            setIsTimerRunning(true);
+            toast.error('Unable to establish live UPI gateway session. Please refresh or select Cash on Delivery.', { position: 'bottom-center' });
         } finally {
             setLoading(false);
         }
@@ -156,19 +151,22 @@ export default function Payment() {
 
     // 3. User taps "I Paid via GPay / Authenticate Now"
     const handleManualUpiAuthenticate = async () => {
+        if (!utrNumber.trim()) {
+            return toast.warning('Please enter the 12-digit UTR / UPI Reference ID from Google Pay or your UPI app.', { position: 'bottom-center' });
+        }
+
         setIsAuthenticating(true);
         try {
             const { data } = await axios.post('/api/v1/payment/upi/confirm', {
                 orderId: upiOrderId,
-                utrNumber: utrNumber.trim() || undefined
+                utrNumber: utrNumber.trim()
             });
 
             if (data.success) {
                 handleSuccessfulPayment(data.paymentId, 'Direct UPI / Google Pay');
             }
         } catch (err) {
-            // Instant verification fallback
-            handleSuccessfulPayment(`pay_gpay_auth_${Date.now()}`, 'Direct UPI / Google Pay');
+            toast.error(err.response?.data?.message || 'Payment authentication failed. Please verify your 12-digit UTR number.', { position: 'bottom-center' });
         } finally {
             setIsAuthenticating(false);
         }
@@ -202,7 +200,7 @@ export default function Payment() {
             }
 
             const options = {
-                key: orderData.key_id || 'rzp_test_ajwa_dry_fruits_live',
+                key: orderData.key_id || 'rzp_live_ajwa_dry_fruits_live',
                 amount: orderData.amount,
                 currency: orderData.currency || 'INR',
                 name: 'Ajwa Dry Fruits & Confectionery',
@@ -216,7 +214,7 @@ export default function Payment() {
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature
                         });
-                        handleSuccessfulPayment(response.razorpay_payment_id || `pay_rzp_${Date.now()}`, 'Razorpay Enterprise Live');
+                        handleSuccessfulPayment(response.razorpay_payment_id, 'Razorpay Enterprise Live');
                     } catch (err) {
                         toast.error('Payment Verification Failed', { position: 'bottom-center' });
                     } finally {
@@ -236,7 +234,7 @@ export default function Payment() {
                 rzp.open();
                 setLoading(false);
             } else {
-                handleSuccessfulPayment(`pay_rzp_live_${Date.now()}`, 'Razorpay Enterprise Live');
+                toast.error('Razorpay SDK not loaded. Please select Direct UPI or Cash on Delivery.', { position: 'bottom-center' });
                 setLoading(false);
             }
         } catch (err) {
@@ -281,7 +279,8 @@ export default function Payment() {
             const clientSecret = data.client_secret;
 
             if (!stripe || !elements) {
-                handleSuccessfulPayment(`pay_stripe_live_${Date.now()}`, 'Stripe 3D Secure Live');
+                toast.error('Stripe payment elements not initialized. Please select Direct UPI or Cash on Delivery.', { position: 'bottom-center' });
+                setLoading(false);
                 return;
             }
 

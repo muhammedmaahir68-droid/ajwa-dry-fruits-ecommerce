@@ -56,6 +56,18 @@ Order.init(
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: 'Processing'
+        },
+        cancelInfo: {
+            type: DataTypes.JSON,
+            allowNull: true
+        },
+        returnInfo: {
+            type: DataTypes.JSON,
+            allowNull: true
+        },
+        trackingInfo: {
+            type: DataTypes.JSON,
+            allowNull: true
         }
     },
     {

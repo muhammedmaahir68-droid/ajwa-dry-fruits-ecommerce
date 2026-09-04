@@ -1,69 +1,100 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { addCartItem } from "../actions/cartActions";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addCartItem } from '../actions/cartActions';
+import { toast } from 'react-toastify';
 
 const QUICK_PROMPTS = [
-  "💪 Muscle building under ₹1,000",
-  "🧠 Brain focus & memory (Omega-3)",
-  "🩸 Diabetes-safe superfoods",
-  "🦴 Calcium & digestion",
-  "🎁 Luxury gift hamper under ₹3,000"
+  "📞 Ajwa Customer Care number",
+  "🔄 How to return an order?",
+  "⛔ How to cancel order before shipping?",
+  "🚚 Track my shipment status",
+  "Dates for energy & stamina",
+  "Weight loss mix under ₹1000"
 ];
 
-export default function ChatbotWidget({ products = [] }) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("advisor"); // "advisor" | "orderTrack"
-  const [orderIdSearch, setOrderIdSearch] = useState("");
-  const [orderStatusResult, setOrderStatusResult] = useState(null);
+export default function ChatbotWidget() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('advisor');
+  const [query, setQuery] = useState('');
+  const [aiReply, setAiReply] = useState("Greetings! I am the Ajwa AI Concierge. Ask me about our royal dry fruits collection, nutritional benefits, instant cancellations, 7-day returns, or 24/7 Customer Care helpline (+91 98765 43210)!");
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [appliedBudget, setAppliedBudget] = useState(null);
   const [loadingAi, setLoadingAi] = useState(false);
 
-  // AI Response state
-  const [aiReply, setAiReply] = useState(
-    "Hello! I am your Ajwa AI Sommelier. Ask me anything like: 'I need dry fruits for muscle building under ₹1,000' or 'Best dates for fasting'."
-  );
-  const [aiGoal, setAiGoal] = useState("wellness");
-  const [appliedBudget, setAppliedBudget] = useState(null);
-  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  // Order Tracking State
+  const [orderIdSearch, setOrderIdSearch] = useState('');
+  const [orderStatusResult, setOrderStatusResult] = useState(null);
 
   const dispatch = useDispatch();
 
-  const handleAskAi = async (textToUse) => {
-    const text = (textToUse || query).trim();
-    if (!text) return;
+  // Listen to open event from Header
+  useEffect(() => {
+    const handleOpenConcierge = () => {
+      setIsOpen(true);
+    };
+    window.addEventListener('open-ajwa-ai-concierge', handleOpenConcierge);
+    return () => window.removeEventListener('open-ajwa-ai-concierge', handleOpenConcierge);
+  }, []);
 
-    if (textToUse) setQuery(textToUse);
+  const handleAskAi = async (overridePrompt) => {
+    const promptToSend = overridePrompt || query;
+    if (!promptToSend.trim()) return;
+
     setLoadingAi(true);
-
     try {
-      const { data } = await axios.post("/api/v1/ai/chat", { query: text });
-      if (data.success) {
-        setAiReply(data.reply);
-        setAiGoal(data.matched_goal);
-        setAppliedBudget(data.budget_applied);
-        setRecommendedProducts(data.products || []);
+      const lower = promptToSend.toLowerCase();
+
+      // Client-side instant policy & helpline responses for zero friction
+      if (lower.includes('customer care') || lower.includes('phone') || lower.includes('call') || lower.includes('contact') || lower.includes('number') || lower.includes('helpline')) {
+        setAiReply("📞 **Ajwa 24/7 Dedicated Customer Care Helpline:**\n• Phone: **+91 98765 43210** (Toll-Free Direct Line)\n• Email: **care@ajwadryfruits.com**\n• Operating Hours: 24 Hours, 7 Days a week\n\nOur support experts are ready to assist you with order tracking, refunds, returns, or product recommendations!");
+        setRecommendedProducts([]);
+        setAppliedBudget(null);
+        setLoadingAi(false);
+        return;
+      }
+
+      if (lower.includes('return') || lower.includes('refund policy')) {
+        setAiReply("🔄 **Ajwa 7-Day Hassle-Free Return Policy:**\n1. Go to **My Orders** in your profile.\n2. Click **Track & Details** on any delivered order.\n3. Click **'Request 7-Day Return'** and choose your reason (e.g. damaged item, quality issue, incorrect product).\n4. Our team will verify and dispatch a replacement or initiate a 100% full refund to your original payment method!");
+        setRecommendedProducts([]);
+        setAppliedBudget(null);
+        setLoadingAi(false);
+        return;
+      }
+
+      if (lower.includes('cancel') || lower.includes('cancellation')) {
+        setAiReply("⛔ **Instant Order Cancellation Policy:**\n• You can cancel your order anytime **before shipping** (when status is 'Processing' or 'Packaged') directly with 1-click in **My Orders**.\n• Full refund is automatically initiated to your UPI/Card account (3-5 business days).\n• Once an order is Shipped, you can request a 7-day return after delivery!");
+        setRecommendedProducts([]);
+        setAppliedBudget(null);
+        setLoadingAi(false);
+        return;
+      }
+
+      if (lower.includes('track') || lower.includes('status') || lower.includes('shipping stage')) {
+        setActiveTab('orderTrack');
+        setAiReply("📦 **Order Lifecycle Stages:**\n1. **Processing**: Order confirmed and payment verified.\n2. **Packaged**: Sealed with Freshness Lock.\n3. **Shipped**: Dispatched with courier partner & tracking AWB.\n4. **Out for Delivery**: Arriving at your doorstep today.\n5. **Delivered**: Successfully received!\n\nEnter your Order ID below to track live!");
+        setLoadingAi(false);
+        return;
+      }
+
+      const res = await axios.post('/api/v1/ai/sommelier-recommend', { query: promptToSend });
+      if (res.data.success) {
+        setAiReply(res.data.data.analysis);
+        setRecommendedProducts(res.data.data.recommendedProducts || []);
+        setAppliedBudget(res.data.data.budgetCap);
       }
     } catch (err) {
-      // Graceful local fallback
-      const q = text.toLowerCase();
-      let matched = products.slice(0, 3);
-      if (q.includes("muscle") || q.includes("protein") || q.includes("gym")) {
-        matched = products.filter(p => ["almonds", "pistachios", "cashews"].includes((p.category || "").toLowerCase()));
-      }
-      setAiReply(`Here are our verified selections matching "${text}":`);
-      setRecommendedProducts(matched);
+      setAiReply("I am here to help! You can reach our 24/7 Ajwa Helpline at +91 98765 43210 or care@ajwadryfruits.com for immediate support with orders, cancellations, and returns.");
     } finally {
       setLoadingAi(false);
     }
   };
 
-  const handleAddToCart = (p) => {
-    const targetId = p._id || p.id;
+  const handleAddToCart = (product) => {
+    const targetId = product._id || product.id;
     dispatch(addCartItem(targetId, 1));
-    toast.success(`Added ${p.name} to cart!`, { position: "bottom-center" });
+    toast.success(`${product.name} added to cart!`, { position: 'bottom-center' });
   };
 
   const handleOrderLookup = async (e) => {
@@ -71,63 +102,56 @@ export default function ChatbotWidget({ products = [] }) {
     if (!orderIdSearch.trim()) return;
 
     try {
-      const { data } = await axios.get(`/api/v1/order/${orderIdSearch.trim()}`);
-      if (data && data.order) {
+      const res = await axios.get(`/api/v1/order/${orderIdSearch.trim()}`);
+      if (res.data.success && res.data.order) {
+        const o = res.data.order;
         setOrderStatusResult({
-          id: data.order._id || orderIdSearch.trim(),
-          status: data.order.orderStatus || "Processing 📦",
-          estimatedDelivery: "Expected in 2-3 Business Days",
-          items: `${data.order.orderItems?.length || 1} gourmet items`,
-          total: data.order.totalPrice
+          id: o._id || o.id,
+          status: o.orderStatus || 'Processing',
+          total: o.totalPrice,
+          items: o.orderItems ? `${o.orderItems.length} item(s)` : 'N/A',
+          courier: o.trackingInfo?.courier || 'Express Courier',
+          trackingNumber: o.trackingInfo?.trackingNumber || 'Assigned upon dispatch',
+          estimatedDelivery: o.trackingInfo?.estimatedDelivery || '2-4 business days'
         });
-        return;
       }
     } catch (err) {
-      // Fallback display
+      toast.error('Order not found. Please verify your Order ID.');
     }
-
-    setOrderStatusResult({
-      id: orderIdSearch.trim(),
-      status: "Out for Delivery 🚚",
-      estimatedDelivery: "Today by 6:00 PM",
-      items: "Saudi Ajwa Dates (500g) + Belgian Dark Chocolate Truffles"
-    });
   };
 
   return (
     <>
-      <button 
-        type="button" 
-        className="ajwa-chat-fab position-fixed shadow-lg"
+      {/* Floating Launcher Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="btn btn-warning rounded-circle shadow-lg d-flex align-items-center justify-content-center"
         style={{
+          position: 'fixed',
           bottom: '25px',
           right: '25px',
-          zIndex: 9999,
           width: '60px',
           height: '60px',
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #D4AF37 0%, #B8860B 100%)',
-          color: '#1a0d08',
-          border: '2px solid #fff',
-          fontWeight: 'bold',
-          fontSize: '1.2rem',
-          cursor: 'pointer'
+          zIndex: 9999,
+          boxShadow: '0 8px 25px rgba(229, 169, 60, 0.6)',
+          border: '2px solid #fff'
         }}
-        onClick={() => setOpen((v) => !v)}
-        title="Ajwa AI Assistant"
+        title="Ajwa AI Concierge & Customer Care"
       >
-        <i className={`fa fa-${open ? 'times' : 'comments'}`}></i>
+        <i className={`fa ${isOpen ? 'fa-times' : 'fa-comments'} fa-2x text-dark`}></i>
       </button>
 
-      {open && (
-        <div 
-          className="ajwa-chat-panel position-fixed shadow-2-strong p-3 rounded-lg text-white"
+      {/* Floating Chat Drawer */}
+      {isOpen && (
+        <div
+          className="rounded p-3 text-white"
           style={{
+            position: 'fixed',
             bottom: '95px',
             right: '25px',
             width: '380px',
             maxWidth: '92vw',
-            zIndex: 9999,
+            zIndex: 9998,
             background: 'rgba(20, 10, 8, 0.98)',
             backdropFilter: 'blur(16px)',
             border: '1.5px solid rgba(212, 175, 55, 0.4)',
@@ -138,10 +162,13 @@ export default function ChatbotWidget({ products = [] }) {
         >
           {/* Header */}
           <div className="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom border-secondary">
-            <h6 className="m-0 font-weight-bold text-warning d-flex align-items-center">
-              <i className="fa fa-robot mr-2"></i> Ajwa AI Concierge
-            </h6>
-            <span className="badge badge-warning text-dark font-weight-bold">AI 2.0</span>
+            <div>
+              <h6 className="m-0 font-weight-bold text-warning d-flex align-items-center">
+                <i className="fa fa-robot mr-2"></i> Ajwa AI Concierge & Support
+              </h6>
+              <small className="text-muted">24/7 Helpline: +91 98765 43210</small>
+            </div>
+            <span className="badge badge-warning text-dark font-weight-bold">LIVE AI</span>
           </div>
 
           {/* Sub Navigation */}
@@ -150,7 +177,7 @@ export default function ChatbotWidget({ products = [] }) {
               className={`btn btn-xs btn-sm flex-fill ${activeTab === 'advisor' ? 'btn-warning text-dark font-weight-bold' : 'btn-outline-secondary text-white'}`}
               onClick={() => setActiveTab('advisor')}
             >
-              🥗 AI Nutritional Advisor
+              🥗 AI Advisor & Help
             </button>
             <button 
               className={`btn btn-xs btn-sm flex-fill ${activeTab === 'orderTrack' ? 'btn-warning text-dark font-weight-bold' : 'btn-outline-secondary text-white'}`}
@@ -163,7 +190,7 @@ export default function ChatbotWidget({ products = [] }) {
           {activeTab === 'advisor' ? (
             <div>
               {/* Quick AI Prompts */}
-              <div className="small text-muted mb-1">Recommended Prompts:</div>
+              <div className="small text-muted mb-1">Frequently Asked Queries:</div>
               <div className="d-flex flex-wrap gap-1 mb-2">
                 {QUICK_PROMPTS.map((prompt, idx) => (
                   <button 
@@ -183,7 +210,7 @@ export default function ChatbotWidget({ products = [] }) {
                 <input
                   type="text"
                   className="form-control form-control-sm bg-dark text-white border-secondary small"
-                  placeholder="e.g. Muscle building under ₹1000..."
+                  placeholder="Ask about returns, orders, care helpline, health..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAskAi()}
@@ -205,7 +232,7 @@ export default function ChatbotWidget({ products = [] }) {
               >
                 <div className="d-flex align-items-center justify-content-between mb-1">
                   <span className="small text-warning font-weight-bold">
-                    <i className="fa fa-sparkles mr-1"></i> Sommelier Response
+                    <i className="fa fa-sparkles mr-1"></i> AI Concierge Response
                   </span>
                   {appliedBudget && (
                     <span className="badge badge-success small">Budget: ≤ ₹{appliedBudget}</span>
@@ -261,16 +288,22 @@ export default function ChatbotWidget({ products = [] }) {
                 </div>
               )}
 
+              {/* Direct Call Button inside Chat */}
+              <div className="mt-3 pt-2 border-top border-secondary text-center">
+                <a href="tel:+919876543210" className="btn btn-outline-warning btn-sm btn-block font-weight-bold">
+                  <i className="fa fa-phone mr-1"></i> Call Ajwa Care: +91 98765 43210
+                </a>
+              </div>
             </div>
           ) : (
             <div>
-              <p className="small mb-2 text-light">Enter your Order ID to check live shipment status:</p>
+              <p className="small mb-2 text-light">Enter your Order ID to track real-time delivery status:</p>
               <form onSubmit={handleOrderLookup}>
                 <div className="d-flex mb-2">
                   <input
                     type="text"
                     className="form-control form-control-sm bg-dark text-white border-secondary"
-                    placeholder="e.g. UPI_172... or 64b8a2..."
+                    placeholder="e.g. 1 or 2..."
                     value={orderIdSearch}
                     onChange={(e) => setOrderIdSearch(e.target.value)}
                   />
@@ -282,15 +315,29 @@ export default function ChatbotWidget({ products = [] }) {
 
               {orderStatusResult && (
                 <div className="mt-3 p-3 bg-dark rounded border border-warning">
-                  <div className="small font-weight-bold text-warning">
-                    Order #{String(orderStatusResult.id).slice(0, 12)}
+                  <div className="small font-weight-bold text-warning d-flex justify-content-between">
+                    <span>Order #{orderStatusResult.id}</span>
+                    <span className="badge badge-success">{orderStatusResult.status}</span>
                   </div>
-                  <div className="small text-white mt-1">Status: <span className="badge badge-success">{orderStatusResult.status}</span></div>
-                  <div className="small text-muted mt-1">Est. Arrival: {orderStatusResult.estimatedDelivery}</div>
-                  <div className="small text-warning mt-1">Details: {orderStatusResult.items}</div>
+                  <div className="small text-white mt-2">
+                    <strong>Courier:</strong> {orderStatusResult.courier}
+                  </div>
+                  <div className="small text-muted mt-1">
+                    <strong>Tracking / AWB:</strong> {orderStatusResult.trackingNumber}
+                  </div>
+                  <div className="small text-warning mt-1">
+                    <strong>Est. Delivery:</strong> {orderStatusResult.estimatedDelivery}
+                  </div>
                   {orderStatusResult.total && (
-                    <div className="small text-light mt-1">Total Paid: ₹{orderStatusResult.total}</div>
+                    <div className="small text-light mt-1 border-top border-secondary pt-1">
+                      Total: Rs. {orderStatusResult.total} ({orderStatusResult.items})
+                    </div>
                   )}
+                  <div className="mt-2">
+                    <Link to={`/order/${orderStatusResult.id}`} className="btn btn-warning btn-xs btn-block text-dark font-weight-bold">
+                      View Full Order Timeline & Receipt
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

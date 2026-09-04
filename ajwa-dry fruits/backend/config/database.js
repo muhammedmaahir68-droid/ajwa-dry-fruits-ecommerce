@@ -91,6 +91,26 @@ const connectDatabase = async () => {
                 defaultValue: 'Regular'
             });
         }
+
+        const orderTable = await queryInterface.describeTable('orders');
+        if (orderTable && !orderTable.cancelInfo) {
+            await queryInterface.addColumn('orders', 'cancelInfo', {
+                type: Sequelize.JSON,
+                allowNull: true
+            });
+        }
+        if (orderTable && !orderTable.returnInfo) {
+            await queryInterface.addColumn('orders', 'returnInfo', {
+                type: Sequelize.JSON,
+                allowNull: true
+            });
+        }
+        if (orderTable && !orderTable.trackingInfo) {
+            await queryInterface.addColumn('orders', 'trackingInfo', {
+                type: Sequelize.JSON,
+                allowNull: true
+            });
+        }
     } catch (err) {
         // Table sync handled schema creation
     }

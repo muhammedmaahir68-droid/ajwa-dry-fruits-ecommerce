@@ -41,6 +41,7 @@ import ReviewList from './components/admin/ReviewList';
 import PayrollList from './components/admin/PayrollList';
 import AdminControl from './components/admin/AdminControl';
 import AdManager from './components/admin/AdManager';
+import ChatbotWidget from './components/ChatbotWidget';
 
 function App() {
   const [stripeApiKey, setStripeApiKey] = useState("")
@@ -64,6 +65,7 @@ function App() {
             <Header/>
                 <div className='container container-fluid'>
                   <ToastContainer theme='dark' />
+                  <ChatbotWidget />
                   <Routes>
                       <Route path='/' element={<Home/>} />
                       <Route path='/search/:keyword' element={<ProductSearch/>} />
@@ -82,7 +84,9 @@ function App() {
                       <Route path='/order/success' element={<ProtectedRoute><OrderSuccess/></ProtectedRoute> } />
                       <Route path='/orders' element={<ProtectedRoute><UserOrders/></ProtectedRoute> } />
                       <Route path='/order/:id' element={<ProtectedRoute><OrderDetail/></ProtectedRoute> } />
-                      {stripeApiKey && <Route path='/payment' element={<ProtectedRoute><Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements></ProtectedRoute> } />}
+                      <Route path='/payment' element={<ProtectedRoute>{stripeApiKey ? <Elements stripe={loadStripe(stripeApiKey)}><Payment/></Elements> : <Payment/>}</ProtectedRoute> } />
+                      <Route path='/orders/me' element={<ProtectedRoute><UserOrders/></ProtectedRoute> } />
+                      <Route path='/myorders' element={<ProtectedRoute><UserOrders/></ProtectedRoute> } />
                       {/* Admin Routes */}
                       <Route path='/admin/control' element={ <ProtectedRoute isAdmin={true}><AdminControl/></ProtectedRoute> } />
                       <Route path='/admin/dashboard' element={ <ProtectedRoute isAdmin={true}><Dashboard/></ProtectedRoute> } />
