@@ -37,7 +37,7 @@ export default function Product3DCard({ product, col = 4 }) {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotX = ((y - centerY) / centerY) * -12; // tilt angle
+    const rotX = ((y - centerY) / centerY) * -12;
     const rotY = ((x - centerX) / centerX) * 12;
 
     setRotateX(rotX);
@@ -49,7 +49,7 @@ export default function Product3DCard({ product, col = 4 }) {
     });
   };
 
-  // Touch Move 3D Gyro/Tilt Handler for Mobile
+  // Touch Move / Touch Interaction
   const handleTouchMove = (e) => {
     if (!cardRef.current || e.touches.length === 0) return;
     const touch = e.touches[0];
@@ -65,29 +65,37 @@ export default function Product3DCard({ product, col = 4 }) {
 
     setRotateX(rotX);
     setRotateY(rotY);
+    setGlare({
+      x: (x / rect.width) * 100,
+      y: (y / rect.height) * 100,
+      opacity: 0.4
+    });
   };
 
-  // Reset 3D transforms smoothly on mouse leave / touch end
+  // Touch Start: Immediately highlight and zoom
+  const handleTouchStart = () => {
+    setIsHovered(true);
+    setIsZoomed(true);
+  };
+
+  // Touch End / Mouse Leave: Instantly return to normal actual size
   const handleReset = () => {
     setRotateX(0);
     setRotateY(0);
     setGlare({ x: 50, y: 50, opacity: 0 });
     setIsHovered(false);
+    setIsZoomed(false);
   };
 
-  // Toggle Touch Zoom / Inspect State
   const toggleZoom = (e) => {
     e.stopPropagation();
     setIsZoomed(prev => !prev);
-    if (!isZoomed) {
-      toast.info(`🔍 3D Inspect Mode: ${product.name}`, { position: 'bottom-center', autoClose: 1500 });
-    }
   };
 
   const quickAddToCart = (e) => {
     e.stopPropagation();
-    if (product.stock < 1) {
-      toast.error('Out of stock', { position: 'bottom-center' });
+    if (product.stock <= 0) {
+      toast.error('This royal harvest is currently out of stock', { position: 'bottom-center' });
       return;
     }
     const targetId = product._id || product.id;
@@ -109,9 +117,10 @@ export default function Product3DCard({ product, col = 4 }) {
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleReset}
+        onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleReset}
-        onClick={() => isZoomed && setIsZoomed(false)}
+        onTouchCancel={handleReset}
         style={{
           perspective: '1200px',
           zIndex: isZoomed ? 9999 : 1
@@ -125,11 +134,11 @@ export default function Product3DCard({ product, col = 4 }) {
             transformStyle: 'preserve-3d',
             transform: isZoomed
               ? 'scale(1.18) translateZ(60px)'
-              : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.03 : 1})`,
+              : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.05 : 1})`,
             boxShadow: isZoomed
               ? '0 30px 60px rgba(0,0,0,0.95), 0 0 35px rgba(212, 175, 55, 0.5)'
               : (isHovered ? '0 18px 36px rgba(0,0,0,0.85), 0 0 20px rgba(212, 175, 55, 0.3)' : '0 10px 20px rgba(0,0,0,0.6)'),
-            transition: isHovered && !isZoomed ? 'transform 0.08s ease-out' : 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease'
+            transition: isHovered && !isZoomed ? 'transform 0.08s ease-out' : 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease'
           }}
         >
           {/* Dynamic Specular Light Glare Layer */}
@@ -145,7 +154,7 @@ export default function Product3DCard({ product, col = 4 }) {
             }}
           />
 
-          {/* Floating Layer 1: Badges (translateZ 55px) */}
+          {/* Floating Layer 1: Badges */}
           <div
             className="position-absolute top-0 left-0 m-2 d-flex flex-column gap-1"
             style={{
@@ -164,7 +173,7 @@ export default function Product3DCard({ product, col = 4 }) {
             )}
           </div>
 
-          {/* Touch-to-Zoom Inspect Button Toggle (translateZ 60px) */}
+          {/* Touch-to-Zoom Inspect Button Toggle */}
           <button
             type="button"
             onClick={toggleZoom}
@@ -176,18 +185,19 @@ export default function Product3DCard({ product, col = 4 }) {
               transform: 'translateZ(60px)',
               fontSize: '0.8rem'
             }}
-            title={isZoomed ? 'Click to Return Normal State' : 'Touch to 3D Zoom Inspect'}
-            aria-label="3D Zoom Inspect"
+            title={isZoomed ? 'Click to Return Normal State' : 'Touch to Zoom'}
+            aria-label="Zoom Inspect"
           >
             <i className={`fa ${isZoomed ? 'fa-compress' : 'fa-search-plus'}`}></i>
           </button>
 
-          {/* Floating Layer 2: 3D Product Media (translateZ 35px) */}
+          {/* Floating Layer 2: Real Product Photo Media */}
           <div
-            className="ajwa-card-media position-relative text-center p-3"
+            className="ajwa-card-media position-relative text-center p-2"
             style={{
               transform: isZoomed ? 'translateZ(50px) scale(1.1)' : 'translateZ(35px)',
-              transition: 'transform 0.3s ease'
+              transition: 'transform 0.3s ease',
+              background: 'radial-gradient(circle at center, rgba(35, 18, 12, 0.6), transparent 70%)'
             }}
           >
             <img
@@ -195,15 +205,17 @@ export default function Product3DCard({ product, col = 4 }) {
               src={imgUrl}
               alt={product.name}
               style={{
-                maxHeight: isZoomed ? '220px' : '180px',
-                objectFit: 'contain',
+                height: isZoomed ? '210px' : '175px',
+                width: '100%',
+                objectFit: 'cover',
+                borderRadius: '8px',
                 filter: isHovered ? 'drop-shadow(0 10px 15px rgba(212, 175, 55, 0.4))' : 'none',
-                transition: 'filter 0.3s ease, max-height 0.3s ease'
+                transition: 'filter 0.3s ease, height 0.3s ease'
               }}
             />
           </div>
 
-          {/* Floating Layer 3: Details, Weight Selector & Price (translateZ 45px) */}
+          {/* Floating Layer 3: Details & Actions */}
           <div
             className="card-body d-flex flex-column justify-content-between p-3"
             style={{
@@ -240,7 +252,7 @@ export default function Product3DCard({ product, col = 4 }) {
                 <div className="rating-outer" style={{ fontSize: '0.8rem' }}>
                   <div className="rating-inner" style={{ width: `${((product.ratings || 4.8) / 5) * 100}%` }}></div>
                 </div>
-                <span id="no_of_reviews" className="small text-muted">({product.numOfReviews || 18} Reviews)</span>
+                <span id="no_of_reviews" className="small text-muted">({product.numOfReviews || 24} Reviews)</span>
               </div>
             </div>
 
@@ -265,10 +277,9 @@ export default function Product3DCard({ product, col = 4 }) {
               </div>
             </div>
 
-            {/* Inspect Notice in Zoom State */}
             {isZoomed && (
-              <div className="mt-2 text-center small text-warning font-weight-bold animate__animated animate__fadeIn">
-                <i className="fa fa-info-circle mr-1"></i> Tap anywhere to exit 3D inspect view
+              <div className="mt-2 text-center small text-warning font-weight-bold">
+                <i className="fa fa-info-circle mr-1"></i> Touch or leave to return normal size
               </div>
             )}
 

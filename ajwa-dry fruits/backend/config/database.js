@@ -3,18 +3,6 @@ const path = require('path');
 const fs = require('fs');
 
 const PRODUCT_CATEGORIES = [
-    'Electronics',
-    'Mobile Phones',
-    'Laptops',
-    'Accessories',
-    'Headphones',
-    'Food',
-    'Books',
-    'Clothes/Shoes',
-    'Beauty/Health',
-    'Sports',
-    'Outdoor',
-    'Home',
     'Dates',
     'Almonds',
     'Cashews',
@@ -23,7 +11,8 @@ const PRODUCT_CATEGORIES = [
     'Dried Figs',
     'Raisins',
     'Imported Chocolates',
-    'Gift Hampers'
+    'Gift Hampers',
+    'Gourmet Seeds & Berries'
 ];
 
 let activeSequelize;

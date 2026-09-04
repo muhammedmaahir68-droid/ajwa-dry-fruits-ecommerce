@@ -142,7 +142,7 @@ exports.returnOrder = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler('Return can only be requested for Delivered orders.', 400));
     }
 
-    const { reason, comment } = req.body;
+    const { reason, comment, images } = req.body;
     if (!reason) {
         return next(new ErrorHandler('Please select a reason for return.', 400));
     }
@@ -151,6 +151,7 @@ exports.returnOrder = catchAsyncError(async (req, res, next) => {
     order.returnInfo = {
         reason,
         comment: comment || '',
+        images: Array.isArray(images) ? images : (images ? [images] : []),
         requestedAt: new Date(),
         status: 'Requested'
     };

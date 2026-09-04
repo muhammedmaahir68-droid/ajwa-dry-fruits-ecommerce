@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import Loader from '../layouts/Loader';
@@ -20,10 +20,13 @@ export default function OrderDetail() {
     const [cancelReason, setCancelReason] = useState('Found a better price / changed mind');
     const [customCancelReason, setCustomCancelReason] = useState('');
 
-    // Return Modal State
+    // Return Modal State with Photo Upload
     const [showReturnModal, setShowReturnModal] = useState(false);
     const [returnReason, setReturnReason] = useState('Damaged or spoiled item');
     const [returnComment, setReturnComment] = useState('');
+    const [returnPhoto, setReturnPhoto] = useState(null);
+    const [returnPhotoPreview, setReturnPhotoPreview] = useState('');
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         dispatch(orderDetailAction(id));
@@ -38,7 +41,7 @@ export default function OrderDetail() {
             dispatch(orderDetailAction(id));
         }
         if (isOrderReturned) {
-            toast.success(message || 'Return request submitted successfully! Ajwa team will contact you.', { position: 'bottom-center' });
+            toast.success(message || 'Return request with photo submitted successfully! Ajwa team will contact you.', { position: 'bottom-center' });
             dispatch(clearOrderReturned());
             dispatch(clearMessage());
             setShowReturnModal(false);
@@ -56,15 +59,30 @@ export default function OrderDetail() {
         dispatch(cancelOrder(id, finalReason));
     };
 
-    const handleReturnSubmit = (e) => {
-        e.preventDefault();
-        dispatch(returnOrder(id, { reason: returnReason, comment: returnComment }));
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setReturnPhoto(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setReturnPhotoPreview(reader.result);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
-    // Check if eligible for cancel (Processing or Packaged)
+    const handleReturnSubmit = (e) => {
+        e.preventDefault();
+        dispatch(returnOrder(id, {
+            reason: returnReason,
+            comment: returnComment,
+            images: returnPhotoPreview ? [returnPhotoPreview] : []
+        }));
+    };
+
     const canCancel = ['Processing', 'Packaged', 'Pending'].includes(orderStatus);
-    
-    // Check if eligible for return (Delivered & not already return requested)
     const canReturn = orderStatus === 'Delivered' && !returnInfo;
 
     return (
@@ -91,7 +109,7 @@ export default function OrderDetail() {
                                     className="btn btn-sm btn-warning text-dark font-weight-bold shadow-sm"
                                     onClick={() => setShowReturnModal(true)}
                                 >
-                                    <i className="fa fa-undo mr-1"></i> Request 7-Day Return
+                                    <i className="fa fa-undo mr-1"></i> Request 7-Day Return & Attach Photo
                                 </button>
                             )}
                             <a 
@@ -132,6 +150,26 @@ export default function OrderDetail() {
 
                     {/* Visual 5-Stage Stepper Tracker */}
                     <OrderTimelineStepper order={orderDetail} />
+
+                    {/* Return Photo Inspection if already requested */}
+                    {returnInfo?.images && returnInfo.images.length > 0 && (
+                        <div className="p-3 rounded mb-4 shadow border border-warning" style={{ backgroundColor: 'rgba(229, 169, 60, 0.1)' }}>
+                            <h6 className="text-warning font-weight-bold mb-2">
+                                <i className="fa fa-camera mr-2"></i> Attached Product Issue Photo:
+                            </h6>
+                            <div className="d-flex gap-2">
+                                {returnInfo.images.map((img, idx) => (
+                                    <a key={idx} href={img} target="_blank" rel="noopener noreferrer">
+                                        <img 
+                                            src={img} 
+                                            alt="Return Defect Proof" 
+                                            style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '6px', border: '1.5px solid #D4AF37' }} 
+                                        />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Order Details & Shipping Cards */}
                     <div className="row">
@@ -289,7 +327,7 @@ export default function OrderDetail() {
                 </div>
             )}
 
-            {/* RETURN ORDER MODAL */}
+            {/* RETURN ORDER MODAL WITH PHOTO ATTACHMENT */}
             {showReturnModal && (
                 <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.85)', zIndex: 1050 }}>
                     <div className="modal-dialog modal-dialog-centered">
@@ -300,7 +338,7 @@ export default function OrderDetail() {
                         }}>
                             <div className="modal-header border-secondary">
                                 <h5 className="modal-title text-warning font-weight-bold">
-                                    <i className="fa fa-undo mr-2"></i> Request 7-Day Hassle-Free Return
+                                    <i className="fa fa-undo mr-2"></i> Request 7-Day Return & Attach Photo
                                 </h5>
                                 <button type="button" className="close text-white" onClick={() => setShowReturnModal(false)}>
                                     <span>&times;</span>
@@ -309,7 +347,7 @@ export default function OrderDetail() {
                             <form onSubmit={handleReturnSubmit}>
                                 <div className="modal-body">
                                     <div className="alert alert-info small text-dark font-weight-bold mb-3">
-                                        <i className="fa fa-shield mr-1"></i> Ajwa 100% Quality Guarantee: If you are unsatisfied with the quality or received damaged items, submit this request. Our team will verify and dispatch a replacement or full refund.
+                                        <i className="fa fa-shield mr-1"></i> Ajwa 100% Quality Guarantee: Attach a clear photo showing the issue / package so our team can approve your refund or replacement instantly.
                                     </div>
 
                                     <div className="form-group mb-3">
@@ -329,12 +367,54 @@ export default function OrderDetail() {
                                         </select>
                                     </div>
 
+                                    {/* ATTACH PHOTO INPUT */}
                                     <div className="form-group mb-3">
-                                        <label className="font-weight-bold text-warning small">Additional Details / Comments:</label>
+                                        <label className="font-weight-bold text-warning small">
+                                            <i className="fa fa-camera mr-1"></i> Attach Proof Photo (Required for damage/quality claims):
+                                        </label>
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            className="d-none"
+                                            onChange={handlePhotoChange}
+                                        />
+                                        <div className="d-flex align-items-center gap-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-outline-warning btn-sm font-weight-bold"
+                                                onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                                            >
+                                                <i className="fa fa-upload mr-1"></i> {returnPhoto ? 'Change Photo' : 'Upload Defect Photo'}
+                                            </button>
+                                            {returnPhoto && <span className="small text-success">✔ Photo Selected</span>}
+                                        </div>
+
+                                        {returnPhotoPreview && (
+                                            <div className="mt-2 position-relative d-inline-block">
+                                                <img
+                                                    src={returnPhotoPreview}
+                                                    alt="Defect Preview"
+                                                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #D4AF37' }}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-xs btn-danger position-absolute top-0 right-0 p-1"
+                                                    style={{ transform: 'translate(30%, -30%)', borderRadius: '50%' }}
+                                                    onClick={() => { setReturnPhoto(null); setReturnPhotoPreview(''); }}
+                                                >
+                                                    &times;
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="form-group mb-3">
+                                        <label className="font-weight-bold text-warning small">Explain What Happened / Comments:</label>
                                         <textarea 
                                             className="form-control"
                                             rows="3"
-                                            placeholder="Provide any details that will help us process your return faster..."
+                                            placeholder="Describe the issue with the item..."
                                             value={returnComment}
                                             onChange={(e) => setReturnComment(e.target.value)}
                                         ></textarea>
@@ -345,7 +425,7 @@ export default function OrderDetail() {
                                         Cancel
                                     </button>
                                     <button type="submit" className="btn btn-warning text-dark font-weight-bold">
-                                        Submit Return Request
+                                        Submit Return Request with Photo
                                     </button>
                                 </div>
                             </form>

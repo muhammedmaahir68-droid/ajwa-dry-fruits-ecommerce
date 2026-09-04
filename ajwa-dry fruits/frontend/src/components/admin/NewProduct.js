@@ -22,15 +22,17 @@ export default function NewProduct() {
   const { loading, isProductCreated, error } = useSelector((state) => state.productState);
 
   const categories = [
-    'Dates',
-    'Almonds',
-    'Cashews',
-    'Walnuts',
-    'Pistachios',
-    'Dried Figs',
-    'Raisins',
-    'Food'
-  ];
+        'Dates',
+        'Almonds',
+        'Cashews',
+        'Walnuts',
+        'Pistachios',
+        'Dried Figs',
+        'Raisins',
+        'Imported Chocolates',
+        'Gift Hampers',
+        'Gourmet Seeds & Berries'
+    ];
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

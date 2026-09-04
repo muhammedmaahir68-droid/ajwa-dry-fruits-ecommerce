@@ -131,6 +131,20 @@ export default function UpdateOrder() {
                                         <strong>Customer Notes:</strong> "{returnInfo.comment}"
                                     </p>
                                 )}
+                                {returnInfo?.images && returnInfo.images.length > 0 && (
+                                    <div className="my-2 p-2 rounded bg-dark border border-warning">
+                                        <div className="small text-warning font-weight-bold mb-1">
+                                            <i className="fa fa-camera mr-1"></i> Customer Defect Photo Proof:
+                                        </div>
+                                        <div className="d-flex gap-2">
+                                            {returnInfo.images.map((img, idx) => (
+                                                <a key={idx} href={img} target="_blank" rel="noopener noreferrer">
+                                                    <img src={img} alt="Defect Proof" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #D4AF37' }} />
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="form-group my-3">
                                     <label className="font-weight-bold text-warning small">Admin Resolution Note to Customer:</label>
                                     <input 

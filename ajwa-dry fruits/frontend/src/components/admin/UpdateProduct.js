@@ -23,25 +23,16 @@ export default function UpdateProduct () {
     const { loading, isProductUpdated, error, product } = useSelector( state => state.productState)
 
     const categories = [
-        'Electronics',
-        'Mobile Phones',
-        'Laptops',
-        'Accessories',
-        'Headphones',
-        'Food',
-        'Books',
-        'Clothes/Shoes',
-        'Beauty/Health',
-        'Sports',
-        'Outdoor',
-        'Home',
         'Dates',
         'Almonds',
         'Cashews',
         'Walnuts',
         'Pistachios',
         'Dried Figs',
-        'Raisins'
+        'Raisins',
+        'Imported Chocolates',
+        'Gift Hampers',
+        'Gourmet Seeds & Berries'
     ];
 
     const navigate = useNavigate();
