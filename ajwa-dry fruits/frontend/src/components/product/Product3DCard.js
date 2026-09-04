@@ -1,12 +1,13 @@
 import { getProductImage } from '../../utils/productImage';
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addCartItem } from '../../actions/cartActions';
 
 export default function Product3DCard({ product, col = 4 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cardRef = useRef(null);
 
   const [rotateX, setRotateX] = useState(0);
@@ -28,7 +29,9 @@ export default function Product3DCard({ product, col = 4 }) {
   const currentPrice = Math.round(hasOffer ? basePrice - (basePrice * offerPercentage) / 100 : basePrice);
   const oldPrice = Math.round(basePrice);
 
-  // 3D Perspective Tilt on Mouse Move
+  const targetId = product._id || product.id;
+
+  // 3D Perspective Tilt on Mouse Move (Desktop)
   const handleMouseMove = (e) => {
     if (isZoomed || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -50,42 +53,11 @@ export default function Product3DCard({ product, col = 4 }) {
     });
   };
 
-  // Touch Move / Touch Interaction
-  const handleTouchMove = (e) => {
-    if (!cardRef.current || e.touches.length === 0) return;
-    const touch = e.touches[0];
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotX = ((y - centerY) / centerY) * -14;
-    const rotY = ((x - centerX) / centerX) * 14;
-
-    setRotateX(rotX);
-    setRotateY(rotY);
-    setGlare({
-      x: (x / rect.width) * 100,
-      y: (y / rect.height) * 100,
-      opacity: 0.4
-    });
-  };
-
-  // Touch Start: Immediately highlight and zoom
-  const handleTouchStart = () => {
-    setIsHovered(true);
-    setIsZoomed(true);
-  };
-
-  // Touch End / Mouse Leave: Instantly return to normal actual size
   const handleReset = () => {
     setRotateX(0);
     setRotateY(0);
     setGlare({ x: 50, y: 50, opacity: 0 });
     setIsHovered(false);
-    setIsZoomed(false);
   };
 
   const toggleZoom = (e) => {
@@ -99,14 +71,25 @@ export default function Product3DCard({ product, col = 4 }) {
       toast.error('This royal harvest is currently out of stock', { position: 'bottom-center' });
       return;
     }
-    const targetId = product._id || product.id;
     dispatch(addCartItem(targetId, 1));
     toast.success(`Added ${product.name} (${selectedWeight}) to cart!`, { position: 'bottom-center' });
   };
 
-  const imgUrl = getProductImage(product);
+  // Direct card click / tap navigation
+  const handleCardClick = (e) => {
+    if (e) {
+      if (
+        e.target.closest('button') ||
+        e.target.closest('.ajwa-weight-selector') ||
+        e.target.closest('.ajwa-no-nav')
+      ) {
+        return;
+      }
+    }
+    navigate(`/product/${targetId}`);
+  };
 
-  const targetId = product._id || product.id;
+  const imgUrl = getProductImage(product);
 
   return (
     <div className={`col-sm-12 col-md-6 col-lg-${col} mb-4`}>
@@ -116,13 +99,11 @@ export default function Product3DCard({ product, col = 4 }) {
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={handleReset}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleReset}
-        onTouchCancel={handleReset}
+        onClick={handleCardClick}
         style={{
           perspective: '1200px',
-          zIndex: isZoomed ? 9999 : 1
+          zIndex: isZoomed ? 9999 : 1,
+          cursor: 'pointer'
         }}
       >
         <div
@@ -133,7 +114,7 @@ export default function Product3DCard({ product, col = 4 }) {
             transformStyle: 'preserve-3d',
             transform: isZoomed
               ? 'scale(1.18) translateZ(60px)'
-              : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.05 : 1})`,
+              : `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${isHovered ? 1.03 : 1})`,
             boxShadow: isZoomed
               ? '0 30px 60px rgba(0,0,0,0.95), 0 0 35px rgba(212, 175, 55, 0.5)'
               : (isHovered ? '0 18px 36px rgba(0,0,0,0.85), 0 0 20px rgba(212, 175, 55, 0.3)' : '0 10px 20px rgba(0,0,0,0.6)'),
@@ -172,11 +153,11 @@ export default function Product3DCard({ product, col = 4 }) {
             )}
           </div>
 
-          {/* Touch-to-Zoom Inspect Button Toggle */}
+          {/* Zoom Inspect Button */}
           <button
             type="button"
             onClick={toggleZoom}
-            className={`btn btn-sm position-absolute top-0 right-0 m-2 rounded-circle shadow d-flex align-items-center justify-content-center ${isZoomed ? 'btn-warning text-dark' : 'btn-dark text-warning border-warning'}`}
+            className={`btn btn-sm position-absolute top-0 right-0 m-2 rounded-circle shadow d-flex align-items-center justify-content-center ajwa-no-nav ${isZoomed ? 'btn-warning text-dark' : 'btn-dark text-warning border-warning'}`}
             style={{
               zIndex: 14,
               width: '32px',
@@ -184,19 +165,21 @@ export default function Product3DCard({ product, col = 4 }) {
               transform: 'translateZ(60px)',
               fontSize: '0.8rem'
             }}
-            title={isZoomed ? 'Click to Return Normal State' : 'Touch to Zoom'}
+            title={isZoomed ? 'Return to normal' : 'Zoom view'}
             aria-label="Zoom Inspect"
           >
             <i className={`fa ${isZoomed ? 'fa-compress' : 'fa-search-plus'}`}></i>
           </button>
 
-          {/* Floating Layer 2: Real Product Photo Media */}
-          <div
-            className="ajwa-card-media position-relative text-center p-2"
+          {/* Floating Layer 2: Product Image (Wrapped in Link for Guaranteed Navigation) */}
+          <Link
+            to={`/product/${targetId}`}
+            className="ajwa-card-media position-relative text-center p-2 d-block text-decoration-none"
             style={{
               transform: isZoomed ? 'translateZ(50px) scale(1.1)' : 'translateZ(35px)',
               transition: 'transform 0.3s ease',
-              background: 'radial-gradient(circle at center, rgba(35, 18, 12, 0.6), transparent 70%)'
+              background: 'radial-gradient(circle at center, rgba(35, 18, 12, 0.6), transparent 70%)',
+              cursor: 'pointer'
             }}
           >
             <img
@@ -212,7 +195,7 @@ export default function Product3DCard({ product, col = 4 }) {
                 transition: 'filter 0.3s ease, height 0.3s ease'
               }}
             />
-          </div>
+          </Link>
 
           {/* Floating Layer 3: Details & Actions */}
           <div
@@ -258,32 +241,36 @@ export default function Product3DCard({ product, col = 4 }) {
             {/* Price & Action Section */}
             <div className="pt-2 border-top border-secondary d-flex align-items-center justify-content-between">
               <div>
-                <span className="font-weight-bold text-warning h5 m-0">₹{currentPrice}</span>
+                <div className="text-warning font-weight-bold" style={{ fontSize: '1.15rem' }}>
+                  ₹{currentPrice}
+                </div>
                 {hasOffer && (
-                  <span className="text-muted text-decoration-line-through small ml-2">₹{oldPrice}</span>
+                  <div className="small text-muted text-decoration-line-through" style={{ textDecoration: 'line-through' }}>
+                    ₹{oldPrice}
+                  </div>
                 )}
               </div>
 
-              <div className="d-flex gap-2 align-items-center">
+              <div className="d-flex gap-1">
+                <Link
+                  to={`/product/${targetId}`}
+                  className="btn btn-sm btn-outline-warning rounded-pill px-2 py-1 font-weight-bold"
+                  style={{ fontSize: '0.78rem' }}
+                >
+                  Details
+                </Link>
                 <button
                   type="button"
                   onClick={quickAddToCart}
-                  className="btn btn-warning btn-sm font-weight-bold text-dark rounded-pill px-3 shadow"
-                  title="Add to Cart"
+                  disabled={product.stock <= 0}
+                  className="btn btn-sm btn-warning text-dark font-weight-bold rounded-pill px-3 py-1 shadow-sm d-flex align-items-center gap-1"
+                  style={{ fontSize: '0.78rem' }}
                 >
                   <i className="fa fa-shopping-cart mr-1"></i> Add
                 </button>
               </div>
             </div>
-
-            {isZoomed && (
-              <div className="mt-2 text-center small text-warning font-weight-bold">
-                <i className="fa fa-info-circle mr-1"></i> Touch or leave to return normal size
-              </div>
-            )}
-
           </div>
-
         </div>
       </div>
     </div>
