@@ -31,12 +31,12 @@ export default function Header() {
         fontSize: '0.8rem'
       }}>
         <div className="d-flex align-items-center gap-3 flex-wrap">
-          <a href="tel:+919876543210" className="text-warning text-decoration-none font-weight-bold d-flex align-items-center">
-            <i className="fa fa-phone mr-1"></i> Ajwa Care 24/7: <strong className="text-white ml-1">+91 98765 43210</strong>
+          <a href="tel:+919843571235" className="text-warning text-decoration-none font-weight-bold d-flex align-items-center">
+            <i className="fa fa-phone mr-1"></i> Ajwa Care 24/7: <strong className="text-white ml-1">+91 98435 71235</strong>
           </a>
           <span className="text-secondary d-none d-md-inline">|</span>
           <span className="text-light d-none d-md-inline">
-            <i className="fa fa-envelope mr-1 text-warning"></i> care@ajwadryfruits.com
+            <i className="fa fa-envelope mr-1 text-warning"></i> ajwadryfruits.nuts@gmail.com
           </span>
           <span className="text-secondary d-none d-lg-inline">|</span>
           <span className="text-success font-weight-bold d-none d-lg-inline">

@@ -4,7 +4,7 @@ const sendEmail = async (options) => {
   // Use configured SMTP transport or fallback gracefully
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.SMTP_PORT || 587);
-  const user = process.env.SMTP_USER || 'support@ajwadryfruits.com';
+  const user = process.env.SMTP_USER || 'ajwadryfruits.nuts@gmail.com';
   const pass = process.env.SMTP_PASS || '';
 
   const transporter = nodemailer.createTransport({
@@ -16,7 +16,7 @@ const sendEmail = async (options) => {
   });
 
   const fromName = process.env.SMTP_FROM_NAME || 'Ajwa Dry Fruits Security';
-  const fromEmail = process.env.SMTP_FROM_EMAIL || 'no-reply@ajwadryfruits.com';
+  const fromEmail = process.env.SMTP_FROM_EMAIL || 'ajwadryfruits.nuts@gmail.com';
 
   const htmlContent = options.html || `
     <div style="background-color: #0A0503; color: #FFFFFF; font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37;">

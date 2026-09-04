@@ -18,7 +18,7 @@ export default function ChatbotWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('advisor');
   const [query, setQuery] = useState('');
-  const [aiReply, setAiReply] = useState("Greetings! I am the Ajwa AI Concierge. Ask me about our royal dry fruits collection, nutritional benefits, instant cancellations, 7-day returns, or 24/7 Customer Care helpline (+91 98765 43210)!");
+  const [aiReply, setAiReply] = useState("Greetings! I am the Ajwa AI Concierge. Ask me about our royal dry fruits collection, nutritional benefits, instant cancellations, 7-day returns, or 24/7 Customer Care helpline (+91 98435 71235)!");
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [appliedBudget, setAppliedBudget] = useState(null);
   const [loadingAi, setLoadingAi] = useState(false);
@@ -48,7 +48,7 @@ export default function ChatbotWidget() {
 
       // Client-side instant policy & helpline responses for zero friction
       if (lower.includes('customer care') || lower.includes('phone') || lower.includes('call') || lower.includes('contact') || lower.includes('number') || lower.includes('helpline')) {
-        setAiReply("📞 **Ajwa 24/7 Dedicated Customer Care Helpline:**\n• Phone: **+91 98765 43210** (Toll-Free Direct Line)\n• Email: **care@ajwadryfruits.com**\n• Operating Hours: 24 Hours, 7 Days a week\n\nOur support experts are ready to assist you with order tracking, refunds, returns, or product recommendations!");
+        setAiReply("📞 **Ajwa 24/7 Dedicated Customer Care Helpline:**\n• Phone: **+91 98435 71235** (Toll-Free Direct Line)\n• Email: **ajwadryfruits.nuts@gmail.com**\n• Operating Hours: 24 Hours, 7 Days a week\n\nOur support experts are ready to assist you with order tracking, refunds, returns, or product recommendations!");
         setRecommendedProducts([]);
         setAppliedBudget(null);
         setLoadingAi(false);
@@ -85,7 +85,7 @@ export default function ChatbotWidget() {
         setAppliedBudget(res.data.data.budgetCap);
       }
     } catch (err) {
-      setAiReply("I am here to help! You can reach our 24/7 Ajwa Helpline at +91 98765 43210 or care@ajwadryfruits.com for immediate support with orders, cancellations, and returns.");
+      setAiReply("I am here to help! You can reach our 24/7 Ajwa Helpline at +91 98435 71235 or ajwadryfruits.nuts@gmail.com for immediate support with orders, cancellations, and returns.");
     } finally {
       setLoadingAi(false);
     }
@@ -166,7 +166,7 @@ export default function ChatbotWidget() {
               <h6 className="m-0 font-weight-bold text-warning d-flex align-items-center">
                 <i className="fa fa-robot mr-2"></i> Ajwa AI Concierge & Support
               </h6>
-              <small className="text-muted">24/7 Helpline: +91 98765 43210</small>
+              <small className="text-muted">24/7 Helpline: +91 98435 71235</small>
             </div>
             <span className="badge badge-warning text-dark font-weight-bold">LIVE AI</span>
           </div>
@@ -290,8 +290,8 @@ export default function ChatbotWidget() {
 
               {/* Direct Call Button inside Chat */}
               <div className="mt-3 pt-2 border-top border-secondary text-center">
-                <a href="tel:+919876543210" className="btn btn-outline-warning btn-sm btn-block font-weight-bold">
-                  <i className="fa fa-phone mr-1"></i> Call Ajwa Care: +91 98765 43210
+                <a href="tel:+919843571235" className="btn btn-outline-warning btn-sm btn-block font-weight-bold">
+                  <i className="fa fa-phone mr-1"></i> Call Ajwa Care: +91 98435 71235
                 </a>
               </div>
             </div>

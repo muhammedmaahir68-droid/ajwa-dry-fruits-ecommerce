@@ -156,8 +156,8 @@ export default function UserOrders() {
                         <small className="text-muted">Track package status, cancel before shipping, or initiate 7-day hassle-free returns</small>
                     </div>
                     <div className="d-flex gap-2">
-                        <a href="tel:+919876543210" className="btn btn-outline-warning btn-sm font-weight-bold">
-                            <i className="fa fa-phone mr-1"></i> Support: +91 98765 43210
+                        <a href="tel:+919843571235" className="btn btn-outline-warning btn-sm font-weight-bold">
+                            <i className="fa fa-phone mr-1"></i> Support: +91 98435 71235
                         </a>
                     </div>
                 </div>

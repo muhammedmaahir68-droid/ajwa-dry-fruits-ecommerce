@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Footer() {
@@ -12,8 +13,23 @@ export default function Footer() {
             <span className="ajwa-logo-main h4 font-weight-bold text-warning mr-2">AJWA</span>
             <span className="ajwa-logo-sub text-muted">DRY FRUITS & GOURMET IMPORTS</span>
           </div>
-          <p className="text-warning font-weight-bold mb-0 small">
-            © {new Date().getFullYear()} Ajwa Dry Fruits. All Rights Reserved. Luxury Quality Guaranteed.
+
+          <div className="d-flex justify-content-center align-items-center gap-3 flex-wrap my-2 small">
+            <a href="tel:+919843571235" className="text-warning text-decoration-none font-weight-bold">
+              <i className="fa fa-phone mr-1"></i> Helpline: +91 98435 71235
+            </a>
+            <span className="text-secondary d-none d-sm-inline">|</span>
+            <a href="mailto:ajwadryfruits.nuts@gmail.com" className="text-light text-decoration-none">
+              <i className="fa fa-envelope mr-1 text-warning"></i> ajwadryfruits.nuts@gmail.com
+            </a>
+            <span className="text-secondary d-none d-sm-inline">|</span>
+            <span className="text-success font-weight-bold">
+              <i className="fa fa-shield mr-1"></i> 100% Royal Quality Certified
+            </span>
+          </div>
+
+          <p className="text-muted font-weight-bold mb-0 small">
+            &copy; {new Date().getFullYear()} Ajwa Dry Fruits. All Rights Reserved.
           </p>
         </div>
       </footer>

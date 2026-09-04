@@ -95,11 +95,11 @@ export default function OrderDetail() {
                                 </button>
                             )}
                             <a 
-                                href="tel:+919876543210" 
+                                href="tel:+919843571235" 
                                 className="btn btn-sm btn-outline-success font-weight-bold"
                                 title="24/7 Ajwa Helpline"
                             >
-                                <i className="fa fa-phone mr-1"></i> Care: +91 98765 43210
+                                <i className="fa fa-phone mr-1"></i> Care: +91 98435 71235
                             </a>
                         </div>
                     </div>
@@ -213,8 +213,8 @@ export default function OrderDetail() {
                                 <i className="fa fa-headphones text-warning fa-2x mb-2"></i>
                                 <h6 className="text-warning font-weight-bold mb-1">Have an issue with this order?</h6>
                                 <p className="small text-muted mb-2">Our customer care is available 24/7 to resolve refunds, returns, or queries.</p>
-                                <a href="tel:+919876543210" className="btn btn-warning btn-sm font-weight-bold text-dark px-3 shadow-sm">
-                                    <i className="fa fa-phone mr-1"></i> Call +91 98765 43210
+                                <a href="tel:+919843571235" className="btn btn-warning btn-sm font-weight-bold text-dark px-3 shadow-sm">
+                                    <i className="fa fa-phone mr-1"></i> Call +91 98435 71235
                                 </a>
                             </div>
                         </div>
