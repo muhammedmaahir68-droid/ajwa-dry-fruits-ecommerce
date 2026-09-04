@@ -25,16 +25,14 @@ export default function Dashboard() {
     // Real live stats from actual data
     const totalRevenue = adminOrders.reduce((sum, o) => sum + Number(o.totalPrice || 0), 0);
     const pendingOrders = adminOrders.filter(o => (o.orderStatus || '').includes('Processing')).length;
-    const pendingAmount = adminOrders
-        .filter(o => (o.orderStatus || '').includes('Processing'))
-        .reduce((sum, o) => sum + Number(o.totalPrice || 0), 0);
+    const aov = adminOrders.length > 0 ? (totalRevenue / adminOrders.length).toFixed(2) : '0.00';
 
     useEffect(() => {
         dispatch(getAdminProducts);
         dispatch(getUsers);
         dispatch(adminOrdersAction);
 
-        // Fetch real analytics
+        // Fetch real analytics & demand forecasts
         axios.get('/api/v1/admin/analytics').then(res => {
             if (res.data.success) setAnalytics(res.data);
         }).catch(() => {});
@@ -64,51 +62,151 @@ export default function Dashboard() {
 
     const topProducts = analytics?.topProducts || [];
     const pieData = analytics?.pieChartCategory || [];
+    const inventoryAlerts = analytics?.inventoryAlerts || [];
+    const demandForecasts = analytics?.demandForecasts || [];
 
     return (
         <div className="ajwa-admin-page">
             <Sidebar />
             <div className="ajwa-admin-content">
 
-                {/* 1. Top Metrics Cards Row — LIVE REAL DATA ONLY */}
+                {/* 1. Top Metrics Cards Row — LIVE REAL DATA */}
                 <div className="row mb-4">
                     {/* Total Revenue */}
-                    <div className="col-md-4 mb-3">
+                    <div className="col-md-3 col-sm-6 mb-3">
                         <div className="card bg-dark text-white border border-warning rounded-lg p-3 shadow-lg h-100">
                             <div className="small text-muted font-weight-bold text-uppercase mb-1">TOTAL REVENUE</div>
-                            <h2 className="font-weight-bold text-warning mb-1">
+                            <h3 className="font-weight-bold text-warning mb-1">
                                 ₹{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                            </h2>
+                            </h3>
                             <span className="text-muted small">From {adminOrders.length} orders</span>
                         </div>
                     </div>
 
                     {/* Orders Received */}
-                    <div className="col-md-4 mb-3">
+                    <div className="col-md-3 col-sm-6 mb-3">
                         <div className="card bg-dark text-white border border-secondary rounded-lg p-3 shadow-lg h-100">
                             <div className="small text-muted font-weight-bold text-uppercase mb-1">ORDERS RECEIVED</div>
-                            <h2 className="font-weight-bold text-white mb-1">
+                            <h3 className="font-weight-bold text-white mb-1">
                                 {adminOrders.length}
-                            </h2>
-                            <span className="text-muted small">{pendingOrders} pending</span>
+                            </h3>
+                            <span className="text-muted small">{pendingOrders} awaiting fulfillment</span>
                         </div>
                     </div>
 
-                    {/* Payments Pending */}
-                    <div className="col-md-4 mb-3">
+                    {/* Average Order Value (AOV) */}
+                    <div className="col-md-3 col-sm-6 mb-3">
                         <div className="card bg-dark text-white border border-secondary rounded-lg p-3 shadow-lg h-100">
-                            <div className="small text-muted font-weight-bold text-uppercase mb-1">PAYMENTS PENDING</div>
-                            <h2 className="font-weight-bold text-white mb-1">
-                                ₹{pendingAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                            </h2>
-                            <span className="text-muted small">COD/Unprocessed orders</span>
+                            <div className="small text-muted font-weight-bold text-uppercase mb-1">AVG ORDER VALUE</div>
+                            <h3 className="font-weight-bold text-white mb-1">
+                                ₹{Number(aov).toLocaleString()}
+                            </h3>
+                            <span className="text-muted small">Basket Size Optimization</span>
+                        </div>
+                    </div>
+
+                    {/* AI Engine Status */}
+                    <div className="col-md-3 col-sm-6 mb-3">
+                        <div className="card bg-dark text-white border border-warning rounded-lg p-3 shadow-lg h-100">
+                            <div className="small text-muted font-weight-bold text-uppercase mb-1">AI COMMERCE STACK</div>
+                            <div className="d-flex align-items-center mt-1">
+                                <span className="badge badge-success px-2 py-1 mr-2">ONLINE</span>
+                                <span className="font-weight-bold text-warning small">FastAPI + Scikit</span>
+                            </div>
+                            <span className="text-muted small mt-1 d-block">ML Forecasts Active</span>
                         </div>
                     </div>
                 </div>
 
-                {/* 2. Second Row: Live Stats + Top Products */}
-                <div className="row mb-4">
+                {/* 2. INTELLIGENT INVENTORY ALERTS (Predictive Restock Triggers) */}
+                {inventoryAlerts.length > 0 && (
+                    <div className="card bg-dark text-white border border-danger rounded-lg p-3 shadow-lg mb-4">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                            <h6 className="text-danger font-weight-bold text-uppercase m-0">
+                                <i className="fa fa-exclamation-triangle mr-2"></i>
+                                Intelligent Inventory Alerts ({inventoryAlerts.length})
+                            </h6>
+                            <span className="badge badge-danger">High Priority Restock</span>
+                        </div>
+                        <div className="d-flex flex-column gap-2">
+                            {inventoryAlerts.map((alert, i) => (
+                                <div
+                                    key={i}
+                                    className="p-2 rounded border border-danger d-flex align-items-center justify-content-between flex-wrap"
+                                    style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}
+                                >
+                                    <div>
+                                        <strong className="text-white">{alert.name}</strong> ({alert.category}) —
+                                        <span className="text-warning ml-1">Stock: {alert.currentStock} units</span>
+                                        <span className="text-muted small ml-2">
+                                            (Projected depletion in <strong>{alert.daysRemaining} days</strong> at {alert.dailyVelocity} units/day)
+                                        </span>
+                                    </div>
+                                    <div className="mt-1 mt-md-0">
+                                        <span className="badge badge-warning text-dark font-weight-bold mr-2">{alert.action}</span>
+                                        <Link to="/admin/products" className="btn btn-xs btn-outline-danger small py-1 px-2">
+                                            Manage Stock
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
+                {/* 3. AI DEMAND FORECASTING TABLE */}
+                {demandForecasts.length > 0 && (
+                    <div className="card bg-dark text-white border border-warning rounded-lg p-4 shadow-lg mb-4">
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h6 className="text-warning font-weight-bold text-uppercase m-0">
+                                <i className="fa fa-line-chart mr-2"></i>
+                                Machine Learning Demand Forecasting (7-Day & 30-Day Outlook)
+                            </h6>
+                            <span className="badge badge-warning text-dark font-weight-bold">scikit-learn Linear / Ridge</span>
+                        </div>
+                        <div className="table-responsive">
+                            <table className="table table-dark table-hover table-borderless align-middle m-0 small">
+                                <thead className="text-muted border-bottom border-secondary">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Category</th>
+                                        <th>Current Stock</th>
+                                        <th>Daily Velocity</th>
+                                        <th>7-Day Demand</th>
+                                        <th>30-Day Demand</th>
+                                        <th>Runout Horizon</th>
+                                        <th>Risk Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {demandForecasts.map((df) => (
+                                        <tr key={df.productId}>
+                                            <td className="font-weight-bold text-white">{df.name}</td>
+                                            <td><span className="badge badge-secondary">{df.category}</span></td>
+                                            <td className="font-weight-bold text-warning">{df.currentStock}</td>
+                                            <td>{df.dailyVelocity} / day</td>
+                                            <td><strong>{df.forecast7d} units</strong></td>
+                                            <td>{df.forecast30d} units</td>
+                                            <td>
+                                                <span className={df.daysUntilStockout <= 5 ? 'text-danger font-weight-bold' : (df.daysUntilStockout <= 10 ? 'text-warning' : 'text-success')}>
+                                                    {df.daysUntilStockout} days
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className={`badge ${df.riskLevel === 'CRITICAL' ? 'badge-danger' : (df.riskLevel === 'WARNING' ? 'badge-warning text-dark' : 'badge-success')}`}>
+                                                    {df.riskLevel}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* 4. Second Row: Live Stats + Top Products */}
+                <div className="row mb-4">
                     {/* Live Store Overview */}
                     <div className="col-md-6 mb-4">
                         <div className="card bg-dark text-white border border-secondary rounded-lg p-4 shadow-lg h-100">
@@ -138,7 +236,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Top Performing Products — LIVE */}
+                    {/* Top Performing Products */}
                     <div className="col-md-6 mb-4">
                         <div className="card bg-dark text-white border border-secondary rounded-lg p-4 shadow-lg h-100">
                             <h6 className="text-warning font-weight-bold text-uppercase mb-3">TOP PERFORMING PRODUCTS</h6>
@@ -176,13 +274,13 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* 3. Sales Distribution — Live or Empty State */}
+                {/* 5. Sales Distribution */}
                 <div className="card bg-dark text-white border border-secondary rounded-lg p-4 shadow-lg mb-4">
                     <h6 className="text-warning font-weight-bold text-uppercase mb-3">SALES DISTRIBUTION BY CATEGORY</h6>
                     {pieData.length === 0 ? (
                         <div className="text-center py-4">
                             <i className="fa fa-pie-chart text-warning" style={{ fontSize: '2rem' }}></i>
-                            <p className="text-muted mt-3 small">No category sales yet. When customers start placing orders, the live chart will appear here.</p>
+                            <p className="text-muted mt-3 small">No category sales yet. Category breakdown will update dynamically with checkout activity.</p>
                         </div>
                     ) : (
                         <div className="d-flex flex-wrap gap-3">
@@ -196,7 +294,7 @@ export default function Dashboard() {
                     )}
                 </div>
 
-                {/* 4. Quick Add Product Bar */}
+                {/* 6. Quick Add Product Bar */}
                 <div className="card bg-dark text-white border border-secondary rounded-lg p-4 shadow-lg mb-4">
                     <h6 className="text-warning font-weight-bold text-uppercase mb-3">QUICK ADD PRODUCT</h6>
                     <form onSubmit={handleQuickAdd}>
@@ -251,26 +349,6 @@ export default function Dashboard() {
                         </div>
                     </form>
                 </div>
-
-                {/* 5. Getting Started CTA if empty */}
-                {products.length === 0 && adminOrders.length === 0 && (
-                    <div className="card bg-dark text-white border border-warning rounded-lg p-4 shadow-lg">
-                        <h6 className="text-warning font-weight-bold text-uppercase mb-2">
-                            <i className="fa fa-rocket mr-2"></i> GETTING STARTED — FRESH STORE
-                        </h6>
-                        <p className="text-light small mb-3">
-                            Your store is freshly reset and ready for live usage. Start by adding your actual products, then share your store link with customers.
-                        </p>
-                        <div className="d-flex flex-wrap gap-2">
-                            <Link to="/admin/products/create" className="btn btn-warning font-weight-bold text-dark px-4 rounded-pill shadow">
-                                <i className="fa fa-plus mr-2"></i> Add New Product
-                            </Link>
-                            <Link to="/admin/ads" className="btn btn-outline-warning font-weight-bold px-4 rounded-pill">
-                                <i className="fa fa-image mr-2"></i> Setup Hero Slides
-                            </Link>
-                        </div>
-                    </div>
-                )}
 
             </div>
         </div>

@@ -1,0 +1,95 @@
+name: Ajwa AI Commerce CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # ============================================================================
+  # 1. Test & Validate Python AI Microservice
+  # ============================================================================
+  test-ai-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install AI Dependencies
+        run: |
+          cd "ajwa-dry fruits/ai-service"
+          pip install -r requirements.txt
+
+      - name: Run AI Microservice Tests
+        run: |
+          cd "ajwa-dry fruits/ai-service"
+          python test_service.py
+
+  # ============================================================================
+  # 2. Build & Test Backend API Gateway
+  # ============================================================================
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Backend Dependencies
+        run: |
+          cd "ajwa-dry fruits"
+          npm install
+
+      - name: Verify Backend Server Boot
+        run: |
+          cd "ajwa-dry fruits"
+          node -e "require('./backend/app.js'); console.log('Backend app loaded successfully');"
+
+  # ============================================================================
+  # 3. Build & Test Frontend SPA
+  # ============================================================================
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd "ajwa-dry fruits/frontend"
+          npm install --legacy-peer-deps
+
+      - name: Compile Production Build
+        run: |
+          cd "ajwa-dry fruits/frontend"
+          CI=false npm run build
+
+  # ============================================================================
+  # 4. Container & Orchestration Validation
+  # ============================================================================
+  validate-containers:
+    runs-on: ubuntu-latest
+    needs: [test-ai-service, test-backend, build-frontend]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose Configuration
+        run: |
+          cd "ajwa-dry fruits"
+          docker compose config

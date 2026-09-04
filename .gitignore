@@ -27,3 +27,9 @@ Thumbs.db
 # runtime uploads/cache
 **/uploads/*
 !**/uploads/.gitkeep
+
+# python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class

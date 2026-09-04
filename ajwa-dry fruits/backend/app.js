@@ -36,14 +36,16 @@ const order = require('./routes/order');
 const payment = require('./routes/payment');
 const payroll = require('./routes/payroll');
 const analytics = require('./routes/analytics');
+const ai = require('./routes/ai');
 
 // Root API Health Check Route
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: '🎉 Ajwa Dry Fruits Backend API is Live & Connected!',
+    message: '🎉 Ajwa AI Commerce API Gateway is Live & Connected!',
     status: 'ONLINE',
-    version: '1.0.0'
+    version: '2.0.0',
+    services: ['Auth', 'Products', 'Orders', 'Payments (Direct UPI + Razorpay)', 'AI & ML Service']
   });
 });
 
@@ -53,6 +55,7 @@ app.use('/api/v1/', order);
 app.use('/api/v1/', payment);
 app.use('/api/v1/', payroll);
 app.use('/api/v1/', analytics);
+app.use('/api/v1/', ai);
 
 
 if (process.env.NODE_ENV === "production" && process.env.SERVE_FRONTEND === "true") {

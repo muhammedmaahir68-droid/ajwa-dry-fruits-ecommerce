@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ajwa-commerce
+  labels:
+    app.kubernetes.io/name: ajwa-ai-commerce
+    environment: production

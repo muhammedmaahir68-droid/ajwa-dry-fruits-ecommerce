@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: ajwa-commerce
+  labels:
+    app: ajwa-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ajwa-backend
+  template:
+    metadata:
+      labels:
+        app: ajwa-backend
+    spec:
+      containers:
+        - name: backend
+          image: ajwa-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: ajwa-config
+            - secretRef:
+                name: ajwa-secrets
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
+            limits:
+              cpu: "800m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: ajwa-commerce
+spec:
+  type: ClusterIP
+  selector:
+    app: ajwa-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

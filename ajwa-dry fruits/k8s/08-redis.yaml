@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  namespace: ajwa-commerce
+  labels:
+    app: ajwa-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ajwa-redis
+  template:
+    metadata:
+      labels:
+        app: ajwa-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: ajwa-commerce
+spec:
+  type: ClusterIP
+  selector:
+    app: ajwa-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379

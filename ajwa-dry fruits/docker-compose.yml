@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. Frontend UI Service (React SPA served with Nginx)
+  # ============================================================================
+  ajwa-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ajwa_frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - ajwa-backend
+    networks:
+      - ajwa-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # 2. Backend API Gateway (Node.js/Express)
+  # ============================================================================
+  ajwa-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ajwa_backend_gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - DB_HOST=ajwa-postgres
+      - DB_PORT=5432
+      - DB_NAME=ajwa_ai_commerce
+      - DB_USER=ajwa_admin
+      - DB_PASSWORD=ajwa_secure_password_2026
+      - AI_SERVICE_HOST=ajwa-ai-service
+      - AI_SERVICE_PORT=5001
+      - REDIS_HOST=ajwa-redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=ajwa_ai_jwt_super_secret_key_2026
+      - JWT_EXPIRES_TIME=7d
+      - UPI_VPA=ajwadryfruits@okaxis
+    depends_on:
+      - ajwa-postgres
+      - ajwa-redis
+      - ajwa-ai-service
+    networks:
+      - ajwa-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # 3. AI & ML Microservice (Python FastAPI + scikit-learn + Pandas)
+  # ============================================================================
+  ajwa-ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: ajwa_ai_microservice
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - PYTHONUNBUFFERED=1
+    networks:
+      - ajwa-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # 4. PostgreSQL Relational Database
+  # ============================================================================
+  ajwa-postgres:
+    image: postgres:16-alpine
+    container_name: ajwa_postgres_db
+    environment:
+      POSTGRES_DB: ajwa_ai_commerce
+      POSTGRES_USER: ajwa_admin
+      POSTGRES_PASSWORD: ajwa_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ajwa-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # 5. Redis High-Speed Cache & Session Store
+  # ============================================================================
+  ajwa-redis:
+    image: redis:7-alpine
+    container_name: ajwa_redis_cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ajwa-network
+    restart: unless-stopped
+
+# ==============================================================================
+# Networks & Persistent Volumes
+# ==============================================================================
+networks:
+  ajwa-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
